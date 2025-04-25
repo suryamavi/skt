@@ -6,7 +6,7 @@
     <!-- Include html2canvas library from CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <style>
-        /* === General Styling === */
+        /* === General Styling (Common for Screen and Base for Print) === */
         body {
             font-family: Calibri, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0; padding: 0; background-color: #f0f2f5;
@@ -47,16 +47,12 @@
             border-bottom: 3px solid #0056b3;
         }
         .header .logo { width: 70px; height: 70px; flex-shrink: 0; margin-right: 15px; }
-        .header .logo img { max-width: 100%; max-height: 100%; display: block; }
+        .header .logo img { max-width: 100%; max-height: 100%; display: block;}
         .header .title { text-align: center; flex-grow: 1; color: #003366; }
         .header .title h1, .header .title h2, .header .title h3, .header .title h4, .header .title h5 {
              margin: 1px 0; font-weight: bold; color: #0056b3; text-transform: uppercase;
         }
-        .header .title h1 {
-            font-size: 18pt; /* --- Increased Font Size --- */
-            font-weight: bold; /* Ensure it's bold */
-            letter-spacing: 1px;
-        }
+        .header .title h1 { font-size: 18pt; font-weight: bold; letter-spacing: 1px; }
         .header .title h2 { font-size: 11pt; }
         .header .title h3 { font-size: 10pt; font-weight: normal; }
         .header .title h4 { font-size: 12pt; margin-top: 5px; }
@@ -69,7 +65,7 @@
             border-radius: 5px; font-size: 10.5pt;
         }
         .student-info table { width: 100%; border-collapse: collapse; }
-        .student-info td { padding: 3px 5px; vertical-align: top; }
+        .student-info td { padding: 4px 6px; vertical-align: top; } /* Increased padding slightly */
         .student-info td.label { font-weight: 600; color: #004085; width: 130px; white-space: nowrap; }
         .student-info td.value { font-weight: normal; }
         .dotted-line { display: none; }
@@ -77,95 +73,188 @@
         /* === Separator Line (Hide on screen) === */
         hr.separator { display: none; }
 
-        /* === Grades Table Styling (Revised Screen Styles) === */
+        /* === Grades Table Styling (Screen Styles) === */
         .grades-table {
-            width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 9pt;
+            width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 9.5pt; /* Slightly larger base font for table */
             border: 1.5pt solid #004a99;
+         }
+        .grades-table th, .grades-table td {
+            padding: 6px 8px; /* Increased padding for more row height */
+            text-align: left; vertical-align: middle;
+            border-top: 0.5pt solid #d0d9e3; border-bottom: 0.5pt solid #d0d9e3;
+            border-left: 1pt solid #a8b8c8; border-right: 1pt solid #a8b8c8;
         }
-        .grades-table th, .grades-table td { padding: 5px 7px; text-align: left; vertical-align: middle; border-top: 0.5pt solid #d0d9e3; border-bottom: 0.5pt solid #d0d9e3; border-left: 1pt solid #a8b8c8; border-right: 1pt solid #a8b8c8; }
         .grades-table th:first-child, .grades-table td:first-child { border-left: none; }
         .grades-table th:last-child, .grades-table td:last-child { border-right: none; }
-        .grades-table thead th { background: linear-gradient(to bottom, #f0f6fc, #d9e6f5); color: #003366; font-weight: 600; text-align: center; font-size: 9.5pt; padding: 7px 7px; text-transform: uppercase; border-bottom: 1pt solid #a8b8c8; border-top: none; }
+        .grades-table thead th {
+            background: linear-gradient(to bottom, #f0f6fc, #d9e6f5); color: #003366;
+            font-weight: 600; text-align: center; font-size: 10pt; /* Slightly larger header font */
+            padding: 8px 8px; /* Increased header padding */
+            text-transform: uppercase; border-bottom: 1pt solid #a8b8c8; border-top: none;
+        }
         .grades-table td:nth-child(1),.grades-table td:nth-child(3),.grades-table td:nth-child(4),.grades-table td:nth-child(5),.grades-table td:nth-child(6) { text-align: center; }
         .grades-table tbody tr:nth-child(even) { background-color: #fafdff; }
         .grades-table td.final-grade { font-weight: bold; vertical-align: middle; text-align: center; }
-        .grades-table tfoot td { font-weight: bold; background-color: #eef4fa; text-align: right; padding: 6px 12px; font-size: 10pt; color: #003366; border-top: 1pt solid #a8b8c8; border-bottom: none; }
+        .grades-table tfoot td {
+            font-weight: bold; background-color: #eef4fa; text-align: right;
+            padding: 7px 12px; /* Increased footer padding */
+            font-size: 10.5pt; color: #003366;
+            border-top: 1pt solid #a8b8c8; border-bottom: none;
+        }
         .grades-table tfoot td:nth-child(2) { font-weight: bold; text-align: center;}
 
-        /* === Notes Section (Screen Styles - Boxed) === */
+               /* === Notes Section (Screen Styles - Boxed) === */
         .notes {
-            font-size: 9pt; color: #444; line-height: 1.4; padding: 12px 15px;
-            background-color: #f9f9f9; border: 1px solid #e5e5e5; border-radius: 5px;
+            font-size: 9pt; color: #444; line-height: 1.4;
+            padding: 12px 15px; background-color: #f9f9f9;
+            border: 1px solid #e5e5e5; border-radius: 5px;
         }
         .notes strong { color: #000; }
         .notes h4 { margin: 0 0 6px 0; font-size: 10pt; font-weight: 600; color: #333; text-transform: uppercase; }
         .notes ul { list-style: none; padding-left: 0; margin: 0; }
         .notes ul li { display: inline-block; margin-right: 12px; white-space: nowrap; }
 
+        /* Footer Section removed */
+
         /* === Action Buttons Container === */
         .action-buttons { text-align: center; margin: 30px 0 10px; display: none; }
-        .action-buttons button { padding: 10px 25px; font-size: 12pt; font-weight: 600; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.2s ease, box-shadow 0.2s ease; box-shadow: 0 2px 5px rgba(0,0,0,0.15); text-transform: uppercase; margin: 0 10px; }
+        .action-buttons button {
+            padding: 10px 25px; font-size: 12pt; font-weight: 600;
+            color: white; border: none; border-radius: 5px; cursor: pointer;
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15); text-transform: uppercase;
+            margin: 0 10px;
+        }
         #printButton { background-color: #28a745; }
         #printButton:hover { background-color: #218838; }
         #savePngButton { background-color: #ffc107; color: #333; }
         #savePngButton:hover { background-color: #e0a800; }
 
-        /* === Class to Hide Element for PNG === */
-        .hide-for-png {
-            display: none !important; /* Hide element when this class is applied */
-            visibility: hidden !important; /* Extra measure */
-        }
 
-        /* === Print Specific Styles (Boxed Sections) === */
+        /* === Print Specific Styles (Mimicking Screen Styles where possible) === */
         @page { size: A4; margin: 12mm; }
         @media print {
-            body { font-family: Arial, sans-serif; font-size: 9pt; background-color: #fff; margin: 0; padding: 0; color: #000 !important; }
-            .gradesheet-container { width: 100%; min-height: initial; margin: 0; padding: 0; border: none !important; box-shadow: none !important; display: block !important; }
-            .noprint, .search-form-container, .action-buttons, .disclaimer, .hide-for-png { display: none !important; } /* Hide logo for print too */
+            body {
+                font-family: Calibri, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Use screen font */
+                font-size: 10pt; /* Slightly smaller base for print */
+                background-color: #fff; margin: 0; padding: 0; color: #000 !important;
+                line-height: 1.4; /* Adjust line height for print */
+            }
+            .gradesheet-container {
+                width: 100%; min-height: initial; margin: 0; padding: 0;
+                border: none !important; box-shadow: none !important;
+                display: block !important;
+            }
+            .noprint, .search-form-container, .action-buttons, .disclaimer, .hide-for-png {
+                display: none !important;
+            }
             hr.separator { display: none !important; }
-            .header, .student-info, .grades, .notes { page-break-inside: avoid; margin-bottom: 6mm !important; padding: 4mm !important; border: 0.75pt solid #e0e0e0 !important; background-color: #fdfdfd !important; border-radius: 3px; }
-            .header { border: none !important; background-color: transparent !important; padding: 0 0 4mm 0 !important; margin-bottom: 4mm !important; border-bottom: 1pt solid #999 !important; border-radius: 0; }
-             .grades { padding: 0 !important; border: none !important; background-color: transparent !important; margin-bottom: 6mm !important; }
-              .notes { border: 0.75pt solid #e0e0e0 !important; background-color: #fdfdfd !important; padding: 4mm !important; margin-top: 5mm !important; margin-bottom: 0 !important; }
-            .header .title h1 { font-size: 14pt !important; white-space: nowrap; }
-            .header .title h2 { font-size: 10pt !important; }
-            .header .title h3 { font-size: 9pt !important; }
-            .header .title h4 { font-size: 11pt !important; }
-            .header .title h5 { font-size: 13pt !important; }
-            .student-info { font-size: 9pt !important; }
+
+            /* --- Print Section Styling (Mimic Screen Boxes - No BG/Border except table) --- */
+            .header, .student-info, .grades, .notes {
+                 page-break-inside: avoid;
+                 margin-bottom: 8mm !important; /* Space between sections */
+                 padding: 0 !important; /* No extra padding */
+                 border: none !important; /* No border for sections */
+                 background-color: transparent !important; /* No background */
+                 border-radius: 0;
+             }
+             .header {
+                 padding-bottom: 5mm !important; /* Space before border */
+                 margin-bottom: 8mm !important;
+                 border-bottom: 2pt solid #555 !important; /* Thicker Line after header */
+             }
+              .grades { margin-bottom: 8mm !important; }
+              .notes { margin-top: 5mm !important; margin-bottom: 0 !important; }
+
+            /* Print Header */
+            .header .title h1 { font-size: 16pt !important; white-space: nowrap; } /* Match screen */
+            .header .title h2 { font-size: 11pt !important; }
+            .header .title h3 { font-size: 10pt !important; }
+            .header .title h4 { font-size: 12pt !important; }
+            .header .title h5 { font-size: 14pt !important; }
+
+            /* Print Student Info */
+            .student-info { font-size: 10pt !important; } /* Match screen base slightly reduced */
             .student-info table { width: 100%; }
-            .student-info td { padding: 1px 3px !important; vertical-align: top !important; }
-            .student-info td.label { color: #000 !important; font-weight: bold !important; width: auto !important; white-space: nowrap; padding-right: 5px !important; }
-            .student-info td.value { font-weight: bold !important; border-bottom: none !important; }
+            .student-info td { padding: 2px 4px !important; vertical-align: top !important; } /* Adjust padding */
+            .student-info td.label { color: #000 !important; font-weight: 600 !important; width: 120px !important; white-space: nowrap; padding-right: 5px !important; } /* Labels not bold */
+            .student-info td.value { font-weight: normal !important; border-bottom: none !important; } /* Values not bold */
             .dotted-line { display: none !important; }
-             .grades-table { border: 1pt solid #bbb !important; font-size: 8.5pt !important; margin-bottom: 0 !important; }
-             .grades-table th, .grades-table td { border: 0.5pt solid #ccc !important; padding: 2.5px 4px !important; }
-             .grades-table thead th { background-color: #ededed !important; color: #000 !important; font-size: 8.5pt !important; font-weight: bold !important; border-bottom: 1pt solid #aaa !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-             .grades-table tfoot td { background-color: #f0f0f0 !important; font-size: 9.5pt !important; color: #000 !important; border-top: 1pt solid #aaa !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+            /* Print Grades Table - Increased Row Height/Padding */
+             .grades-table {
+                 border: 1.5pt solid #004a99 !important; /* Match screen outer border */
+                 font-size: 9pt !important; /* Match screen table font */
+                 margin-bottom: 0 !important;
+             }
+             .grades-table th, .grades-table td {
+                 border-top: 0.5pt solid #d0d9e3 !important;
+                 border-bottom: 0.5pt solid #d0d9e3 !important;
+                 border-left: 1pt solid #a8b8c8 !important;
+                 border-right: 1pt solid #a8b8c8 !important;
+                 padding: 5px 7px !important; /* --- Increased padding for print row height --- */
+            }
+             .grades-table th:first-child, .grades-table td:first-child { border-left: none !important; }
+             .grades-table th:last-child, .grades-table td:last-child { border-right: none !important; }
+
+            .grades-table thead th {
+                background-color: #e9f0f7 !important; /* Match screen header bg */
+                color: #003366 !important; /* Match screen header text */
+                font-size: 10pt !important; /* Match screen header font */
+                font-weight: 600 !important;
+                border-bottom: 1pt solid #a8b8c8 !important;
+                border-top: none !important;
+                padding: 7px 7px !important; /* Adjust header padding */
+                -webkit-print-color-adjust: exact; print-color-adjust: exact;
+            }
+            .grades-table tfoot td {
+                background-color: #eef4fa !important; /* Match screen footer bg */
+                font-size: 10pt !important; /* Match screen footer font */
+                color: #003366 !important;
+                border-top: 1pt solid #a8b8c8 !important;
+                border-bottom: none !important;
+                padding: 6px 12px !important;
+                 -webkit-print-color-adjust: exact; print-color-adjust: exact;
+             }
              .grades-table tfoot td:nth-child(2) { font-weight: bold !important;}
-             .grades-table tbody tr:nth-child(even) { background-color: transparent !important; }
-             .notes h4 { font-size: 9pt !important; }
+             .grades-table tbody tr:nth-child(even) { background-color: transparent !important; } /* No alternating color in print */
+
+            /* Print Notes */
+             .notes {
+                 border-top: 1pt solid #999 !important; /* Line above notes */
+                 padding-top: 4mm !important;
+                 font-size: 9pt !important; /* Match screen */
+                 line-height: 1.3 !important;
+            }
+             .notes h4 { font-size: 10pt !important; }
              .notes ul li { margin-right: 10px !important;}
+
+            /* Footer removed */
+            /* General overrides */
              * { background-color: transparent !important; box-shadow: none !important; text-shadow: none !important; color: #000 !important; }
             a { text-decoration: none; }
             img { max-width: 100% !important; }
         }
 
-         /* Style for PNG generation to mimic print */
-        .generating-png { border: none !important; box-shadow: none !important; padding: 12mm !important; background-color: #ffffff !important; }
-        .generating-png .header, .generating-png .student-info, .generating-png .grades, .generating-png .notes { margin-bottom: 6mm !important; padding: 4mm !important; border: 0.75pt solid #e0e0e0 !important; background-color: #fdfdfd !important; border-radius: 3px; }
-        .generating-png .header { border: none !important; background-color: transparent !important; padding: 0 0 4mm 0 !important; margin-bottom: 4mm !important; border-bottom: 1pt solid #999 !important; border-radius: 0; }
-        /* Ensure logo is hidden when generating PNG */
-        .generating-png .hide-for-png { display: none !important; visibility: hidden !important; }
-        .generating-png .grades { padding: 0 !important; border: none !important; background-color: transparent !important; margin-bottom: 6mm !important; }
-        .generating-png .notes { border: 0.75pt solid #e0e0e0 !important; background-color: #fdfdfd !important; padding: 4mm !important; margin-top: 5mm !important; margin-bottom: 0 !important; }
-        .generating-png .student-info { border: 0.75pt solid #e0e0e0 !important; background-color: #fdfdfd !important; }
-        .generating-png .grades-table { border: 1pt solid #bbb !important; }
-        .generating-png .grades-table th, .generating-png .grades-table td { border: 0.5pt solid #ccc !important; }
-        .generating-png .grades-table thead th { background-color: #ededed !important; color: #000 !important; border-bottom: 1pt solid #aaa !important; }
-        .generating-png .grades-table tfoot td { background-color: #f0f0f0 !important; color: #000 !important; border-top: 1pt solid #aaa !important; }
-        .generating-png .student-info td.label { color: #000 !important; }
-        .generating-png * { font-family: Arial, sans-serif !important; color: #000 !important; background-color: transparent !important; }
+        /* Style for PNG generation to mimic screen */
+        /* We want PNG to look like screen view now */
+        .generating-png {
+            /* Keep screen border/shadow for PNG */
+             border: 1px solid #cccccc !important;
+             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1) !important;
+             padding: 15mm !important;
+             background-color: #ffffff !important;
+         }
+        /* Hide logo if needed during PNG generation */
+         .generating-png .hide-for-png { display: none !important; visibility: hidden !important; }
+         /* Force background colors for PNG */
+         .generating-png .student-info { background-color: #f8fbff !important; border: 1px solid #d6e7f9 !important; }
+         .generating-png .grades-table thead th { background: linear-gradient(to bottom, #f0f6fc, #d9e6f5) !important; color: #003366 !important; }
+         .generating-png .grades-table tbody tr:nth-child(even) { background-color: #fafdff !important; }
+         .generating-png .grades-table tfoot td { background-color: #eef4fa !important; color: #003366 !important; }
+         .generating-png .notes { background-color: #f9f9f9 !important; border: 1px solid #e5e5e5 !important; }
+         .generating-png * { color: inherit !important; /* Allow original colors */ } /* Allow original colors for PNG */
 
     </style>
 </head>
@@ -203,8 +292,7 @@
             const studentInfoHTML = `<table><tr><td class="label">Student's Name:</td><td class="value">${student.name}<span class="dotted-line"></span></td><td class="label">Symbol No:</td><td class="value">${symbol}<span class="dotted-line"></span></td></tr><tr><td class="label">Registration No:</td><td class="value">${student.reg_no}<span class="dotted-line"></span></td><td class="label">Date of Birth:</td><td class="value">${student.dob}<span class="dotted-line"></span></td></tr><tr><td class="label">Grade:</td><td class="value">${student.grade_level}<span class="dotted-line"></span></td><td class="label">Gender:</td><td class="value">${student.sex}<span class="dotted-line"></span></td></tr><tr><td class="label">Exam Year:</td><td class="value" colspan="3">${student.exam_year_bs} B.S.<span class="dotted-line"></span></td></tr></table>`;
             let tableRowsHTML = ''; const sortedSubjectCodes = Object.keys(student.subjects).sort();
             for (const th_code of sortedSubjectCodes) { if (subjectDetails[th_code] && student.subjects[th_code]) { const details = subjectDetails[th_code]; const grades = student.subjects[th_code]; const in_code = String(parseInt(th_code) + 1).padStart(4, '0'); const th_grade = grades[0] || ''; const th_gp = grades[1] !== undefined ? grades[1].toFixed(1) : ''; const in_grade = grades[2] || ''; const in_gp = grades[3] !== undefined ? grades[3].toFixed(1) : ''; const final_grade = grades[4] || ''; tableRowsHTML += `<tr><td>${th_code}</td><td>${details.name} (TH)</td><td>${details.th_crhr.toFixed(2)}</td><td>${th_gp}</td><td>${th_grade}</td><td rowspan="2" class="final-grade">${final_grade}</td><td rowspan="2"></td></tr><tr><td>${in_code}</td><td>${details.name} (IN)</td><td>${details.in_crhr.toFixed(2)}</td><td>${in_gp}</td><td>${in_grade}</td></tr>`; } }
-            // *** IMPORTANT: Added id="schoolLogo" to the div containing the logo ***
-            const gradeSheetHTML = `<header class="header"><div class="logo" id="schoolLogo"><img src="school_logo.png" alt="School Logo"></div><div class="title"><h1>SURYA JYOTI SECONDARY SCHOOL MEHELKUNA</h1><h2>GURBHAKOT MUNICIPALITY-08, SURKHET</h2><h3>KARNALI PROVINCE, NEPAL</h3><h4>FINAL EXAMINATION - ${student.exam_year_bs || '2081'}</h4><h5>GRADE SHEET</h5></div></header><section class="student-info">${studentInfoHTML}</section><section class="grades"><table class="grades-table"><thead><tr><th rowspan="2">SUBJECT CODE</th><th rowspan="2">SUBJECTS</th><th rowspan="2">CREDIT HOUR</th><th rowspan="2">GRADE POINT</th><th rowspan="2">GRADE</th><th rowspan="2">FINAL GRADE</th><th rowspan="2">REMARKS</th></tr></thead><tbody>${tableRowsHTML}</tbody><tfoot><tr><td colspan="5">GRADE POINT AVERAGE (GPA) :</td><td style="text-align:center;">${student.gpa.toFixed(2)}</td><td></td></tr></tfoot></table></section><section class="notes"><h4>NOTES:</h4><ul><li>TH: Theory</li><li>PR: Practical</li><li>IN: Internal Assessment</li><li>Abs: Absent</li><li>W: Withheld</li><li>NG: Non-Graded</li><li>One Credit Hour = 32 Clock Hours</li></ul></section>`;
+            const gradeSheetHTML = `<header class="header"><div class="logo" id="schoolLogo"><img src="school_logo.png" alt="School Logo"></div><div class="title"><h1>SURYA JYOTI SECONDARY SCHOOL MEHELKUNA</h1><h2>GURBHAKOT MUNICIPALITY-08, SURKHET</h2><h3>KARNALI PROVINCE, NEPAL</h3><h4>FINAL EXAMINATION - ${student.exam_year_bs || '2081'}</h4><h5>GRADE SHEET</h5></div></header><section class="student-info">${studentInfoHTML}</section><section class="grades"><table class="grades-table"><thead><tr><th rowspan="2">SUBJECT CODE</th><th rowspan="2">SUBJECTS</th><th rowspan="2">CREDIT HOUR</th><th rowspan="2">GRADE POINT</th><th rowspan="2">GRADE</th><th rowspan="2">FINAL GRADE</th><th rowspan="2">REMARKS</th></tr></thead><tbody>${tableRowsHTML}</tbody><tfoot><tr><td colspan="5">GRADE POINT AVERAGE (GPA) :</td><td style="text-align:center;">${student.gpa.toFixed(2)}</td><td></td></tr></tfoot></table></section><section class="notes"><h4>NOTES:</h4><ul><li>TH: Theory</li><li>PR: Practical</li><li>IN: Internal Assessment</li><li>Abs: Absent</li><li>W: Withheld</li><li>NG: Non-Graded</li><li>One Credit Hour = 32 Clock Hours</li></ul></section>`; // Footer removed
             return gradeSheetHTML;
         }
 
@@ -214,21 +302,20 @@
         // --- 5. Handle Save as PNG Button Click (Using CSS Class Toggle) ---
         document.getElementById('savePngButton').addEventListener('click', function() {
             const gradesheetElement = document.getElementById('gradesheetResult');
-            const logoElement = gradesheetElement.querySelector('#schoolLogo'); // Get the logo element by ID
+            const logoElement = gradesheetElement.querySelector('#schoolLogo');
             const symbol = document.getElementById('symbol').value.trim() || 'gradesheet';
             const studentData = allStudentsData[symbol];
             const studentName = studentData ? studentData.name.replace(/\s+/g, '_') : 'student';
             const filename = `GradeSheet_${studentName}_${symbol}.png`;
 
-            if (gradesheetElement && html2canvas && logoElement) {
+            if (gradesheetElement && html2canvas) {
                  const originalContainerBorder = gradesheetElement.style.border;
                  const originalContainerShadow = gradesheetElement.style.boxShadow;
-
-                 // --- Hide logo and remove container border/shadow ---
-                 logoElement.classList.add('hide-for-png');
-                 gradesheetElement.style.border = 'none';
-                 gradesheetElement.style.boxShadow = 'none';
-                 gradesheetElement.classList.add('generating-png'); // Apply print-like styles
+                 // --- Temporarily hide logo and apply screen styles for PNG ---
+                 if (logoElement) logoElement.classList.add('hide-for-png');
+                 gradesheetElement.classList.add('generating-png'); // Use this class to mimic screen styles if needed for PNG
+                 gradesheetElement.style.border = originalContainerBorder; // Keep screen border for PNG
+                 gradesheetElement.style.boxShadow = originalContainerShadow; // Keep screen shadow for PNG
                  // ---
 
                 html2canvas(gradesheetElement, {
@@ -236,10 +323,13 @@
                     useCORS: true,
                     logging: true,
                     backgroundColor: '#ffffff'
+                    // Note: onclone is removed, relying on generating-png class (which is currently styled for print mimic)
+                    // To make PNG look like SCREEN, remove 'generating-png' class addition/removal
+                    // and remove the generating-png styles from CSS
                 })
                  .then(canvas => {
                     // --- Restore everything ---
-                    logoElement.classList.remove('hide-for-png');
+                    if (logoElement) logoElement.classList.remove('hide-for-png');
                     gradesheetElement.classList.remove('generating-png');
                     gradesheetElement.style.border = originalContainerBorder;
                     gradesheetElement.style.boxShadow = originalContainerShadow;
@@ -251,7 +341,7 @@
                     document.body.appendChild(link); link.click(); document.body.removeChild(link);
                 }).catch(err => {
                      // --- Restore on error too ---
-                     logoElement.classList.remove('hide-for-png');
+                     if (logoElement) logoElement.classList.remove('hide-for-png');
                      gradesheetElement.classList.remove('generating-png');
                      gradesheetElement.style.border = originalContainerBorder;
                      gradesheetElement.style.boxShadow = originalContainerShadow;
@@ -264,8 +354,7 @@
                      }
                  });
             } else {
-                if (!logoElement) alert('Could not find logo element (#schoolLogo).');
-                else if (!html2canvas) alert('html2canvas library not loaded.');
+                if (!html2canvas) alert('html2canvas library not loaded.');
                 else alert('Could not find gradesheet element.');
             }
         });
