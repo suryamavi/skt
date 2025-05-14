@@ -8,8 +8,64 @@
     
     <!-- Lightbox2 CSS (CDN) -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet" />
-    
-    <!-- यहाँ भएको <style> ट्याग हटाइएको छ -->
+
+    <style>
+        /* फोटो ग्यालरीको लागि विशेष CSS */
+        .container { /* यो तपाईंको style.css मा पनि हुन सक्छ */
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* फोटो ग्यालरी ग्रिड */
+        .photo-gallery-grid {
+            display: grid;
+            /* minmax को मानलाई अलि ठूलो (e.g., 200px) राखेर हेरौँ, 
+               साना स्क्रिनमा १ कोलममा आउनुपर्ने हो */
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+            gap: 15px; /* ग्याप अलि बढाइयो */
+            padding: 20px 0;
+        }
+
+        .photo-gallery-grid .gallery-item {
+            border: 1px solid #ddd;
+            background-color: #fff;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            text-decoration: none;
+            display: flex; 
+            flex-direction: column;
+            overflow: hidden; 
+            /* मोबाइलमा देखियोस् भनेर निश्चित उचाइ दिने प्रयास (वैकल्पिक, डिबगिङको लागि) */
+            /* min-height: 150px;  <-- यो लाइन डिबगिङको लागि हो, यदि अरुले काम गरेन भने */
+        }
+
+        .photo-gallery-grid .gallery-item img {
+            width: 100%;      /* कन्टेनरको पूरा चौडाइ लिने */
+            max-width: 100%;  /* कन्टेनरभन्दा बाहिर जान नदिन */
+            height: auto;     /* aspect ratio कायम राख्न */
+            display: block;
+            aspect-ratio: 4 / 3; 
+            object-fit: cover;
+            cursor: pointer;
+            flex-grow: 1;
+            /* डिबगिङको लागि बोर्डर */
+            /* border: 2px solid red;  <-- यो लाइन डिबगिङको लागि हो, इमेज कहाँ छ हेर्न */
+        }
+
+        .photo-gallery-grid .gallery-item .caption {
+            font-size: 0.9em; 
+            padding: 10px;
+            color: #333;
+            text-align: center;
+            background-color: #f9f9f9;
+            min-height: 45px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* डिबगिङको लागि बोर्डर */
+            /* border: 1px solid blue; <-- यो लाइन डिबगिङको लागि हो, क्याप्सन कहाँ छ हेर्न */
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -59,58 +115,52 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
 
     <script>
-        // फुटरमा हालको वर्ष देखाउन
         document.getElementById('current-year-gallery').textContent = new Date().getFullYear();
 
-        // फोटो ग्यालरीको JavaScript
         const photoGrid = document.getElementById('photoGrid');
-        const totalPhotos = 9; // तपाईंको फोटोहरूको संख्या
-        const photoBaseName = ''; // यदि फोटोको नाम 1.jpg, 2.jpg ... छ भने
+        const totalPhotos = 9; 
+        const photoBaseName = '';
         
         if (photoGrid) {
             if (totalPhotos > 0) {
                 for (let i = 1; i <= totalPhotos; i++) {
                     const imagePath = `photos/${photoBaseName}${i}.jpg`;
-                    const captionText = `विद्यालय गतिविधि ${i}`; // उदाहरण क्याप्सन
+                    const captionText = `विद्यालय गतिविधि ${i}`;
 
-                    // <a> ट्याग बनाउने (लाइटबक्सको लागि)
                     const galleryItemLink = document.createElement('a');
-                    galleryItemLink.href = imagePath; // ठूलो इमेजको पाथ
-                    galleryItemLink.setAttribute('data-lightbox', 'school-gallery'); // ग्यालरी ग्रुप
-                    galleryItemLink.setAttribute('data-title', captionText); // लाइटबक्समा देखिने क्याप्सन
-                    galleryItemLink.classList.add('gallery-item'); // CSS स्टाइलको लागि
+                    galleryItemLink.href = imagePath;
+                    galleryItemLink.setAttribute('data-lightbox', 'school-gallery');
+                    galleryItemLink.setAttribute('data-title', captionText);
+                    galleryItemLink.classList.add('gallery-item');
 
-                    // <img> ट्याग बनाउने (थम्बनेल)
                     const img = document.createElement('img');
                     img.src = imagePath; 
-                    img.alt = captionText; // Alt टेक्स्ट
-                    // img.loading = 'lazy'; // यदि आवश्यक परेमा परीक्षण पछि थप्नुहोस्
+                    img.alt = captionText;
+                    // img.loading = 'lazy'; // लेजी लोडिङले कहिलेकाहीँ पहिलो पटक लोड हुँदा समस्या देखाउन सक्छ, परीक्षणको लागि हटाउनुहोस्
 
-                    galleryItemLink.appendChild(img); // <a> भित्र <img> राख्ने
+                    galleryItemLink.appendChild(img);
 
-                    // थम्बनेल मुनि देखिने क्याप्सनको लागि <div>
                     const captionDiv = document.createElement('div');
                     captionDiv.classList.add('caption');
                     captionDiv.textContent = captionText;
-                    galleryItemLink.appendChild(captionDiv); // <a> भित्र क्याप्सन <div> राख्ने
+                    galleryItemLink.appendChild(captionDiv);
 
-                    photoGrid.appendChild(galleryItemLink); // ग्रिडमा पूरा आइटम थप्ने
+                    photoGrid.appendChild(galleryItemLink);
                 }
             } else {
                 photoGrid.innerHTML = '<p style="text-align:center; padding: 20px;">अहिले कुनै फोटो उपलब्ध छैन।</p>';
             }
         }
 
-        // Lightbox को लागि अप्सन (वैकल्पिक)
         if (typeof lightbox !== 'undefined') {
             lightbox.option({
               'resizeDuration': 200,
-              'wrapAround': true, 
+              'wrapAround': true,
               'alwaysShowNavOnTouchDevices': true,
-              'albumLabel': "फोटो %1 / %2" 
+              'albumLabel': "फोटो %1 / %2"
             });
         } else {
-            console.warn('Lightbox is not initialized. Check CDN links or script loading order.');
+            console.warn('Lightbox is not initialized.');
         }
     </script>
 </body>
