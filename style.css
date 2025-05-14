@@ -285,17 +285,10 @@ footer p {
     main h2 { font-size: 1.3em; }
 
     /* Responsive table scrolling */
-     div[style*="overflow-x:auto"] { /* This selector might be too generic for a table wrapper */
+     div[style*="overflow-x:auto"] {
         overflow-x: auto; /* Enable horizontal scrolling for table */
         -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
     }
-    /* A better way for table responsiveness: wrap table in a div */
-    .table-responsive {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        margin-bottom: 15px; /* Add some space below the scrollable table */
-    }
-    
     th, td {
         padding: 8px; /* Reduce padding on small screens */
         font-size: 0.9em;
@@ -312,60 +305,3 @@ footer p {
      main h1 { font-size: 1.4em; }
      main h2 { font-size: 1.2em; }
 }
-
-
-/* Photo Gallery Styles - style.css को अन्त्यमा थप्नुहोस् */
-
-.photo-gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* प्रत्येक फोटोको न्यूनतम चौडाइ 200px */
-    gap: 15px; /* फोटोहरू बीचको खाली ठाउँ */
-    padding: 20px 0; /* सेक्सनको माथि र तल प्याडिङ */
-}
-
-.photo-gallery-grid .gallery-item {
-    border: 1px solid #ddd; /* फोटोको वरिपरि हल्का बोर्डर */
-    background-color: #fff; /* सेतो पृष्ठभूमि */
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.1); /* हल्का छाया */
-    text-decoration: none; /* <a> ट्यागको अन्डरलाइन हटाउन */
-    display: flex; /* क्याप्सनलाई तल राख्न र उचाइ मिलाउन */
-    flex-direction: column; /* इमेज माथि, क्याप्सन तल */
-    overflow: hidden; /* यदि इमेज बाहिर गयो भने लुकाउन */
-}
-
-.photo-gallery-grid .gallery-item img {
-    width: 100%;      /* कन्टेनरको पूरा चौडाइ लिने */
-    max-width: 100%;  /* महत्त्वपूर्ण: इमेजलाई कन्टेनरभन्दा बाहिर जान नदिन */
-    height: auto;     /* महत्त्वपूर्ण: इमेजको aspect ratio कायम राख्न */
-    display: block;   /* महत्त्वपूर्ण: अनावश्यक खाली ठाउँ हटाउन */
-    aspect-ratio: 4 / 3; /* सबै थम्बनेललाई एउटै आकार दिन (4:3 ratio) */
-    object-fit: cover;   /* aspect-ratio कायम राख्दै इमेजले ठाउँ भर्ने */
-    cursor: pointer;  /* क्लिक गर्न मिल्ने देखाउन */
-    flex-grow: 1; /* इमेजले उपलब्ध ठाउँ लिन */
-}
-
-.photo-gallery-grid .gallery-item .caption {
-    font-size: 0.9em; /* क्याप्सनको फन्ट साइज */
-    padding: 10px;    /* क्याप्सनको वरिपरि प्याडिङ */
-    color: #333;      /* क्याप्सनको रङ */
-    text-align: center; /* क्याप्सनलाई केन्द्रमा */
-    background-color: #f9f9f9; /* क्याप्सनको पृष्ठभूमि (वैकल्पिक) */
-    min-height: 45px; /* क्याप्सनको लागि न्यूनतम उचाइ (सबैलाई एउटै देखाउन) */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    word-wrap: break-word; /* लामो क्याप्सन भएमा नयाँ लाइनमा जान */
-}
-
-/* Lightbox को स्टाइललाई अलिकति ओभरराइड (यदि आवश्यक परेमा) */
-.lb-data .lb-caption {
-    font-size: 1em; 
-    color: #eee; 
-}
-
-/* Responsive table wrapper - यदि तपाईंले तालिकालाई <div class="table-responsive"> भित्र राख्नुहुन्छ भने */
-/* .table-responsive {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-} */
-/* माथि @media (max-width: 768px) भित्र .table-responsive को स्टाइल पहिले नै छ, त्यसैले यहाँ आवश्यक नहुन सक्छ */
