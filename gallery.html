@@ -8,70 +8,8 @@
     
     <!-- Lightbox2 CSS (CDN) -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet" />
-
-    <style>
-        /* फोटो ग्यालरीको लागि विशेष CSS */
-        /* यो CSS तपाईंको style.css मा राख्दा पनि हुन्छ, वा यहीँ <style> ट्याग भित्र */
-
-        /* सामान्य कन्टेनर र हेडिङ (यदि तपाईंको style.css मा छैन भने) */
-        .container {
-            max-width: 1100px; /* वा तपाईंको साइटको कन्टेनर चौडाइ */
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-
-        /* फोटो ग्यालरी ग्रिड */
-        .photo-gallery-grid {
-            display: grid;
-            /* 
-             * साना स्क्रिन (मोबाइल) मा: 
-             * - minmax(120px, 1fr): प्रत्येक फोटोको न्यूनतम चौडाइ 120px, अधिकतम 1 fraction (उपलब्ध ठाउँको भाग)
-             * - यसले गर्दा धेरै साना स्क्रिनमा पनि फोटोहरू अटाउँछन्, र अलि ठूलो मोबाइल स्क्रिनमा २-३ कोलम बन्न सक्छ।
-             * तपाईं यो 120px लाई आफ्नो आवश्यकता अनुसार समायोजन गर्न सक्नुहुन्छ।
-             */
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
-            gap: 10px; /* फोटोहरू बीचको खाली ठाउँ */
-            padding: 20px 0; /* माथि र तल प्याडिङ */
-        }
-
-        .photo-gallery-grid .gallery-item {
-            border: 1px solid #ddd; /* फोटोको वरिपरि हल्का बोर्डर */
-            background-color: #fff; /* सेतो पृष्ठभूमि */
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.1); /* हल्का छाया */
-            text-decoration: none; /* <a> ट्यागको अन्डरलाइन हटाउन */
-            display: flex; /* क्याप्सनलाई तल राख्न मद्दत गर्न */
-            flex-direction: column; /* इमेज माथि, क्याप्सन तल */
-            overflow: hidden; /* यदि केही बाहिर गयो भने लुकाउन */
-        }
-
-        .photo-gallery-grid .gallery-item img {
-            max-width: 100%;  /* महत्त्वपूर्ण: इमेजलाई कन्टेनरभन्दा बाहिर जान नदिन */
-            height: auto;     /* महत्त्वपूर्ण: इमेजको aspect ratio कायम राख्न */
-            display: block;   /* अनावश्यक खाली ठाउँ हटाउन */
-            aspect-ratio: 4 / 3; /* सबै थम्बनेललाई एउटै आकार दिन (4:3 ratio) */
-            object-fit: cover;   /* aspect-ratio कायम राख्दै इमेजले ठाउँ भर्ने */
-            cursor: pointer;  /* क्लिक गर्न मिल्ने देखाउन */
-            flex-grow: 1; /* इमेजले उपलब्ध ठाउँ लिन */
-        }
-
-        .photo-gallery-grid .gallery-item .caption {
-            font-size: 0.85em; /* क्याप्सनको फन्ट साइज */
-            padding: 8px;    /* क्याप्सनको वरिपरि प्याडिङ */
-            color: #333;      /* क्याप्सनको रङ */
-            text-align: center; /* क्याप्सनलाई केन्द्रमा */
-            background-color: #f9f9f9; /* क्याप्सनको पृष्ठभूमि (वैकल्पिक) */
-            min-height: 40px; /* क्याप्सनको लागि न्यूनतम उचाइ (सबैलाई एउटै देखाउन) */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Lightbox को स्टाइललाई अलिकति ओभरराइड (यदि आवश्यक परेमा) */
-        .lb-data .lb-caption {
-            font-size: 1em; /* लाइटबक्स भित्रको क्याप्सनको फन्ट साइज */
-            color: #eee; /* लाइटबक्स क्याप्सनको रङ (अँध्यारो पृष्ठभूमिमा सेतो राम्रो देखिन्छ) */
-        }
-    </style>
+    
+    <!-- यहाँ भएको <style> ट्याग हटाइएको छ -->
 </head>
 <body>
     <header>
@@ -104,12 +42,6 @@
             
             <div class="photo-gallery-grid" id="photoGrid">
                 <!-- JavaScript ले फोटोहरू यहाँ थप्नेछ -->
-                <!-- यदि JavaScript असक्षम छ भने, यहाँ म्यानुअल रूपमा फोटोहरू राख्न सकिन्छ:
-                <a href="photos/1.jpg" data-lightbox="school-gallery" data-title="फोटो १" class="gallery-item">
-                    <img src="photos/1.jpg" alt="फोटो १">
-                    <div class="caption">फोटो १</div>
-                </a>
-                -->
             </div>
         </section>
     </main>
@@ -139,9 +71,6 @@
             if (totalPhotos > 0) {
                 for (let i = 1; i <= totalPhotos; i++) {
                     const imagePath = `photos/${photoBaseName}${i}.jpg`;
-                    // प्रत्येक फोटोको लागि फरक क्याप्सन राख्न चाहनुहुन्छ भने, तपाईं एउटा एरे बनाउन सक्नुहुन्छ
-                    // const captions = ["कार्यक्रमको फोटो", "खेलकुद दिवस", ...];
-                    // const captionText = captions[i-1] || `फोटो ${i}`;
                     const captionText = `विद्यालय गतिविधि ${i}`; // उदाहरण क्याप्सन
 
                     // <a> ट्याग बनाउने (लाइटबक्सको लागि)
@@ -153,9 +82,9 @@
 
                     // <img> ट्याग बनाउने (थम्बनेल)
                     const img = document.createElement('img');
-                    img.src = imagePath; // थम्बनेल पनि त्यही इमेज (सानो साइजको भए राम्रो)
+                    img.src = imagePath; 
                     img.alt = captionText; // Alt टेक्स्ट
-                    // img.loading = 'lazy'; // लेजी लोडिङ (वैकल्पिक, प्रदर्शन सुधार गर्न)
+                    // img.loading = 'lazy'; // यदि आवश्यक परेमा परीक्षण पछि थप्नुहोस्
 
                     galleryItemLink.appendChild(img); // <a> भित्र <img> राख्ने
 
@@ -176,9 +105,9 @@
         if (typeof lightbox !== 'undefined') {
             lightbox.option({
               'resizeDuration': 200,
-              'wrapAround': true, // अन्तिम फोटोबाट पहिलोमा जान मिल्ने
-              'alwaysShowNavOnTouchDevices': true, // मोबाइलमा सधैँ नेभिगेसन देखाउने
-              'albumLabel': "फोटो %1 / %2" // "Image %1 of %2" को सट्टा नेपालीमा
+              'wrapAround': true, 
+              'alwaysShowNavOnTouchDevices': true,
+              'albumLabel': "फोटो %1 / %2" 
             });
         } else {
             console.warn('Lightbox is not initialized. Check CDN links or script loading order.');
