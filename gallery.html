@@ -1,167 +1,91 @@
 <!DOCTYPE html>
 <html lang="ne">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>फोटो ग्यालेरी - सूर्य ज्योति माध्यमिक विद्यालय</title>
-    <link rel="stylesheet" href="style.css"> <!-- तपाईंको मुख्य CSS फाइल -->
-    
-    <!-- Lightbox2 CSS (CDN) -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>फोटो ग्यालरी</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightbox2@2.11.4/dist/css/lightbox.min.css">
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      overflow-x: hidden;
+    }
 
-    <style>
-        /* फोटो ग्यालरीको लागि विशेष CSS */
-        .container { /* यो तपाईंको style.css मा पनि हुन सक्छ */
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
+    h1 {
+      text-align: center;
+      margin: 20px 0;
+      color: #333;
+    }
 
-        /* फोटो ग्यालरी ग्रिड */
-        .photo-gallery-grid {
-            display: grid;
-            /* minmax को मानलाई अलि ठूलो (e.g., 200px) राखेर हेरौँ, 
-               साना स्क्रिनमा १ कोलममा आउनुपर्ने हो */
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
-            gap: 15px; /* ग्याप अलि बढाइयो */
-            padding: 20px 0;
-        }
+    .photo-gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      padding: 15px;
+      max-width: 1000px;
+      margin: auto;
+    }
 
-        .photo-gallery-grid .gallery-item {
-            border: 1px solid #ddd;
-            background-color: #fff;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-            text-decoration: none;
-            display: flex; 
-            flex-direction: column;
-            overflow: hidden; 
-            /* मोबाइलमा देखियोस् भनेर निश्चित उचाइ दिने प्रयास (वैकल्पिक, डिबगिङको लागि) */
-            /* min-height: 150px;  <-- यो लाइन डिबगिङको लागि हो, यदि अरुले काम गरेन भने */
-        }
+    .gallery-item {
+      overflow: hidden;
+      border-radius: 10px;
+      background-color: #fff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
 
-        .photo-gallery-grid .gallery-item img {
-            width: 100%;      /* कन्टेनरको पूरा चौडाइ लिने */
-            max-width: 100%;  /* कन्टेनरभन्दा बाहिर जान नदिन */
-            height: auto;     /* aspect ratio कायम राख्न */
-            display: block;
-            aspect-ratio: 4 / 3; 
-            object-fit: cover;
-            cursor: pointer;
-            flex-grow: 1;
-            /* डिबगिङको लागि बोर्डर */
-            /* border: 2px solid red;  <-- यो लाइन डिबगिङको लागि हो, इमेज कहाँ छ हेर्न */
-        }
+    .gallery-item:hover {
+      transform: scale(1.02);
+    }
 
-        .photo-gallery-grid .gallery-item .caption {
-            font-size: 0.9em; 
-            padding: 10px;
-            color: #333;
-            text-align: center;
-            background-color: #f9f9f9;
-            min-height: 45px; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            /* डिबगिङको लागि बोर्डर */
-            /* border: 1px solid blue; <-- यो लाइन डिबगिङको लागि हो, क्याप्सन कहाँ छ हेर्न */
-        }
-    </style>
+    .gallery-item img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <header>
-         <div class="container header-content">
-            <img src="logo.png" alt="विद्यालयको लोगो" class="logo">
-            <div>
-                <h1>सूर्य ज्योति माध्यमिक विद्यालय, मेहेलकुना, गुर्भाकोट-८, सुर्खेत</h1>
-                <p>ज्ञान, अनुशासन र प्रगति</p>
-            </div>
-        </div>
-        <nav>
-            <div class="container">
-                <ul>
-                    <li><a href="index.html">गृहपृष्ठ</a></li>
-                    <li><a href="about.html">हाम्रो बारेमा</a></li>
-                    <li><a href="notice.html">सूचना पाटी</a></li>
-                    <li><a href="results.html">नतिजा</a></li>
-                    <li><a href="teachers.html">शिक्षक/कर्मचारी</a></li>
-                    <li><a href="gallery.html">फोटो ग्यालेरी</a></li>
-                    <li><a href="contact.html">सम्पर्क</a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
 
-    <main class="container">
-        <h1>फोटो ग्यालेरी</h1>
-        <section id="gallery-content">
-            <p>हाम्रो विद्यालयका केही अविस्मरणीय पलहरू र गतिविधिहरू।</p>
-            
-            <div class="photo-gallery-grid" id="photoGrid">
-                <!-- JavaScript ले फोटोहरू यहाँ थप्नेछ -->
-            </div>
-        </section>
-    </main>
+  <h1>मेरो फोटो ग्यालरी</h1>
+  <div class="photo-gallery-grid" id="gallery"></div>
 
-    <footer>
-        <div class="container">
-            <p>© <span id="current-year-gallery"></span> सूर्य ज्योति माध्यमिक विद्यालय, मेहेलकुना। सर्वाधिकार सुरक्षित।</p>
-            <p>गुर्भाकोट-८, मेहेलकुना, सुर्खेत, नेपाल</p>
-        </div>
-    </footer>
+  <!-- Lightbox JS -->
+  <script src="https://cdn.jsdelivr.net/npm/lightbox2@2.11.4/dist/js/lightbox.min.js"></script>
 
-    <!-- jQuery (Lightbox2 को लागि आवश्यक) (CDN) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <!-- Lightbox2 JS (CDN) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+  <script>
+    const totalPhotos = 9; // तपाईंको फोटो संख्या यतै सेट गर्नुहोस्
+    const galleryContainer = document.getElementById("gallery");
 
-    <script>
-        document.getElementById('current-year-gallery').textContent = new Date().getFullYear();
+    for (let i = 1; i <= totalPhotos; i++) {
+      const imagePath = `photos/${i}.jpg`; // ensure photos/1.jpg, 2.jpg,... exist
 
-        const photoGrid = document.getElementById('photoGrid');
-        const totalPhotos = 9; 
-        const photoBaseName = '';
-        
-        if (photoGrid) {
-            if (totalPhotos > 0) {
-                for (let i = 1; i <= totalPhotos; i++) {
-                    const imagePath = `photos/${photoBaseName}${i}.jpg`;
-                    const captionText = `विद्यालय गतिविधि ${i}`;
+      const link = document.createElement("a");
+      link.href = imagePath;
+      link.setAttribute("data-lightbox", "gallery");
+      link.classList.add("gallery-item");
 
-                    const galleryItemLink = document.createElement('a');
-                    galleryItemLink.href = imagePath;
-                    galleryItemLink.setAttribute('data-lightbox', 'school-gallery');
-                    galleryItemLink.setAttribute('data-title', captionText);
-                    galleryItemLink.classList.add('gallery-item');
+      const img = document.createElement("img");
+      img.src = imagePath;
+      img.alt = `Photo ${i}`;
+      img.onerror = () => {
+        console.warn(`Image ${imagePath} failed to load.`);
+        link.remove(); // यदि फोटो लोड भएन भने हटाइदिनु
+      };
 
-                    const img = document.createElement('img');
-                    img.src = imagePath; 
-                    img.alt = captionText;
-                    // img.loading = 'lazy'; // लेजी लोडिङले कहिलेकाहीँ पहिलो पटक लोड हुँदा समस्या देखाउन सक्छ, परीक्षणको लागि हटाउनुहोस्
-
-                    galleryItemLink.appendChild(img);
-
-                    const captionDiv = document.createElement('div');
-                    captionDiv.classList.add('caption');
-                    captionDiv.textContent = captionText;
-                    galleryItemLink.appendChild(captionDiv);
-
-                    photoGrid.appendChild(galleryItemLink);
-                }
-            } else {
-                photoGrid.innerHTML = '<p style="text-align:center; padding: 20px;">अहिले कुनै फोटो उपलब्ध छैन।</p>';
-            }
-        }
-
-        if (typeof lightbox !== 'undefined') {
-            lightbox.option({
-              'resizeDuration': 200,
-              'wrapAround': true,
-              'alwaysShowNavOnTouchDevices': true,
-              'albumLabel': "फोटो %1 / %2"
-            });
-        } else {
-            console.warn('Lightbox is not initialized.');
-        }
-    </script>
+      link.appendChild(img);
+      galleryContainer.appendChild(link);
+    }
+  </script>
 </body>
 </html>
