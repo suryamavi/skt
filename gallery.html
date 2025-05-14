@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>फोटो ग्यालेरी - सूर्य ज्योति माध्यमिक विद्यालय</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* फोटो ग्यालरीको लागि विशेष CSS */
+        .photo-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
+            gap: 15px; /* फोटोहरू बीचको खाली ठाउँ */
+            padding: 20px 0;
+        }
+
+        .photo-gallery-grid .gallery-item {
+            border: 1px solid #ddd;
+            padding: 5px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            background-color: #fff;
+            text-align: center; /* क्याप्सनलाई केन्द्रमा राख्न */
+        }
+
+        .photo-gallery-grid img {
+            max-width: 100%;
+            height: auto;
+            display: block; /* अनावश्यक खाली ठाउँ हटाउन */
+            aspect-ratio: 4 / 3; /* फोटोहरूलाई एउटै आकारमा देखाउन (वैकल्पिक) */
+            object-fit: cover; /* aspect-ratio कायम राख्दै फ्रेम भर्न */
+        }
+        .photo-gallery-grid .caption {
+            font-size: 0.9em;
+            padding: 8px 0;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <header>
+         <div class="container header-content">
+            <img src="logo.png" alt="विद्यालयको लोगो" class="logo">
+            <div>
+                <h1>सूर्य ज्योति माध्यमिक विद्यालय, मेहेलकुना, गुर्भाकोट-८, सुर्खेत</h1>
+                <p>ज्ञान, अनुशासन र प्रगति</p>
+            </div>
+        </div>
+        <nav>
+            <div class="container">
+                <ul>
+                    <li><a href="index.html">गृहपृष्ठ</a></li>
+                    <li><a href="about.html">हाम्रो बारेमा</a></li>
+                    <li><a href="notice.html">सूचना पाटी</a></li>
+                    <li><a href="results.html">नतिजा</a></li>
+                    <li><a href="teachers.html">शिक्षक/कर्मचारी</a></li>
+                    <li><a href="gallery.html">फोटो ग्यालेरी</a></li> <!-- यहाँ लिङ्क अपडेट गरियो -->
+                    <li><a href="contact.html">सम्पर्क</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h1>फोटो ग्यालेरी</h1>
+        <section id="gallery-content">
+            <p>हाम्रो विद्यालयका केही अविस्मरणीय पलहरू र गतिविधिहरू।</p>
+            
+            <div class="photo-gallery-grid" id="photoGrid">
+                <!-- फोटोहरू यहाँ देखा पर्नेछन् -->
+                <!-- उदाहरणका लागि, यदि ३ वटा फोटो छन्: -->
+                <!--
+                <div class="gallery-item">
+                    <img src="photos/1.jpg" alt="विद्यालयको कार्यक्रमको फोटो">
+                    <p class="caption">विद्यालयको कार्यक्रम</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="photos/2.jpg" alt="खेलकुद दिवसको फोटो">
+                    <p class="caption">खेलकुद दिवस</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="photos/3.jpg" alt="कक्षाकोठाको गतिविधि">
+                    <p class="caption">कक्षाकोठा गतिविधि</p>
+                </div>
+                -->
+                <!-- JavaScript बाट थप्नको लागि यो खाली राख्न सकिन्छ -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© <span id="current-year-gallery"></span> सूर्य ज्योति माध्यमिक विद्यालय, मेहेलकुना। सर्वाधिकार सुरक्षित।</p>
+            <p>गुर्भाकोट-८, मेहेलकुना, सुर्खेत, नेपाल</p>
+        </div>
+    </footer>
+
+    <script>
+        // फुटरमा हालको वर्ष देखाउन
+        document.getElementById('current-year-gallery').textContent = new Date().getFullYear();
+
+        // JavaScript बाट फोटोहरू थप्ने (वैकल्पिक तर धेरै फोटो भएमा उपयोगी)
+        const photoGrid = document.getElementById('photoGrid');
+        const totalPhotos = 10; // यहाँ तपाईंको `photos` फोल्डरमा भएका फोटोहरूको कुल संख्या राख्नुहोस् (e.g., 1.jpg देखि 10.jpg सम्म भए १०)
+        const photoBaseName = ''; // यदि फोटोको नाम 1.jpg, 2.jpg जस्तो छ भने यो खाली राख्नुहोस्
+                                 // यदि photo_1.jpg, photo_2.jpg जस्तो छ भने 'photo_' राख्नुहोस्
+        
+        // यदि फोटो ग्रिड छ भने मात्र यो कोड चलाउने
+        if (photoGrid) {
+            if (totalPhotos > 0) {
+                for (let i = 1; i <= totalPhotos; i++) {
+                    const galleryItem = document.createElement('div');
+                    galleryItem.classList.add('gallery-item');
+
+                    const img = document.createElement('img');
+                    img.src = `photos/${photoBaseName}${i}.jpg`; // फोटोको पाथ
+                    img.alt = `विद्यालयको फोटो ${i}`; // उपयुक्त alt टेक्स्ट राख्नुहोस्
+                    // img.loading = 'lazy'; // Lazy loading for better performance (optional)
+
+                    const caption = document.createElement('p');
+                    caption.classList.add('caption');
+                    caption.textContent = `फोटो ${i}`; // यहाँ फोटोको बारेमा केही लेख्न सक्नुहुन्छ
+
+                    galleryItem.appendChild(img);
+                    galleryItem.appendChild(caption);
+                    photoGrid.appendChild(galleryItem);
+                }
+            } else {
+                photoGrid.innerHTML = '<p>अहिले कुनै फोटो उपलब्ध छैन।</p>';
+            }
+        }
+    </script>
+
+</body>
+</html>
