@@ -5,6 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>गृहपृष्ठ - सूर्य ज्योति माध्यमिक विद्यालय, मेहेलकुना</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* JS द्वारा सूचना थपिएपछि देखिने, सुरुमा लुकाउने */
+        #recent-notices ul li {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dotted #eee;
+        }
+        #recent-notices ul li:last-child {
+            border-bottom: none;
+        }
+        #recent-notices .notice-date {
+            font-size: 0.9em;
+            color: #555;
+            display: block;
+            margin-top: 4px;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -52,21 +69,108 @@
 
          <section id="recent-notices">
             <h2>ताजा सूचनाहरू (<a href="notice.html">सबै हेर्नुहोस्</a>)</h2>
-            <p><em>(यहाँ हालसालैका २-३ वटा महत्त्वपूर्ण सूचनाहरू राख्नुहोस्)</em></p>
-            <ul>
-                <li>वार्षिक परीक्षा तालिका प्रकाशित भएको सूचना। <a href="notice.html">(पूरा हेर्नुहोस्)</a></li>
-                <li>नयाँ शैक्षिक सत्रका लागि भर्ना खुल्यो। <a href="notice.html">(विवरण)</a></li>
-                <li>विद्यालय वार्षिकोत्सव कार्यक्रम सम्बन्धी जानकारी। <a href="notice.html">(थप)</a></li>
+            <!-- जाभास्क्रिप्टले यहाँ सूचनाहरू थप्नेछ -->
+            <ul id="dynamic-notice-list">
+                <!-- <p><em>सूचनाहरू लोड हुँदैछन्...</em></p> -->
+                <!-- उदाहरण सूचनाहरू हटाइयो -->
             </ul>
-             <p><em><a href="notice.html">सबै सूचनाहरू हेर्न यहाँ जानुहोस्...</a></em></p>
+            <!-- "सबै सूचनाहरू हेर्न यहाँ जानुहोस्..." हटाइयो किनकि H2 मा पहिले नै लिङ्क छ -->
         </section>
     </main>
 
     <footer>
         <div class="container">
-            <p>© २०२४ सूर्य ज्योति माध्यमिक विद्यालय, मेहेलकुना। सर्वाधिकार सुरक्षित।</p>
+            <p>© <span id="current-year"></span> सूर्य ज्योति माध्यमिक विद्यालय, मेहेलकुना। सर्वाधिकार सुरक्षित।</p>
             <p>गुर्भाकोट-८, मेहेलकुना, सुर्खेत, नेपाल</p>
         </div>
     </footer>
+
+    <script>
+        // फुटरमा हालको वर्ष देखाउन
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // notice.html बाट सूचनाहरू ल्याउने र देखाउने
+        async function fetchAndDisplayNotices() {
+            const noticeListElement = document.getElementById('dynamic-notice-list');
+            if (!noticeListElement) {
+                console.error("Element with ID 'dynamic-notice-list' not found.");
+                return;
+            }
+            // सुरुमा 'लोड हुँदै' सन्देश देखाउने
+            noticeListElement.innerHTML = '<li><p><em>सूचनाहरू लोड हुँदैछन्...</em></p></li>';
+
+            try {
+                const response = await fetch('notice.html');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const htmlText = await response.text();
+                
+                const parser = new DOMParser();
+                const noticeDoc = parser.parseFromString(htmlText, 'text/html');
+                
+                const noticeItems = noticeDoc.querySelectorAll('#notice-board .notice-item');
+                
+                noticeListElement.innerHTML = ''; // पुरानो 'लोड हुँदै' सन्देश हटाउने
+
+                if (noticeItems.length === 0) {
+                    noticeListElement.innerHTML = '<li><p>अहिले कुनै नयाँ सूचना छैन।</p></li>';
+                    return;
+                }
+
+                // कतिवटा सूचना देखाउने (उदाहरणका लागि ३ वटा)
+                const noticesToShow = Math.min(noticeItems.length, 3); 
+
+                for (let i = 0; i < noticesToShow; i++) {
+                    const item = noticeItems[i];
+                    const titleElement = item.querySelector('h2');
+                    const dateElement = item.querySelector('p > strong'); // "प्रकाशित मिति:"
+                    
+                    if (titleElement) {
+                        const title = titleElement.textContent.trim();
+                        let dateText = '';
+
+                        if (dateElement && dateElement.parentNode.textContent.includes('प्रकाशित मिति:')) {
+                            // "प्रकाशित मिति:" पछिको टेक्स्ट मात्र लिने
+                            dateText = dateElement.parentNode.textContent.replace('प्रकाशित मिति:', '').trim();
+                        }
+                        
+                        const listItem = document.createElement('li');
+                        
+                        // सूचनाको पहिलो अनुच्छेद (विवरण) को केही अंश
+                        const descriptionElement = item.querySelector('p:not(:has(strong))'); // मिति नभएको पहिलो अनुच्छेद
+                        let shortDescription = '';
+                        if (descriptionElement) {
+                            shortDescription = descriptionElement.textContent.trim().substring(0, 100) + '...'; // पहिलो १०० अक्षर
+                        }
+
+                        listItem.innerHTML = `
+                            <strong>${title}</strong>
+                            ${dateText ? `<span class="notice-date">प्रकाशित मिति: ${dateText}</span>` : ''}
+                            <p>${shortDescription}</p>
+                            <a href="notice.html#notice-${i+1}">पूरा हेर्नुहोस्</a>
+                        `;
+                        noticeListElement.appendChild(listItem);
+
+                        // notice.html मा सम्बन्धित सूचनामा जानको लागि ID थप्ने (यदि छैन भने)
+                        // यो गर्नका लागि notice.html मा प्रत्येक article लाई id दिनुपर्छ।
+                        // अहिलेको लागि, सामान्य लिङ्क notice.html मा जान्छ, तर तपाईंले notice.html मा
+                        // <article id="notice-1" class="notice-item">... जस्तो गर्न सक्नुहुन्छ।
+                        // र माथिको लिङ्कलाई <a href="notice.html#notice-${item.getAttribute('id')}"> बनाउन सक्नुहुन्छ।
+                        // सरलताको लागि, अहिले notice.html#notice-INDEX प्रयोग गरौं।
+                        // तपाईंले notice.html मा हरेक <article> मा id="notice-1", "notice-2" आदि थप्नुपर्छ।
+                        // यदि notice.html मा id छैन भने, यो लिङ्कले पेजको माथि मात्र लैजान्छ।
+                    }
+                }
+
+            } catch (error) {
+                console.error('सूचनाहरू ल्याउन असमर्थ:', error);
+                noticeListElement.innerHTML = '<li><p>सूचनाहरू ल्याउन सकिएन। कृपया <a href="notice.html">सूचना पाटी</a>मा हेर्नुहोस्।</p></li>';
+            }
+        }
+
+        // पेज लोड भएपछि सूचनाहरू ल्याउने
+        document.addEventListener('DOMContentLoaded', fetchAndDisplayNotices);
+    </script>
 </body>
 </html>
