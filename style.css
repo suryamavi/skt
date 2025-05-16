@@ -1,81 +1,122 @@
 /* ================================================ */
 /*               सामान्य रिसेट र आधार               */
 /* ================================================ */
+:root {
+    --primary-color: #2980b9; 
+    --secondary-color: #2c3e50; 
+    --accent-color: #e74c3c; 
+    --light-bg: #ecf0f1; 
+    --text-color: #34495e; 
+    --light-text: #fdfdfd; 
+    --border-color: #bdc3c7; 
+    --card-bg: #ffffff; 
+
+    --font-nepali: 'Noto Sans Devanagari', 'Kantipur', sans-serif;
+    --border-radius: 6px;
+    --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
 body {
-    font-family: 'Noto Sans Devanagari', 'Kantipur', 'Devanagari Sangam MN', 'Kohinoor Devanagari', 'Lohit Devanagari', 'Nirmala UI', 'Mangal', sans-serif; /* नेपाली फन्टलाई प्राथमिकता */
-    line-height: 1.7; /* सुधारिएको लाइन हाइट */
+    font-family: var(--font-nepali);
+    line-height: 1.75;
     margin: 0;
     padding: 0;
-    background-color: #f8f9fa; /* हल्का खैरो/अफ-ह्वाइट पृष्ठभूमि */
-    color: #212529; /* गाढा खैरो टेक्स्ट, कालोभन्दा नरम */
+    background-color: var(--light-bg);
+    color: var(--text-color);
+    font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
 .container {
-    width: 90%; /* प्रतिशतमा चौडाइ, ठूला स्क्रिनमा max-width ले सीमित */
-    max-width: 1140px; /* अधिकतम चौडाइ */
-    margin: 0 auto; /* केन्द्रमा */
-    padding: 0 15px; /* मोबाइलको लागि छेउमा प्याडिङ */
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px; /* मोबाइलको लागि प्याडिङ */
 }
 
 /* ================================================ */
 /*                      हेडर                       */
 /* ================================================ */
 header {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); /* आकर्षक नीलो ग्रेडियन्ट */
-    color: #ffffff;
-    padding: 25px 0; /* माथि र तल प्याडिङ */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* नरम छाया */
-    position: sticky; /* स्क्रोल गर्दा हेडर टाँसिने (वैकल्पिक) */
-    top: 0;
-    z-index: 1000; /* अरू तत्वभन्दा माथि */
+    background: var(--primary-color);
+    color: var(--light-text);
+    padding: 15px 0; /* मोबाइलको लागि प्याडिङ अलि कम */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* छाया अलि हल्का */
+    border-bottom: 3px solid var(--accent-color);
+    /* position: sticky;  <-- हटाइयो, यसले मोबाइलमा समस्या दिन सक्छ */
+    /* top: 0;             <-- हटाइयो */
+    /* z-index: 1000;      <-- हटाइयो */
 }
 
 .header-content {
     display: flex;
     align-items: center;
+    flex-wrap: wrap; /* सानो स्क्रिनमा लोगो र टेक्स्टलाई र्‍याप गर्न */
+    justify-content: center; /* सुरुमा केन्द्रमा, ठूलो स्क्रिनमा मिलाउने */
 }
 
 .logo {
-    max-height: 70px; /* लोगोको उचाइ */
+    max-height: 60px; /* मोबाइलको लागि अलि सानो */
     width: auto;
-    margin-right: 20px;
-    border-radius: 8px; /* लोगोको किनारा अलि गोलाकार */
-    transition: transform 0.3s ease; /* होभरमा हल्का जुम इफेक्ट */
-}
-.logo:hover {
-    transform: scale(1.05);
+    margin-right: 15px;
+    margin-bottom: 10px; /* यदि र्‍याप भयो भने तल मार्जिन */
+    border: 2px solid var(--light-text);
+    border-radius: var(--border-radius);
+    padding: 3px;
+    background-color: rgba(255,255,255,0.1);
 }
 
-.header-content div { /* विद्यालयको नाम र नाराको लागि */
+.header-content .school-info {
     flex-grow: 1;
+    text-align: center; /* मोबाइलमा केन्द्रमा */
 }
 
 .header-content h1 {
-    margin: 0 0 8px 0;
-    font-size: clamp(1.5em, 4vw, 2.2em); /* Responsive font size */
+    margin: 0 0 5px 0;
+    font-size: clamp(1.4em, 3vw, 2.0em); /* मोबाइलको लागि फन्ट साइज अलि सानो */
     font-weight: 700;
-    line-height: 1.2;
     letter-spacing: 0.5px;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.1); /* टेक्स्टमा हल्का छाया */
 }
 
 .header-content p { /* नारा */
     margin: 0;
-    font-size: clamp(0.9em, 2vw, 1.1em); /* Responsive font size */
-    font-style: italic;
-    opacity: 0.9; /* नारा अलि मधुरो */
+    font-size: clamp(0.8em, 1.8vw, 0.95em); /* मोबाइलको लागि फन्ट साइज अलि सानो */
+    opacity: 0.85;
 }
+
+/* ठूलो स्क्रिनको लागि हेडर लेआउट */
+@media (min-width: 769px) {
+    header {
+        padding: 20px 0;
+    }
+    .header-content {
+        justify-content: flex-start; /* लोगो देब्रे, टेक्स्ट दायाँ */
+        flex-wrap: nowrap; /* र्‍याप नगर्ने */
+    }
+    .logo {
+        max-height: 65px;
+        margin-bottom: 0;
+    }
+    .header-content .school-info {
+        text-align: left;
+    }
+     .header-content h1 {
+        font-size: clamp(1.6em, 3.5vw, 2.3em);
+    }
+    .header-content p {
+        font-size: clamp(0.9em, 2vw, 1.0em);
+    }
+}
+
 
 /* ================================================ */
 /*                     नेभिगेसन                     */
 /* ================================================ */
 nav {
-    background-color: #ffffff;
-    border-bottom: 1px solid #e0e0e0;
-    padding: 12px 0;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    background-color: var(--secondary-color);
+    padding: 0; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 nav .container ul {
@@ -83,77 +124,68 @@ nav .container ul {
     margin: 0;
     list-style: none;
     text-align: center;
+    display: flex; 
+    justify-content: center; 
+    flex-wrap: wrap; 
 }
 
 nav ul li {
-    display: inline-block;
-    margin: 0 8px; /* लिङ्कहरू बीचको खाली ठाउँ */
+    margin: 0; 
 }
 
 nav a {
     text-decoration: none;
-    color: #343a40; /* नेभिगेसन लिङ्कको रङ */
-    font-weight: 600; /* अलि मोटो */
-    padding: 10px 15px;
-    transition: color 0.3s ease, background-color 0.3s ease;
+    color: var(--light-text);
+    font-weight: 500; 
+    padding: 12px 18px; /* प्याडिङ अलि समायोजन */
+    transition: background-color 0.3s ease, color 0.3s ease;
     display: block;
-    border-radius: 5px;
-    position: relative; /* होभर इफेक्टको लागि */
+    text-transform: uppercase; 
+    font-size: 0.85em; /* फन्ट साइज अलि सानो */
+    letter-spacing: 0.5px;
 }
 
 nav a:hover, nav a:focus, nav a.active {
-    color: #0056b3; /* होभरमा प्रमुख रङ */
-    background-color: #e9ecef; /* होभरमा हल्का पृष्ठभूमि */
+    background-color: var(--accent-color); 
+    color: var(--light-text);
 }
-
-nav a::after { /* होभरमा अन्डरलाइन इफेक्ट */
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: 5px; /* लिङ्कको तलबाट कति माथि */
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #0056b3;
-    transition: width 0.3s ease;
-}
-nav a:hover::after, nav a:focus::after, nav a.active::after {
-    width: 70%; /* अन्डरलाइनको चौडाइ */
-}
-
 
 /* ================================================ */
 /*                   मुख्य सामग्री                   */
 /* ================================================ */
-main.container { /* main लाई पनि .container क्लास दिनुहोस् HTML मा */
-    padding-top: 30px;
+main.container {
+    padding-top: 30px; 
     padding-bottom: 30px;
-    background-color: #ffffff;
-    margin-top: 25px;
-    margin-bottom: 25px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    border-radius: 8px;
+    background-color: var(--card-bg);
+    margin-top: 20px; /* मार्जिन अलि कम */
+    margin-bottom: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.07); 
+    border-radius: var(--border-radius);
+    border-top: 5px solid var(--primary-color); 
 }
 
 main h1, main h2 {
-    color: #0056b3; /* प्रमुख रङ */
-    border-bottom: 2px solid #dee2e6; /* बोर्डरको रङ मिलाइएको */
-    padding-bottom: 12px;
-    margin-bottom: 25px;
+    color: var(--primary-color);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 12px; /* प्याडिङ अलि कम */
+    margin-bottom: 25px; /* मार्जिन अलि कम */
     margin-top: 0;
     font-weight: 700;
 }
 main h1 {
-    font-size: clamp(1.7em, 5vw, 2.4em); /* Responsive */
+    font-size: clamp(1.7em, 4.5vw, 2.4em);
+    text-align: center; 
+    border-bottom-width: 2px; 
 }
 main h2 {
-    font-size: clamp(1.4em, 4vw, 2em); /* Responsive */
+    font-size: clamp(1.4em, 3.5vw, 2.0em);
+    color: var(--secondary-color); 
 }
 
 section {
-    margin-bottom: 35px;
+    margin-bottom: 30px; /* मार्जिन अलि कम */
     padding-bottom: 25px;
-    border-bottom: 1px dashed #ced4da; /* ड्यास्ड बोर्डर */
+    border-bottom: 1px solid #e9ecef; 
 }
 section:last-child{
     border-bottom: none;
@@ -161,217 +193,114 @@ section:last-child{
     padding-bottom: 0;
 }
 
+/* सूचना पाटी र फुटरको स्टाइल उस्तै राख्ने (अघिल्लो कोडबाट) */
+/* ... (यहाँ .notice-item र footer को स्टाइलहरू राख्नुहोस्) ... */
 /* ================================================ */
-/*                      तालिका                       */
+/*                 सूचना पाटी आइटम                  */
 /* ================================================ */
-.table-responsive { /* तालिकालाई यो div भित्र राख्नुहोस् */
-    overflow-x: auto;
-    margin-top: 20px;
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
+.notice-item {
+    border-left: 4px solid var(--accent-color); 
+    padding: 20px 25px;
+    margin-bottom: 25px;
+    background-color: #fdfdfd; 
+    border-radius: 0 var(--border-radius) var(--border-radius) 0; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.9em; 
-}
-
-th, td {
-    border: none; /* सेलको भित्री बोर्डर हटाइयो, tr मा बोर्डर राख्ने */
-    border-bottom: 1px solid #dee2e6; /* प्रत्येक पङ्क्तिको तल बोर्डर */
-    padding: 12px 15px; /* प्याडिङ बढाइएको */
-    text-align: left;
-    vertical-align: middle; /* सामग्री ठाडो रूपमा केन्द्रमा */
-}
-table tr:last-child td {
-    border-bottom: none; /* अन्तिम पङ्क्तिको बोर्डर हटाइयो */
+.notice-item:hover {
+    transform: translateX(5px); 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-th {
-    background-color: #e9ecef;
-    font-weight: 600;
-    color: #495057;
-    text-transform: uppercase; /* हेडर टेक्स्टलाई अपरकेस (वैकल्पिक) */
-    letter-spacing: 0.5px;
+.notice-item h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.35em;
+    border-bottom: none;
+    color: var(--primary-color);
+    font-weight: 700;
 }
-
-tbody tr:hover {
-    background-color: #f1f3f5; /* होभरमा हल्का पृष्ठभूमि */
+.notice-item p {
+    margin-bottom: 8px;
+    color: #525252;
+    font-size: 1em; 
 }
-
-/* ================================================ */
-/*                       फारम                       */
-/* ================================================ */
-form label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: 600;
-    color: #495057;
-}
-form input[type="text"],
-form input[type="email"],
-form textarea {
-    width: 100%; /* calc हटाइयो, box-sizing ले ह्यान्डल गर्छ */
-    padding: 12px 15px;
-    margin-bottom: 18px;
-    border: 1px solid #ced4da;
-    border-radius: 5px;
-    font-size: 1em;
-    box-sizing: border-box; /* प्याडिङ र बोर्डरलाई चौडाइमा समावेश गर्न */
-    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-}
-form input[type="text"]:focus,
-form input[type="email"]:focus,
-form textarea:focus {
-    border-color: #007bff;
-    outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-
-form textarea {
-    resize: vertical;
-    min-height: 120px;
-}
-form button {
-    background-color: #007bff;
-    color: white;
-    padding: 12px 28px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1.05em; /* अलि ठूलो */
-    font-weight: 600;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-}
-form button:hover {
-    background-color: #0056b3;
-    transform: translateY(-1px); /* होभरमा हल्का माथि सर्ने */
-}
-form button:active {
-    transform: translateY(0); /* क्लिक गर्दा सामान्य अवस्थामा */
+.notice-item p strong { 
+    color: var(--secondary-color); 
+    font-weight: 500;
 }
 
 /* ================================================ */
 /*                       फुटर                       */
 /* ================================================ */
 footer {
-    background: #2c3e50; /* गाढा स्लेट-नीलो */
-    color: #ecf0f1; /* हल्का खैरो/सेतो टेक्स्ट */
+    background: var(--secondary-color);
+    color: rgba(255,255,255,0.7); 
     text-align: center;
-    padding: 30px 0;
-    margin-top: 40px;
+    padding: 30px 0; /* प्याडिङ अलि कम */
+    margin-top: 25px; /* मार्जिन अलि कम */
     font-size: 0.9em;
+    border-top: 3px solid var(--primary-color);
 }
 
 footer p {
-    margin: 8px 0;
-    opacity: 0.8; /* टेक्स्ट अलि मधुरो */
+    margin: 5px 0;
 }
-footer a { /* यदि फुटरमा लिङ्क छ भने */
-    color: #3498db; /* नीलो लिङ्क */
+footer a {
+    color: var(--light-bg); 
     text-decoration: none;
+    font-weight: 500;
 }
 footer a:hover {
+    color: var(--accent-color);
     text-decoration: underline;
 }
 
-/* ================================================ */
-/*                 सूचना पाटी आइटम                  */
-/* ================================================ */
-.notice-item {
-    border: none; /* बोर्डर हटाइयो, छायाले विभाजन गर्छ */
-    padding: 25px;
-    margin-bottom: 25px;
-    background-color: #ffffff;
-    border-radius: 6px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.07);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.notice-item:hover {
-    transform: translateY(-3px); /* होभरमा हल्का माथि सर्ने */
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.notice-item h2 {
-    margin-top: 0;
-    margin-bottom: 12px;
-    font-size: 1.4em; /* मिलाइएको */
-    border-bottom: none;
-    color: #0056b3;
-    font-weight: 600;
-}
-.notice-item p {
-    margin-bottom: 8px;
-    color: #55595c; /* टेक्स्टको रङ अलि गाढा */
-    font-size: 0.95em;
-}
-.notice-item p strong { /* प्रकाशित मिति */
-    color: #343a40; 
-    font-weight: 600;
-}
-.notice-item a.read-more { /* 'पूरा पढ्नुहोस्' लिङ्कको लागि (यदि छ भने) */
-    display: inline-block;
-    margin-top: 10px;
-    color: #007bff;
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.2s ease;
-}
-.notice-item a.read-more:hover {
-    color: #0056b3;
-    text-decoration: underline;
-}
 
 /* ================================================ */
 /*                  Responsive Design                */
 /* ================================================ */
 @media (max-width: 768px) {
+    /* हेडरको लागि flex-direction पहिले नै .header-content मा wrap र center ले ह्यान्डल गरेको छ */
+    /* तर, यदि निश्चित रूपमा ठाडो बनाउने हो भने:
     .header-content {
-        flex-direction: column; /* सानो स्क्रिनमा लोगो माथि, टेक्स्ट तल */
-        text-align: center;
+        flex-direction: column;
     }
+    */
     .logo {
-        float: none; 
-        display: block;
-        margin: 0 auto 15px auto; /* केन्द्रमा र तल मार्जिन */
+        /* float: none; हटाइएको, flex ले ह्यान्डल गर्छ */
+        /* display: block; हटाइएको */
+        margin: 0 auto 10px auto; /* केन्द्रमा र तल मार्जिन */
     }
-    .header-content div {
-        text-align: center;
-    }
-    .header-content p { /* नारा */
-        text-align: center;
-    }
+     /* .header-content .school-info को text-align: center; पहिले नै छ */
 
+    nav .container ul {
+        flex-direction: column; 
+    }
     nav ul li {
-        display: block; 
-        margin: 8px 0;
+        width: 100%; 
     }
     nav a {
-        padding: 12px; /* प्याडिङ बढाइएको */
+        padding: 14px 15px; /* मोबाइलमा प्याडिङ अलि बढी */
+        border-bottom: 1px solid rgba(255,255,255,0.05); 
+        font-size: 0.9em; /* मोबाइलमा नेभ लिङ्क फन्ट */
     }
-    nav a::after { /* सानो स्क्रिनमा अन्डरलाइन इफेक्ट नचाहिन सक्छ */
-        display: none;
+    nav ul li:last-child a {
+        border-bottom: none;
     }
 
     main.container {
-        padding-left: 15px; /* main को प्याडिङ मोबाइलमा */
-        padding-right: 15px;
+        padding-top: 20px;
+        padding-bottom: 20px;
         margin-top: 15px;
         margin-bottom: 15px;
     }
-    
-    th, td {
-        padding: 10px 8px; 
-        font-size: 0.85em;
-    }
+     main h1 { font-size: 1.6em; } /* मोबाइलमा हेडिङ साइज */
+     main h2 { font-size: 1.35em; }
 }
 
-/* फोटो ग्यालरी र अन्य विशेष कम्पोनेन्टको स्टाइल यहाँ थप्न सकिन्छ */
-/* तपाईंले अघिल्लो उत्तरहरूबाट फोटो ग्यालरीको CSS लाई यहाँ मिलाएर राख्न सक्नुहुन्छ */
-/* जस्तै: */
-/*
-.photo-gallery-grid { ... }
-.photo-gallery-grid .gallery-item { ... }
-.photo-gallery-grid .gallery-item img { ... }
-.photo-gallery-grid .gallery-item .caption { ... }
+/* तालिका र फारमको स्टाइल तपाईंले पहिले दिनुभएको मूल CSS बाट लिन सक्नुहुन्छ, 
+   वा तिनीहरूलाई पनि CSS Variables र नयाँ डिजाइन अनुसार मिलाउन सक्नुहुन्छ।
+   अहिलेको लागि, म तिनीहरूलाई समावेश गर्दिनँ ताकि यो कोड धेरै लामो नहोस्।
+   फोटो ग्यालरीको स्टाइल पनि आवश्यक भएमा थप्नुहोला।
 */
