@@ -1,113 +1,72 @@
-/* ================================================ */
-/*               सामान्य रिसेट र आधार               */
-/* ================================================ */
-:root {
-    --primary-color: #0056b3; /* पहिलेको नीलो */
-    --secondary-color: #333a40; /* पहिलेको गाढा खैरो */
-    --accent-color: #d9534f; /* फरक एक्सेंट */
-    --light-bg: #f4f4f4; /* पहिलेको हल्का पृष्ठभूमि */
-    --text-color: #333; /* पहिलेको टेक्स्ट रङ */
-    --light-text: #ffffff;
-    --border-color: #dddddd;
-    --card-bg: #ffffff;
-
-    --font-nepali: 'Kantipur', 'Noto Sans Devanagari', 'Devanagari Sangam MN', 'Kohinoor Devanagari', 'Lohit Devanagari', 'Nirmala UI', 'Mangal', sans-serif; /* तपाईंको मूल फन्ट स्ट्याकबाट, अंग्रेजी फन्ट हटाइएको */
-    --border-radius: 4px; /* पहिलेको रेडियस */
-}
-
-html {
-    scroll-behavior: smooth; /* स्मूथ स्क्रोलिङ */
-}
-
+/* सामान्य रिसेट र आधारभूत स्टाइल */
 body {
-    font-family: var(--font-nepali);
-    line-height: 1.65; /* अलिकति समायोजन */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif, 'Preeti', 'Kantipur', 'Noto Sans Devanagari'; /* Devanagari support */
+    line-height: 1.6;
     margin: 0;
     padding: 0;
-    background-color: var(--light-bg);
-    color: var(--text-color);
-    /* overflow-x: hidden; */ /* आवश्यक परेमा मात्र, अहिले हटाइयो */
+    background-color: #f9f9f9;
+    color: #333;
 }
 
 .container {
-    width: 90%;
-    max-width: 1100px; /* पहिलेको जस्तै */
-    margin: 0 auto;
-    padding: 0 15px; /* मोबाइलको लागि छेउमा प्याडिङ */
-    /* overflow: hidden; <-- यो हटाइयो, यसले समस्या दिन सक्छ */
+    max-width: 1100px;
+    margin: auto;
+    overflow: hidden; /* Clears floats */
+    padding: 0 20px;
 }
 
-/* Clearfix (यदि float प्रयोग भएको छ भने) */
-.container::after, .header-content::after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
-
-/* ================================================ */
-/*                      हेडर                       */
-/* ================================================ */
+/* हेडर */
 header {
-    background: var(--primary-color);
-    color: var(--light-text);
-    padding: 15px 0;
-    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */ /* छायाँ अहिलेको लागि हटाउन सकिन्छ */
-    /* border-bottom: 3px solid var(--accent-color); */
+    background-color: #0056b3; /* नीलो रंग */
+    color: #fff;
+    padding-top: 15px; /* Adjust padding */
+    min-height: 100px; /* Increased min-height for logo */
+    border-bottom: #003d80 4px solid;
 }
 
-.header-content {
-    /* display: flex; र align-items: center; अहिलेको लागि float ले काम गरिरहेको छ भने हटाइयो */
-    padding-bottom: 10px; /* तपाईंको मूल CSS बाट */
-}
-
+/* लोगोको लागि स्टाइल */
 .logo {
-    max-height: 70px; /* मोबाइलको लागि समायोजन */
+    max-height: 75px; /* लोगोको उचाइ मिलाउनुहोस् */
     width: auto;
-    margin-right: 20px;
-    float: left; /* तपाईंको मूल CSS बाट */
-    /* border-radius र अन्य स्टाइलहरू अहिले सरल राखियो */
+    vertical-align: middle; /* टेक्स्टसँग मिलाउन */
+    margin-right: 20px; /* नामबाट अलि टाढा राख्न */
+    float: left; /* Logo on the left */
 }
 
-.header-content .school-info { /* यो तपाईंले HTML मा थप्नुभएको क्लास हो */
-    overflow: hidden; /* float भएको लोगोको छेउमा टेक्स्टलाई राख्न */
+/* हेडरमा लोगो र टेक्स्ट मिलाउन */
+.header-content {
+    /* display: flex; replaced with float for logo */
+    align-items: center;
+    padding-bottom: 10px;
+    overflow: hidden; /* Contain floats */
+}
+
+.header-content div {
+    /* Holds the text, adjust as needed */
+     overflow: hidden; /* To stay beside the floated logo */
 }
 
 .header-content h1 {
-    margin: 5px 0 5px 0; /* मार्जिन समायोजन */
-    font-size: 1.6em; /* मोबाइलको लागि आधार फन्ट साइज */
-    font-weight: bold;
-    line-height: 1.3;
+    margin: 5px 0 0 0; /* Adjust top margin */
+    padding: 0;
+    border-bottom: none;
+    font-size: 1.7em; /* Adjust font size */
+    line-height: 1.2;
 }
-
-.header-content p { /* नारा */
-    margin: 0;
-    font-size: 0.95em; /* मोबाइलको लागि आधार फन्ट साइज */
-    font-style: italic; /* तपाईंको मूल CSS बाट */
-}
-
-/* ठूलो स्क्रिनको लागि हेडर फन्ट साइज */
-@media (min-width: 769px) {
-    .header-content h1 {
-        font-size: 1.8em; /* तपाईंको मूल CSS को नजिक */
-    }
-    .header-content p {
-        font-size: 1em;
-    }
-    .logo {
-        max-height: 75px; /* तपाईंको मूल CSS को नजिक */
-    }
+.header-content p {
+     margin: 5px 0 0 0;
+     text-align: left;
+     font-style: italic;
 }
 
 
-/* ================================================ */
-/*                     नेभिगेसन                     */
-/* ================================================ */
+/* नेभिगेसन */
 nav {
-    background-color: #f0f0f0; /* अलि फरक हल्का रङ */
-    border-bottom: 1px solid var(--border-color);
-    padding: 8px 0; /* प्याडिङ अलि कम */
-    clear: both; /* तपाईंको मूल CSS बाट */
+    background-color: #f4f4f4;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+    clear: both; /* Clear the float from the logo */
+    margin-top: 10px; /* Space below header content */
 }
 
 nav .container ul {
@@ -118,70 +77,56 @@ nav .container ul {
 }
 
 nav ul li {
-    display: inline-block;
-    margin: 0 5px; /* लिङ्कहरू बीच थोरै खाली ठाउँ */
+    display: inline-block; /* Use inline-block for better spacing control */
+    margin: 0 10px; /* Adjust spacing */
 }
 
 nav a {
     text-decoration: none;
-    color: var(--text-color); /* गाढा टेक्स्ट */
+    color: #333;
     font-weight: bold;
-    padding: 10px 12px; /* प्याडिङ */
-    transition: background-color 0.2s ease, color 0.2s ease;
-    display: block;
-    border-radius: var(--border-radius);
+    padding: 8px 12px; /* Adjust padding */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    display: block; /* Make the whole area clickable */
+    border-radius: 4px;
 }
 
-nav a:hover, nav a:focus, nav a.active {
-    background-color: var(--primary-color);
-    color: var(--light-text);
+nav a:hover, nav a:focus, nav a.active /* Add active class later if needed */ {
+    background-color: #0056b3;
+    color: #fff;
 }
 
-/* ================================================ */
-/*                   मुख्य सामग्री                   */
-/* ================================================ */
-main.container { /* HTML मा <main class="container"> निश्चित गर्नुहोस् */
-    padding-top: 25px; 
-    padding-bottom: 25px;
-    background-color: var(--card-bg);
+
+/* मुख्य सामग्री */
+main {
+    padding: 30px 0;
+    background-color: #fff;
     margin-top: 20px;
     margin-bottom: 20px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08); /* हल्का छाया */
-    border-radius: var(--border-radius);
-    min-height: 300px; /* सामग्री नहुँदा पनि निश्चित उचाइ */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    min-height: 400px; /* Ensure footer doesn't jump up on short pages */
 }
 
 main h1, main h2 {
-    color: var(--primary-color);
-    border-bottom: 1px solid #e0e0e0; /* हल्का बोर्डर */
+    color: #0056b3;
+    border-bottom: 2px solid #eee;
     padding-bottom: 10px;
     margin-bottom: 20px;
-    margin-top: 0;
-    font-weight: bold;
+    margin-top: 0; /* Remove default top margin */
 }
 main h1 {
-    font-size: 1.7em; /* मोबाइलको लागि */
-    text-align: left; /* पहिलेको जस्तै */
+    font-size: 1.8em;
 }
 main h2 {
-    font-size: 1.4em; /* मोबाइलको लागि */
-}
-
-/* ठूलो स्क्रिनको लागि मुख्य सामग्रीको हेडिङ */
-@media (min-width: 769px) {
-    main h1 {
-        font-size: 1.9em;
-    }
-    main h2 {
-        font-size: 1.6em;
-    }
+    font-size: 1.5em;
 }
 
 
 section {
-    margin-bottom: 25px;
+    margin-bottom: 30px;
     padding-bottom: 20px;
-    border-bottom: 1px dotted #cccccc;
+    border-bottom: 1px dotted #ccc;
 }
 section:last-child{
     border-bottom: none;
@@ -189,50 +134,85 @@ section:last-child{
     padding-bottom: 0;
 }
 
-/* ================================================ */
-/*                 सूचना पाटी आइटम                  */
-/* ================================================ */
-.notice-item {
-    padding: 15px;
-    margin-bottom: 20px;
-    background-color: #fdfdfd; 
-    border-radius: var(--border-radius);
-    border: 1px solid #e7e7e7; /* हल्का बोर्डर */
-    /* box-shadow: 0 1px 3px rgba(0,0,0,0.05); */ /* अहिलेको लागि छायाँ हटाउन सकिन्छ */
+/* तालिका */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 0.95em; /* Slightly larger font */
 }
 
-.notice-item h2 {
-    margin-top: 0;
-    margin-bottom: 8px;
-    font-size: 1.25em; /* मोबाइलको लागि */
-    border-bottom: none;
-    color: var(--primary-color);
-    font-weight: bold;
+th, td {
+    border: 1px solid #ccc; /* Lighter border */
+    padding: 12px; /* More padding */
+    text-align: left;
+    vertical-align: top; /* Align content top */
 }
-.notice-item p {
-    margin-bottom: 8px;
-    color: #555555;
-    font-size: 0.95em;
+
+th {
+    background-color: #e9ecef; /* Lighter gray background */
+    font-weight: 600; /* Bolder */
+    color: #495057;
 }
-.notice-item p strong { 
-    color: var(--secondary-color); 
-    font-weight: bold;
+
+tbody tr:nth-child(even) {
+    background-color: #f8f9fa; /* Very light gray for even rows */
 }
-@media (min-width: 769px) {
-    .notice-item h2 { font-size: 1.35em; }
-    .notice-item p { font-size: 1em; }
+tbody tr:hover {
+    background-color: #e2e6ea; /* Hover effect */
+}
+
+/* फारम */
+form label {
+    display: block;
+    margin-bottom: 8px; /* Increased space */
+    font-weight: 600; /* Bolder label */
+}
+form input[type="text"],
+form input[type="email"],
+form textarea {
+    width: calc(100% - 24px); /* Padding adjustment */
+    padding: 10px;
+    margin-bottom: 20px; /* Increased space */
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1em;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+form input[type="text"]:focus,
+form input[type="email"]:focus,
+form textarea:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+form textarea {
+    resize: vertical;
+    min-height: 100px; /* Minimum height for textarea */
+}
+form button {
+    background-color: #007bff; /* Bootstrap primary blue */
+    color: white;
+    padding: 12px 25px; /* Larger button */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+form button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
 }
 
 
-/* ================================================ */
-/*                       फुटर                       */
-/* ================================================ */
+/* फुटर */
 footer {
-    background: var(--secondary-color);
-    color: rgba(255,255,255,0.8); 
+    background-color: #343a40; /* Dark gray */
+    color: #f8f9fa; /* Light text */
     text-align: center;
-    padding: 25px 0; 
-    margin-top: 30px;
+    padding: 25px 0;
+    margin-top: 40px; /* More space above footer */
     font-size: 0.9em;
 }
 
@@ -240,69 +220,88 @@ footer p {
     margin: 5px 0;
 }
 
-/* ================================================ */
-/*                  Responsive Design (मोबाइल प्रथम) */
-/* ================================================ */
+/* सूचना पाटीका आइटमहरूको लागि स्टाइल (उदाहरण) */
+.notice-item {
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.notice-item h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.3em;
+    border-bottom: none;
+    color: #0056b3;
+}
+.notice-item p {
+    margin-bottom: 10px;
+    color: #555;
+}
+.notice-item p strong {
+    color: #333;
+}
+.notice-item a {
+    color: #0056b3;
+    text-decoration: none;
+    font-weight: bold;
+}
+.notice-item a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-    /* तपाईंको मूल responsive स्टाइल यहाँ राखिएको छ */
     .logo {
-        float: none; 
+        float: none; /* Stack logo on small screens */
         display: block;
-        margin: 0 auto 10px auto; 
+        margin: 0 auto 10px auto; /* Center logo */
         max-height: 60px;
     }
-    .header-content .school-info { /* .school-info क्लास प्रयोग भएको सुनिश्चित गर्नुहोस् */
-        text-align: center; 
+    .header-content div { /* तपाईंले HTML मा .school-info क्लास दिनुभएको छ भने यो त्यसलाई पनि लागु हुन्छ */
+        text-align: center; /* Center text below logo */
     }
     .header-content h1 {
-        font-size: 1.4em; /* तपाईंको मूल responsive बाट */
+        font-size: 1.4em;
     }
     .header-content p {
-        text-align: center; /* तपाईंको मूल responsive बाट */
+        text-align: center;
     }
 
      nav ul li {
-        display: block; 
-        margin: 5px 0; /* मार्जिन समायोजन */
+        display: block; /* Stack navigation links */
+        margin: 10px 0;
     }
     nav a {
         padding: 10px;
     }
 
-    main.container { /* main मा .container क्लास */
-        padding: 20px 10px; /* मोबाइलमा प्याडिङ */
+    main { /* यदि HTML मा <main class="container"> छ भने यो त्यसलाई लागु हुन्छ */
+        padding: 20px;
     }
-    main h1 { font-size: 1.5em; } 
-    main h2 { font-size: 1.25em; }
+    main h1 { font-size: 1.6em; }
+    main h2 { font-size: 1.3em; }
 
-    /* Responsive table scrolling (यो तपाईंको मूल CSS मा थियो) */
-     div[style*="overflow-x:auto"] { /* यो सिलेक्टर धेरै जेनेरिक छ */
-        overflow-x: auto; 
-        -webkit-overflow-scrolling: touch; 
+    /* Responsive table scrolling */
+     div[style*="overflow-x:auto"] {
+        overflow-x: auto; /* Enable horizontal scrolling for table */
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
     }
-    /* यदि तालिका छ भने, त्यसलाई <div class="table-responsive">...</div> भित्र राख्नुहोस् */
-    .table-responsive {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        margin-bottom: 15px;
+    th, td {
+        padding: 8px; /* Reduce padding on small screens */
+        font-size: 0.9em;
     }
-    
-    /* th, td (तालिकाको लागि) को स्टाइल तपाईंको मूल CSS बाट लिनुहोस् यदि आवश्यक छ भने */
 }
 
-/* धेरै सानो स्क्रिनको लागि (480px भन्दा कम) */
 @media (max-width: 480px) {
      .header-content h1 {
-        font-size: 1.2em; /* तपाईंको मूल responsive बाट */
+        font-size: 1.2em;
     }
      .header-content p {
-        font-size: 0.85em; /* तपाईंको मूल responsive बाट */
+        font-size: 0.9em;
     }
-     main h1 { font-size: 1.3em; }
-     main h2 { font-size: 1.15em; }
-     .notice-item h2 { font-size: 1.1em; }
-     .notice-item p { font-size: 0.9em; }
+     main h1 { font-size: 1.4em; }
+     main h2 { font-size: 1.2em; }
 }
-
-/* फोटो ग्यालरी र अन्य विशेष कम्पोनेन्टको स्टाइल यहाँ थप्न सकिन्छ */
-/* .photo-gallery-grid { ... } */
