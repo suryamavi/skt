@@ -130,6 +130,8 @@ header.site-header {
     height: 60px;
     width: auto;
     flex-shrink: 0;
+    position: relative; /* यदि पहिले नै absolute/fixed छैन भने */
+    z-index: 10;      /* उच्च z-index दिनुहोस् */
     border-radius: 4px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
