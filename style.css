@@ -989,3 +989,9 @@ footer.site-footer a:hover {
         height: 220px;
     }
 }
+
+.site-header::before, .site-header::after,
+.site-header .header-content-wrapper::before, .site-header .header-content-wrapper::after,
+.site-header .logo-name-group::before, .site-header .logo-name-group::after {
+    display: none !important;
+}
