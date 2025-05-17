@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>शिक्षक/कर्मचारी विवरण - सूर्य ज्योति माध्यमिक विद्यालय</title>
+    <link rel="stylesheet" href="style.css"> <!-- Your main stylesheet -->
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-content-wrapper">
+            <div class="logo-name-group">
+                <img src="logo.png" alt="विद्यालयको लोगो" class="logo-img">
+                <div class="school-details">
+                    <h1>सूर्य ज्योति माध्यमिक विद्यालय, मेहेलकुना, गुर्भाकोट-८, सुर्खेत</h1>
+                    <p>ज्ञान, अनुशासन र प्रगति</p>
+                </div>
+            </div>
+        </div>
+    </header>
+    <nav class="main-navigation">
+        <div class="container nav-list-wrapper">
+            <ul class="nav-menu">
+                <li><a href="index.html">गृहपृष्ठ</a></li>
+                <li><a href="about.html">हाम्रो बारेमा</a></li>
+                <li><a href="notice.html">सूचना पाटी</a></li>
+                <li><a href="results.html">नतिजा</a></li>
+                <li><a href="teachers.html" class="active">शिक्षक/कर्मचारी</a></li> <!-- .active class यहाँ थपियो -->
+                <li><a href="gallery.html">फोटो ग्यालेरी</a></li>
+                <li><a href="contact.html">सम्पर्क</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container page-content"> <!-- Added .page-content class -->
+        <section id="teachers-staff-page"> <!-- Specific ID for this page's content -->
+            <h1 class="main-page-title">शिक्षक तथा कर्मचारी विवरण</h1> <!-- Main page title, reused class -->
+
+            <div class="teachers-table-wrapper">
+                <table class="teachers-table">
+                    <thead>
+                        <tr>
+                            <th>क्र.सं.</th>
+                            <th>नाम थर</th>
+                            <th>पद</th>
+                            <th>योग्यता</th>
+                            <th>तह</th>
+                            <th>ठेगाना</th>
+                            <th>मोबाइल नं.</th> <!-- Corrected spelling -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-label="क्र.सं.">१</td>
+                            <td data-label="नाम थर">हिक्मत रोका</td>
+                            <td data-label="पद">प्रधानाध्यापक</td>
+                            <td data-label="योग्यता">एम्.एड.</td>
+                            <td data-label="तह">माध्यमिक तृतीय</td>
+                            <td data-label="ठेगाना">गुर्भाकोट-८</td>
+                            <td data-label="मोबाइल नं."><a href="tel:9848162886">९८४८१६२८८६</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="क्र.सं.">२</td>
+                            <td data-label="नाम थर">नवराज शर्मा</td>
+                            <td data-label="पद">स. प्र.अ.</td>
+                            <td data-label="योग्यता">एम्.ए.</td>
+                            <td data-label="तह">माध्यमिक तृतीय</td>
+                            <td data-label="ठेगाना">गुर्भाकोट-८</td>
+                            <td data-label="मोबाइल नं."><a href="tel:9848194877">९८४८१९४८७७</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="क्र.सं.">३</td>
+                            <td data-label="नाम थर">पद्मराज पौडेल</td>
+                            <td data-label="पद">शिक्षक</td>
+                            <td data-label="योग्यता">एम.एड.</td>
+                            <td data-label="तह">माध्यमिक तृतीय</td>
+                            <td data-label="ठेगाना">गुर्भाकोट-८</td>
+                            <td data-label="मोबाइल नं."><a href="tel:9844832952">९८४४८३२९५२</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="क्र.सं.">४</td>
+                            <td data-label="नाम थर">प्रकाश गुरूङ</td>
+                            <td data-label="पद">शिक्षक</td>
+                            <td data-label="योग्यता">एम्.एड.</td>
+                            <td data-label="तह">माध्यमिक तृतीय</td>
+                            <td data-label="ठेगाना">गुर्भाकोट-८</td>
+                            <td data-label="मोबाइल नं."><a href="tel:9848164055">९८४८१६४०५५</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="क्र.सं.">५</td>
+                            <td data-label="नाम थर">हुम कुमारी खाँण</td>
+                            <td data-label="पद">शिक्षक</td>
+                            <td data-label="योग्यता">एम्.बि.एस्.</td>
+                            <td data-label="तह">माध्यमिक तृतीय</td>
+                            <td data-label="ठेगाना">गुर्भाकोट-८</td>
+                            <td data-label="मोबाइल नं."><a href="tel:9846260637">९८४६२६०६३७</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="क्र.सं.">६</td>
+                            <td data-label="नाम थर">तिलक प्रसाद शर्मा</td>
+                            <td data-label="पद">शिक्षक</td>
+                            <td data-label="योग्यता">एम्.बि.एस्.</td>
+                            <td data-label="तह">माध्यमिक तृतीय</td>
+                            <td data-label="ठेगाना">गुर्भाकोट-८</td>
+                            <td data-label="मोबाइल नं."><a href="tel:9848022463">९८४८०२२४६३</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="क्र.सं.">७</td>
+                            <td data-label="नाम थर">डिल्ली बहादुर खत्री</td>
+                            <td data-label="पद">शिक्षक</td>
+                            <td data-label="योग्यता">एम्.एड.</td>
+                            <td data-label="तह">माध्यमिक तृतीय</td>
+                            <td data-label="ठेगाना">गुर्भाकोट-९</td>
+                            <td data-label="मोबाइल नं."><a href="tel:9848197475">९८४८१९७४७५</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="क्र.सं.">८</td>
+                            <td data-label="नाम थर">हस्ता वली</td>
+                            <td data-label="पद">शिक्षक</td>
+                            <td data-label="योग्यता">एम्.एड.</td>
+                            <td data-label="तह">माध्यमिक तृतीय</td>
+                            <td data-label="ठेगाना">गुर्भाकोट-३</td>
+                            <td data-label="मोबाइल नं."><a href="tel:9866175688">९८६६१७५६८८</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="क्र.सं.">९</td>
+                            <td data-label="नाम थर">नीलकण्ठ भट्टराई</td>
+                            <td data-label="पद">शिक्षक</td>
+                            <td data-label="योग्यता">एम्.एड.</td>
+                            <td data-label="तह">नि.मा. द्वितीय</td>
+                            <td data-label="ठेगाना">लेकवेशी-१</td>
+                            <td data-label="मोबाइल नं."><a href="tel:9848093960">९८४८०९३९६०</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="क्र.सं.">१०</td>
+                            <td data-label="नाम थर">मोहनलाल खत्री</td>
+                            <td data-label="पद">शिक्षक</td>
+                            <td data-label="योग्यता">बि.एड.</td>
+                            <td data-label="तह">नि.मा. तृतीय</td>
+                            <td data-label="ठेगाना">गुर्भाकोट-९</td>
+                            <td data-label="मोबाइल नं."><a href="tel:9848309276">९८४८३०९२७६</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="क्र.सं.">११</td>
+                            <td data-label="नाम थर">तारा बहादुर सारू मगर</td>
+                            <td data-label="पद">शिक्षक</td>
+                            <td data-label="योग्यता">आइ.ए.</td>
+                            <td data-label="तह">नि.मा. तृतीय</td>
+                            <td data-label="ठेगाना">भेरीगङ्गा-५</td>
+                            <td data-label="मोबाइल नं."><a href="tel:9848096279">९८४८०९६२७९</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="क्र.सं.">१२</td>
+                            <td data-label="नाम थर">ईन्द्र बहादुर थापा</td>
+                            <td data-label="पद">शिक्षक</td>
+                            <td data-label="योग्यता">बि.एड.</td>
+                            <td data-label="तह">नि.मा. तृतीय</td>
+                            <td data-label="ठेगाना">गुर्भाकोट-६</td>
+                            <td data-label="मोबाइल नं."><a href="tel:9848040164">९८४८०४०१६४</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="क्र.सं.">१३</td>
+                            <td data-label="नाम थर">पृथ्वी बहादुर सुनार</td>
+                            <td data-label="पद">शिक्षक</td>
+                            <td data-label="योग्यता">बि.एस्सी.</td>
+                            <td data-label="तह">नि.मा. तृतीय</td>
+                            <td data-label="ठेगाना">सिम्ता-५</td>
+                            <td data-label="मोबाइल नं."><a href="tel:9848035859">९८४८०३५८५९</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="क्र.सं.">१४</td>
+                            <td data-label="नाम थर">तिलबिर नेपाली</td>
+                            <td data-label="पद">शिक्षक</td>
+                            <td data-label="योग्यता">१२</td>
+                            <td data-label="तह">प्राथमिक प्रथम</td>
+                            <td data-label="ठेगाना">गुर्भाकोट-८</td>
+                            <td data-label="मोबाइल नं."><a href="tel:9812527074">९८१२५२७०७४</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="क्र.सं.">१५</td>
+                            <td data-label="नाम थर">गोविन्द कुमार बि.के.</td>
+                            <td data-label="पद">शिक्षक</td>
+                            <td data-label="योग्यता">१२</td>
+                            <td data-label="तह">प्राथमिक प्रथम</td>
+                            <td data-label="ठेगाना">गुर्भाकोट-७</td>
+                            <td data-label="मोबाइल नं."><a href="tel:9848105798">९८४८१०५७९८</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="क्र.सं.">१६</td>
+                            <td data-label="नाम थर">हरिकला डाँगी</td>
+                            <td data-label="पद">शिक्षक</td>
+                            <td data-label="योग्यता">१२</td>
+                            <td data-label="तह">प्राथमिक द्वितीय</td>
+                            <td data-label="ठेगाना">गुर्भाकोट-६</td>
+                            <td data-label="मोबाइल नं."><a href="tel:9848164606">९८४८१६४६०६</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="क्र.सं.">१७</td>
+                            <td data-label="नाम थर">राम बहादुर बि.सी.</td>
+                            <td data-label="पद">शिक्षक</td>
+                            <td data-label="योग्यता">१२</td>
+                            <td data-label="तह">प्राथमिक तृतीय</td>
+                            <td data-label="ठेगाना">गुर्भाकोट-७</td>
+                            <td data-label="मोबाइल नं."><a href="tel:9848161879">९८४८१६१८७९</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="क्र.सं.">१८</td>
+                            <td data-label="नाम थर">धनमाया बोहरा</td>
+                            <td data-label="पद">शिक्षक</td>
+                            <td data-label="योग्यता">१२</td>
+                            <td data-label="तह">प्राथमिक तृतीय</td>
+                            <td data-label="ठेगाना">गुर्भाकोट-७</td>
+                            <td data-label="मोबाइल नं."><a href="tel:9848142525">९८४८१४२५२५</a></td> <!-- Corrected phone number format -->
+                        </tr>
+                        <tr>
+                            <td data-label="क्र.सं.">१९</td>
+                            <td data-label="नाम थर">धन बहादुर थापा</td>
+                            <td data-label="पद">शिक्षक</td>
+                            <td data-label="योग्यता">एम्.एड.</td>
+                            <td data-label="तह">प्राथमिक तृतीय</td>
+                            <td data-label="ठेगाना">छेडागाड-४</td>
+                            <td data-label="मोबाइल नं."><a href="tel:9868144735">९८६८१४४७३५</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="क्र.सं.">२०</td>
+                            <td data-label="नाम थर">नीतादेवी सुनार</td>
+                            <td data-label="पद">सहजकर्ता</td>
+                            <td data-label="योग्यता">१०</td>
+                            <td data-label="तह">बालविकास</td>
+                            <td data-label="ठेगाना">गुर्भाकोट-८</td>
+                            <td data-label="मोबाइल नं."><a href="tel:9815594001">९८१५५९४००१</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="क्र.सं.">२१</td>
+                            <td data-label="नाम थर">ज्ञान बहादुर कामी</td>
+                            <td data-label="पद">लेखापाल</td> <!-- Changed पद from मुखिया to लेखापाल for clarity -->
+                            <td data-label="योग्यता">१२</td>
+                            <td data-label="तह">सहायक लेखापाल</td> <!-- Changed तह for clarity -->
+                            <td data-label="ठेगाना">गुर्भाकोट-८</td>
+                            <td data-label="मोबाइल नं."><a href="tel:9848194884">९८४८१९४८८४</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="क्र.सं.">२२</td>
+                            <td data-label="नाम थर">सन्त बहादुर राजी</td>
+                            <td data-label="पद">कार्यालय सहयोगी</td> <!-- Changed पद from सहायक for clarity -->
+                            <td data-label="योग्यता">एम्.ए.</td>
+                            <td data-label="तह">श्रेणीविहीन</td> <!-- Changed तह for clarity -->
+                            <td data-label="ठेगाना">गुर्भाकोट-७</td>
+                            <td data-label="मोबाइल नं."><a href="tel:9848104587">९८४८१०४५८७</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="क्र.सं.">२३</td>
+                            <td data-label="नाम थर">गीता सुनार</td>
+                            <td data-label="पद">कार्यालय सहयोगी</td>
+                            <td data-label="योग्यता">८</td>
+                            <td data-label="तह">श्रेणीविहीन</td>
+                            <td data-label="ठेगाना">गुर्भाकोट-७</td>
+                            <td data-label="मोबाइल नं."><a href="tel:9822560043">९८२२५६००४३</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="क्र.सं.">२४</td>
+                            <td data-label="नाम थर">प्रेम बुढा मगर</td>
+                            <td data-label="पद">कार्यालय सहयोगी</td>
+                            <td data-label="योग्यता">१२</td>
+                            <td data-label="तह">श्रेणीविहीन</td>
+                            <td data-label="ठेगाना">गुर्भाकोट-८</td>
+                            <td data-label="मोबाइल नं."><a href="tel:9748484302">९७४८४८४३०२</a></td>
+                        </tr>
+                        <tr>
+                            <td data-label="क्र.सं.">२५</td>
+                            <td data-label="नाम थर">भूमिसरा बुढा</td>
+                            <td data-label="पद">कार्यालय सहयोगी</td>
+                            <td data-label="योग्यता">६</td>
+                            <td data-label="तह">श्रेणीविहीन</td>
+                            <td data-label="ठेगाना">गुर्भाकोट-७</td>
+                            <td data-label="मोबाइल नं."><a href="tel:9864869253">९८६४८६९२५३</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>© <span id="current-year"></span> सूर्य ज्योति माध्यमिक विद्यालय, मेहेलकुना। सर्वाधिकार सुरक्षित।</p>
+            <p>गुर्भाकोट-८, मेहेलकुना, सुर्खेत, नेपाल</p>
+        </div>
+    </footer>
+
+    <script>
+        // Current Year for Footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

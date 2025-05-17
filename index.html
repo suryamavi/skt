@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>गृहपृष्ठ - सूर्य ज्योति माध्यमिक विद्यालय, मेहेलकुना</title>
+    <link rel="stylesheet" href="style.css"> <!-- Your main stylesheet -->
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- In-HTML <style> block has been removed as styles are moved to style.css -->
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-content-wrapper">
+            <div class="logo-name-group">
+                <img src="logo.png" alt="विद्यालयको लोगो" class="logo-img">
+                <div class="school-details">
+                    <h1>सूर्य ज्योति माध्यमिक विद्यालय, मेहेलकुना, गुर्भाकोट-८, सुर्खेत</h1>
+                    <p>ज्ञान, अनुशासन र प्रगति</p>
+                </div>
+            </div>
+        </div>
+    </header>
+    <nav class="main-navigation">
+        <div class="container nav-list-wrapper">
+            <ul class="nav-menu">
+                <li><a href="index.html" class="active">गृहपृष्ठ</a></li>
+                <li><a href="about.html">हाम्रो बारेमा</a></li>
+                <li><a href="notice.html">सूचना पाटी</a></li>
+                <li><a href="results.html">नतिजा</a></li>
+                <li><a href="teachers.html">शिक्षक/कर्मचारी</a></li>
+                <li><a href="gallery.html">फोटो ग्यालेरी</a></li>
+                <li><a href="contact.html">सम्पर्क</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container"> <!-- Main content wrapper -->
+        <!-- Notice Ticker Section -->
+        <section id="notice-ticker-section">
+            <div class="notice-ticker-wrapper">
+                <span class="material-icons">campaign</span>
+                <div class="notice-ticker" id="notice-ticker-content"> <!-- Added ID for potential JS targeting -->
+                    <marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();">
+                        <a href="notice.html#notice1">सूचना १: PMT छात्रवृत्ति खाता सम्बन्धमा</a> |
+                        <a href="notice.html#notice2">सूचना २: विद्यार्थी भर्ना सम्बन्धि सूचना</a> |
+                        <a href="notice.html#notice3">सूचना ३: नतिजा प्रकाशन</a>
+                    </marquee>
+                </div>
+            </div>
+        </section>
+
+        <!-- Welcome Section -->
+        <section id="welcome">
+            <h2>स्वागतम्!</h2>
+            <p>सूर्य ज्योति माध्यमिक विद्यालय, मेहेलकुनाको आधिकारिक वेबसाइटमा तपाईंलाई हार्दिक स्वागत छ। हाम्रो विद्यालय गुणस्तरीय शिक्षा प्रदान गर्न र विद्यार्थीहरूको सर्वाङ्गीण विकासमा समर्पित छ। हामी नवीनतम शिक्षण पद्धतिहरू र प्रविधिहरूको प्रयोग गर्दै विद्यार्थीहरूलाई भविष्यका चुनौतीहरूको सामना गर्न सक्षम बनाउने प्रयास गर्दछौं।</p>
+        </section>
+
+        <!-- Slideshow Section -->
+        <section class="school-photo-section-container"> <!-- Changed div to section for semantics -->
+            <div class="school-photo-section">
+                <div class="photo-slideshow">
+                    <img src="photos/1.jpg" alt="विद्यालयको गतिविधि १" class="slide active">
+                    <img src="photos/5.jpg" alt="विद्यालयको गतिविधि ५" class="slide">
+                    <img src="photos/8.jpg" alt="विद्यालयको गतिविधि ८" class="slide">
+                    <img src="photos/7.jpg" alt="विद्यालयको गतिविधि ८" class="slide">
+                    <img src="photos/3.jpg" alt="विद्यालयको गतिविधि ८" class="slide">
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Links Section -->
+        <section id="quick-links">
+            <h2>द्रुत लिङ्कहरू</h2>
+            <ul>
+                <li><a href="about.html#history">विद्यालयको इतिहास</a></li>
+                <li><a href="notice.html">सूचना पाटी</a></li>
+                <li><a href="results.html">नतिजा</a></li>
+                <li><a href="teachers.html">हाम्रा शिक्षकहरू</a></li>
+                <li><a href="gallery.html">फोटो सङ्ग्रह</a></li>
+                <li><a href="contact.html">हामीलाई सम्पर्क गर्नुहोस्</a></li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>© <span id="current-year"></span> सूर्य ज्योति माध्यमिक विद्यालय, मेहेलकुना। सर्वाधिकार सुरक्षित।</p>
+            <p>गुर्भाकोट-८, मेहेलकुना, सुर्खेत, नेपाल</p>
+            <!-- Optional: Add social media links or other footer info here -->
+        </div>
+    </footer>
+
+    <script>
+        // Current Year for Footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // Slideshow JavaScript
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.photo-slideshow .slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            if (totalSlides === 0) return;
+
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+                slide.style.opacity = 0; // Ensure opacity is set for transition
+            });
+
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            slides[currentSlide].style.opacity = 1; // Trigger fade-in
+        }
+
+        if (totalSlides > 0) {
+            showSlide(currentSlide);
+        }
+
+        setInterval(() => {
+            if (totalSlides > 0) {
+                showSlide(currentSlide + 1);
+            }
+        }, 3000); // Change slide every 3 seconds
+
+        // Notice Ticker (Marquee is already self-animating, JS for dynamic content could be added here)
+        // Example: If you want to fetch notices dynamically and update the marquee
+        // async function loadNotices() {
+        //     try {
+        //         const response = await fetch('api/notices'); // Replace with your actual API endpoint
+        //         const notices = await response.json();
+        //         const tickerContent = document.getElementById('notice-ticker-content');
+        //         if (tickerContent) {
+        //             const marquee = tickerContent.querySelector('marquee');
+        //             if (marquee) {
+        //                 marquee.innerHTML = notices.map(notice =>
+        //                     `<a href="${notice.link}">${notice.title}</a>`
+        //                 ).join(' | ');
+        //             }
+        //         }
+        //     } catch (error) {
+        //         console.error('Failed to load notices:', error);
+        //     }
+        // }
+        // document.addEventListener('DOMContentLoaded', loadNotices);
+    </script>
+</body>
+</html>

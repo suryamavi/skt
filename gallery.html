@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>फोटो ग्यालेरी - सूर्य ज्योति माध्यमिक विद्यालय</title>
+    <link rel="stylesheet" href="style.css"> <!-- Your main stylesheet -->
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Lightbox2 CSS (CDN) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet" />
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-content-wrapper">
+            <div class="logo-name-group">
+                <img src="logo.png" alt="विद्यालयको लोगो" class="logo-img">
+                <div class="school-details">
+                    <h1>सूर्य ज्योति माध्यमिक विद्यालय, मेहेलकुना, गुर्भाकोट-८, सुर्खेत</h1>
+                    <p>ज्ञान, अनुशासन र प्रगति</p>
+                </div>
+            </div>
+        </div>
+    </header>
+    <nav class="main-navigation">
+        <div class="container nav-list-wrapper">
+            <ul class="nav-menu">
+                <li><a href="index.html">गृहपृष्ठ</a></li>
+                <li><a href="about.html">हाम्रो बारेमा</a></li>
+                <li><a href="notice.html">सूचना पाटी</a></li>
+                <li><a href="results.html">नतिजा</a></li>
+                <li><a href="teachers.html">शिक्षक/कर्मचारी</a></li>
+                <li><a href="gallery.html" class="active">फोटो ग्यालेरी</a></li> <!-- .active class यहाँ थपियो -->
+                <li><a href="contact.html">सम्पर्क</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container page-content"> <!-- Added .page-content class -->
+        <section id="gallery-page"> <!-- Specific ID for this page's content -->
+            <h1 class="main-page-title">फोटो ग्यालेरी</h1> <!-- Main page title, reused class -->
+            
+            <div class="gallery-intro">
+                <p>हाम्रो विद्यालयका विभिन्न कार्यक्रम, गतिविधिहरू तथा अविस्मरणीय पलहरूका केही झलकहरू। फोटोमा क्लिक गरी ठूलो आकारमा हेर्नुहोस्।</p>
+            </div>
+            
+            <div class="photo-gallery-grid" id="photoGrid">
+                <!-- JavaScript will populate photos here -->
+                <!-- Placeholder for when JS is disabled or photos are loading -->
+                <p class="gallery-loading-placeholder">फोटोहरू लोड हुँदैछन्...</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>© <span id="current-year"></span> सूर्य ज्योति माध्यमिक विद्यालय, मेहेलकुना। सर्वाधिकार सुरक्षित।</p>
+            <p>गुर्भाकोट-८, मेहेलकुना, सुर्खेत, नेपाल</p>
+        </div>
+    </footer>
+
+    <!-- jQuery (Lightbox2 dependency) (CDN) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- Lightbox2 JS (CDN) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+
+    <script>
+        // Footer Current Year
+        document.getElementById('current-year').textContent = new Date().getFullYear(); // Changed ID to 'current-year' for consistency
+
+        // Photo Gallery JavaScript
+        const photoGrid = document.getElementById('photoGrid');
+        const loadingPlaceholder = document.querySelector('.gallery-loading-placeholder');
+        const totalPhotos = 9; // Total number of photos
+        const photoBaseName = ''; // Base name if photos are 1.jpg, 2.jpg etc.
+        const photoFolderPath = 'photos/'; // Path to the photos folder
+
+        const photoCaptions = [
+            "विद्यालयको पुरानो भवन अगाडी राष्ट्रपतिकप प्रतियोगिता सञ्चालन हुँदै", // 1.jpg
+            "चुरे संरक्षण जनचेतना कार्यक्रम",                                  // 2.jpg
+            "विद्यालयको ऐतिहासिक भवन अगाडी बालबालिकाहरू",                      // 3.jpg
+            "अभिभावक भेला",                                                  // 4.jpg
+            "नगरस्तरीय राष्ट्रपतिकप २०८१ जित्दाको खुसी",                     // 5.jpg
+            "कक्षा १२ का विद्यार्थीहरूको बिदाइ कार्यक्रम",                       // 6.jpg
+            "कक्षा ११ का विद्यार्थीहरूको समूह कार्य २०८१",                       // 7.jpg
+            "सरस्वती पूजाको प्रसाद ग्रहण गर्दै विद्यार्थीहरू २०८१",               // 8.jpg
+            "सरस्वती पुजा पछिको फोटोसेसन २०८१"                               // 9.jpg
+            // Add more captions if you have more photos
+        ];
+        
+        if (photoGrid) {
+            if (totalPhotos > 0) {
+                if(loadingPlaceholder) loadingPlaceholder.style.display = 'none'; // Hide loading placeholder
+                photoGrid.innerHTML = ''; // Clear any existing content
+
+                for (let i = 1; i <= totalPhotos; i++) {
+                    const imageFileName = `${photoBaseName}${i}.jpg`;
+                    const imagePath = `${photoFolderPath}${imageFileName}`;
+                    
+                    // Array index is 0-based, so use i-1 for captions
+                    const captionText = (photoCaptions[i-1] !== undefined && photoCaptions[i-1].trim() !== '') 
+                                        ? photoCaptions[i-1] 
+                                        : `विद्यालय गतिविधि ${i}`; // Default caption
+
+                    const galleryItemLink = document.createElement('a');
+                    galleryItemLink.href = imagePath; 
+                    galleryItemLink.setAttribute('data-lightbox', 'school-gallery'); 
+                    galleryItemLink.setAttribute('data-title', captionText); 
+                    galleryItemLink.classList.add('gallery-item'); 
+
+                    const img = document.createElement('img');
+                    img.src = imagePath; 
+                    img.alt = captionText; // Use the same caption for alt text
+                    img.onerror = function() { // Handle image loading errors
+                        this.parentElement.style.display = 'none'; // Hide item if image fails to load
+                        console.error(`Error loading image: ${this.src}`);
+                    };
+
+
+                    galleryItemLink.appendChild(img); 
+
+                    const captionDiv = document.createElement('div');
+                    captionDiv.classList.add('caption');
+                    captionDiv.textContent = captionText; 
+                    galleryItemLink.appendChild(captionDiv); 
+
+                    photoGrid.appendChild(galleryItemLink); 
+                }
+            } else {
+                if(loadingPlaceholder) loadingPlaceholder.textContent = 'अहिले कुनै फोटो उपलब्ध छैन।';
+            }
+        } else {
+            console.error("Element with ID 'photoGrid' not found.");
+        }
+
+        // Lightbox Options (Optional but recommended)
+        if (typeof lightbox !== 'undefined') {
+            lightbox.option({
+              'resizeDuration': 250,
+              'fadeDuration': 300,
+              'imageFadeDuration': 300,
+              'wrapAround': true, 
+              'alwaysShowNavOnTouchDevices': true,
+              'albumLabel': "फोटो %1 / %2",
+              'showImageNumberLabel': true,
+              'disableScrolling': true // Prevents page scrolling when lightbox is open
+            });
+        } else {
+            // console.warn('Lightbox is not initialized. Check CDN links or script loading order.');
+            // It might take a moment for Lightbox to initialize from CDN, so this warning might appear even if it works.
+        }
+    </script>
+</body>
+</html>

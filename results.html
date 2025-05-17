@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>नतिजा प्रकाशन - सूर्य ज्योति माध्यमिक विद्यालय</title>
+    <link rel="stylesheet" href="style.css"> <!-- Your main stylesheet -->
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-content-wrapper">
+            <div class="logo-name-group">
+                <img src="logo.png" alt="विद्यालयको लोगो" class="logo-img">
+                <div class="school-details">
+                    <h1>सूर्य ज्योति माध्यमिक विद्यालय, मेहेलकुना, गुर्भाकोट-८, सुर्खेत</h1>
+                    <p>ज्ञान, अनुशासन र प्रगति</p>
+                </div>
+            </div>
+        </div>
+    </header>
+    <nav class="main-navigation">
+        <div class="container nav-list-wrapper">
+            <ul class="nav-menu">
+                <li><a href="index.html">गृहपृष्ठ</a></li>
+                <li><a href="about.html">हाम्रो बारेमा</a></li>
+                <li><a href="notice.html">सूचना पाटी</a></li>
+                <li><a href="results.html" class="active">नतिजा</a></li> <!-- .active class यहाँ थपियो -->
+                <li><a href="teachers.html">शिक्षक/कर्मचारी</a></li>
+                <li><a href="gallery.html">फोटो ग्यालेरी</a></li>
+                <li><a href="contact.html">सम्पर्क</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container page-content"> <!-- Added .page-content class -->
+        <section id="results-page"> <!-- Specific ID for this page's content -->
+            <h1 class="main-page-title">नतिजा प्रकाशन</h1> <!-- Main page title -->
+
+            <div class="result-links-section"> <!-- Wrapper for result links -->
+                <h3>कक्षा अनुसार नतिजा</h3>
+                <ul class="class-result-buttons"> <!-- Removed inline style, will be styled in CSS -->
+                    <li><a href="result/G1.html" class="btn result-btn">कक्षा १</a></li>
+                    <li><a href="result/G2.html" class="btn result-btn">कक्षा २</a></li>
+                    <li><a href="result/G3.html" class="btn result-btn">कक्षा ३</a></li>
+                    <li><a href="result/G4.html" class="btn result-btn">कक्षा ४</a></li>
+                    <li><a href="result/G5.html" class="btn result-btn">कक्षा ५</a></li>
+                    <li><a href="result/G6.html" class="btn result-btn">कक्षा ६</a></li>
+                    <li><a href="result/G7.html" class="btn result-btn">कक्षा ७</a></li>
+                    <li><a href="result/G8.html" class="btn result-btn">कक्षा ८</a></li>
+                    <li><a href="result/G9.html" class="btn result-btn">कक्षा ९</a></li>
+                    <!-- Example for Grade 10 if SEE results are hosted here -->
+                    <!-- <li><a href="result/SEE.html" class="btn result-btn special-result">SEE नतिजा</a></li> -->
+                </ul>
+            </div>
+
+            <div class="instructions-section"> <!-- Wrapper for instructions -->
+                <h3>नतिजा हेर्ने निर्देशनहरू</h3>
+                <ul class="instructions-list"> <!-- Class for styling the list -->
+                    <li>आफ्नो कक्षा अनुसारको सम्बन्धित लिङ्कमा क्लिक गर्नुहोस्।</li>
+                    <li>नयाँ पेजमा आफ्नो सिम्बोल नम्बर/रोल नम्बर तथा आवश्यक विवरणहरू राखी नतिजा खोज्नुहोस्।</li>
+                    <li>उपलब्ध भएमा, तपाईं आफ्नो नतिजा PDF फाइलमा डाउनलोड गर्न वा प्रिन्ट गर्न सक्नुहुनेछ।</li>
+                    <li>नतिजा सम्बन्धि कुनै जिज्ञासा वा समस्या भएमा विद्यालयको प्रशासन शाखामा सम्पर्क गर्नुहोस्।</li>
+                    <li>विद्यालयले प्रकाशित गरेको नतिजा नै अन्तिम आधिकारिक हुनेछ।</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>© <span id="current-year"></span> सूर्य ज्योति माध्यमिक विद्यालय, मेहेलकुना। सर्वाधिकार सुरक्षित।</p>
+            <p>गुर्भाकोट-८, मेहेलकुना, सुर्खेत, नेपाल</p>
+        </div>
+    </footer>
+
+    <script>
+        // Current Year for Footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
