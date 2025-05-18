@@ -258,14 +258,15 @@ main.container:not(.page-content) .notice-ticker {
     overflow: hidden;
 }
 main.container:not(.page-content) .notice-ticker marquee a {
-    color: #0056b3;
+    color: #D90429;
     text-decoration: none;
     margin: 0 15px;
     font-weight: 500;
+    transition: color 0.2s ease-in-out; 
 }
 main.container:not(.page-content) .notice-ticker marquee a:hover {
     text-decoration: underline;
-    color: #003f7f;
+    color: #A90321;
 }
 
 main.container:not(.page-content) #welcome {
