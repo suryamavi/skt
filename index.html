@@ -91,11 +91,11 @@
         </div>
     </footer>
 
-    <script>
+     <script>
         // Current Year for Footer
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
-        // Slideshow JavaScript
+        // Slideshow JavaScript (यो पहिलेकै जस्तो छ)
         let currentSlide = 0;
         const slides = document.querySelectorAll('.photo-slideshow .slide');
         const totalSlides = slides.length;
@@ -105,12 +105,12 @@
 
             slides.forEach(slide => {
                 slide.classList.remove('active');
-                slide.style.opacity = 0; // Ensure opacity is set for transition
+                slide.style.opacity = 0; 
             });
 
             currentSlide = (n + totalSlides) % totalSlides;
             slides[currentSlide].classList.add('active');
-            slides[currentSlide].style.opacity = 1; // Trigger fade-in
+            slides[currentSlide].style.opacity = 1;
         }
 
         if (totalSlides > 0) {
@@ -121,28 +121,66 @@
             if (totalSlides > 0) {
                 showSlide(currentSlide + 1);
             }
-        }, 3000); // Change slide every 3 seconds
+        }, 3000);
 
-        // Notice Ticker (Marquee is already self-animating, JS for dynamic content could be added here)
-        // Example: If you want to fetch notices dynamically and update the marquee
-        // async function loadNotices() {
-        //     try {
-        //         const response = await fetch('api/notices'); // Replace with your actual API endpoint
-        //         const notices = await response.json();
-        //         const tickerContent = document.getElementById('notice-ticker-content');
-        //         if (tickerContent) {
-        //             const marquee = tickerContent.querySelector('marquee');
-        //             if (marquee) {
-        //                 marquee.innerHTML = notices.map(notice =>
-        //                     `<a href="${notice.link}">${notice.title}</a>`
-        //                 ).join(' | ');
-        //             }
-        //         }
-        //     } catch (error) {
-        //         console.error('Failed to load notices:', error);
-        //     }
-        // }
-        // document.addEventListener('DOMContentLoaded', loadNotices);
+        // --- सूचना टिकरको लागि नयाँ JavaScript ---
+        async function loadAndDisplayNotices() {
+            const noticeTickerMarquee = document.querySelector('#notice-ticker-content marquee');
+            if (!noticeTickerMarquee) {
+                console.error("Marquee element for notice ticker not found.");
+                return;
+            }
+
+            try {
+                // notice.html फाइललाई fetch गर्ने
+                const response = await fetch('notice.html');
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch notice.html: ${response.statusText}`);
+                }
+                const htmlText = await response.text();
+
+                // DOMParser प्रयोग गरेर HTML टेक्स्टलाई DOM object मा बदल्ने
+                const parser = new DOMParser();
+                const noticeDoc = parser.parseFromString(htmlText, 'text/html');
+
+                // notice.html मा रहेका सबै .notice-item हरूलाई छान्ने
+                const noticeItems = noticeDoc.querySelectorAll('#notice-board-page .notice-item');
+                
+                let tickerLinks = [];
+                noticeItems.forEach((item, index) => {
+                    const titleElement = item.querySelector('h3'); // सूचनाको शीर्षक <h3> मा छ भन्ने अनुमान
+                    const noticeId = item.getAttribute('id'); // <article id="notice1"> बाट id लिने
+
+                    if (titleElement && noticeId) {
+                        // पछिल्ला ५ वटा मात्र लिने (noticeItems पहिले नै क्रममा छन् भन्ने अनुमान)
+                        // यदि notice.html मा नयाँ सूचना माथि आउँछ भने, slice(0, 5) ले काम गर्छ।
+                        // यदि पुरानो माथि आउँछ भने, slice(-5) गर्नुपर्ने हुनसक्छ वा array लाई reverse गर्नुपर्छ।
+                        // अहिलेलाई, notice.html मा नयाँ सूचना माथि छ भन्ने मानौं।
+                        if (tickerLinks.length < 5) {
+                             // शीर्षकबाट "सूचना X:" जस्तो भाग हटाउने (यदि छ भने)
+                            let titleText = titleElement.textContent.trim();
+                            // वैकल्पिक: यदि तपाईंको शीर्षकमा "सूचना १:", "सूचना २:" जस्तो छ र त्यो हटाउन चाहनुहुन्छ भने:
+                            // titleText = titleText.replace(/^सूचना \d+:\s*/, ''); 
+                            
+                            tickerLinks.push(`<a href="notice.html#${noticeId}">${titleText}</a>`);
+                        }
+                    }
+                });
+
+                if (tickerLinks.length > 0) {
+                    noticeTickerMarquee.innerHTML = tickerLinks.join(' | ');
+                } else {
+                    noticeTickerMarquee.innerHTML = '<span>हाल कुनै नयाँ सूचना छैन।</span>';
+                }
+
+            } catch (error) {
+                console.error('सूचना टिकर लोड गर्न असफल:', error);
+                noticeTickerMarquee.innerHTML = '<span>सूचनाहरू लोड हुन सकेन।</span>';
+            }
+        }
+
+        // DOM लोड भएपछि सूचनाहरू लोड गर्ने
+        document.addEventListener('DOMContentLoaded', loadAndDisplayNotices);
     </script>
 </body>
 </html>
