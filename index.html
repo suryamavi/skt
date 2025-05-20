@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="style.css"> <!-- Your main stylesheet -->
     <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <!-- In-HTML <style> block has been removed as styles are moved to style.css -->
 </head>
 <body>
     <header class="site-header">
@@ -40,11 +39,10 @@
         <section id="notice-ticker-section">
             <div class="notice-ticker-wrapper">
                 <span class="material-icons">campaign</span>
-                <div class="notice-ticker" id="notice-ticker-content"> <!-- Added ID for potential JS targeting -->
+                <div class="notice-ticker" id="notice-ticker-content">
                     <marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();">
-                        <a href="notice.html#notice1">PMT छात्रवृत्ति खाता सम्बन्धमा</a> |
-                        <a href="notice.html#notice2">विद्यार्थी भर्ना सम्बन्धि सूचना</a> |
-                        <a href="notice.html#notice3">नतिजा प्रकाशन</a>
+                        <!-- सूचनाहरू यहाँ JavaScript बाट लोड हुनेछन् -->
+                        <span>सूचनाहरू लोड हुँदै...</span>
                     </marquee>
                 </div>
             </div>
@@ -57,14 +55,14 @@
         </section>
 
         <!-- Slideshow Section -->
-        <section class="school-photo-section-container"> <!-- Changed div to section for semantics -->
+        <section class="school-photo-section-container">
             <div class="school-photo-section">
                 <div class="photo-slideshow">
                     <img src="photos/1.jpg" alt="विद्यालयको गतिविधि १" class="slide active">
                     <img src="photos/5.jpg" alt="विद्यालयको गतिविधि ५" class="slide">
                     <img src="photos/8.jpg" alt="विद्यालयको गतिविधि ८" class="slide">
-                    <img src="photos/7.jpg" alt="विद्यालयको गतिविधि ८" class="slide">
-                    <img src="photos/3.jpg" alt="विद्यालयको गतिविधि ८" class="slide">
+                    <img src="photos/7.jpg" alt="विद्यालयको गतिविधि ७" class="slide"> <!-- Alt text मिलाइएको -->
+                    <img src="photos/3.jpg" alt="विद्यालयको गतिविधि ३" class="slide"> <!-- Alt text मिलाइएको -->
                 </div>
             </div>
         </section>
@@ -87,7 +85,6 @@
         <div class="container">
             <p>© <span id="current-year"></span> सूर्य ज्योति माध्यमिक विद्यालय, मेहेलकुना। सर्वाधिकार सुरक्षित।</p>
             <p>गुर्भाकोट-८, मेहेलकुना, सुर्खेत, नेपाल</p>
-            <!-- Optional: Add social media links or other footer info here -->
         </div>
     </footer>
 
@@ -95,7 +92,7 @@
         // Current Year for Footer
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
-        // Slideshow JavaScript (यो पहिलेकै जस्तो छ)
+        // Slideshow JavaScript
         let currentSlide = 0;
         const slides = document.querySelectorAll('.photo-slideshow .slide');
         const totalSlides = slides.length;
@@ -114,69 +111,87 @@
         }
 
         if (totalSlides > 0) {
-            showSlide(currentSlide);
+            showSlide(currentSlide); // Show first slide immediately
+            setInterval(() => {
+                showSlide(currentSlide + 1);
+            }, 3000); // Change slide every 3 seconds
         }
 
-        setInterval(() => {
-            if (totalSlides > 0) {
-                showSlide(currentSlide + 1);
-            }
-        }, 3000);
 
-        // --- सूचना टिकरको लागि नयाँ JavaScript ---
+        // --- सूचना टिकरको लागि JavaScript ---
         async function loadAndDisplayNotices() {
             const noticeTickerMarquee = document.querySelector('#notice-ticker-content marquee');
             if (!noticeTickerMarquee) {
-                console.error("Marquee element for notice ticker not found.");
+                console.error("त्रुटि: सूचना टिकरको लागि marquee तत्व भेटिएन।");
                 return;
             }
+            console.log("१. सूचना टिकर: `loadAndDisplayNotices` प्रकार्य सुरु भयो।");
 
             try {
-                // notice.html फाइललाई fetch गर्ने
-                const response = await fetch('notice.html');
+                console.log("२. सूचना टिकर: `notice.html` फाइल fetch गर्ने प्रयास गर्दै...");
+                // './notice.html' ले index.html भएकै ठाउँमा notice.html खोज्छ
+                const response = await fetch('./notice.html'); 
+                console.log("३. सूचना टिकर: Fetch response प्राप्त भयो। Status:", response.status, response.statusText);
+
                 if (!response.ok) {
-                    throw new Error(`Failed to fetch notice.html: ${response.statusText}`);
+                    console.error(`त्रुटि: 'notice.html' fetch गर्न असफल। Status: ${response.status} ${response.statusText}`);
+                    throw new Error(`'notice.html' fetch गर्न असफल: ${response.statusText} (Status: ${response.status})`);
                 }
                 const htmlText = await response.text();
+                console.log("४. सूचना टिकर: 'notice.html' को सामग्री सफलतापूर्वक fetch गरियो (पहिलो ३०० अक्षर):", htmlText.substring(0, 300));
 
-                // DOMParser प्रयोग गरेर HTML टेक्स्टलाई DOM object मा बदल्ने
                 const parser = new DOMParser();
                 const noticeDoc = parser.parseFromString(htmlText, 'text/html');
+                console.log("५. सूचना टिकर: HTML सामग्री DOM object मा पार्स गरियो।");
 
-                // notice.html मा रहेका सबै .notice-item हरूलाई छान्ने
+                // तपाईंको notice.html को संरचना अनुसार selector प्रयोग गर्नुहोस्
+                // यदि <section id="notice-board-page"> भित्र <article class="notice-item"> छ भने:
                 const noticeItems = noticeDoc.querySelectorAll('#notice-board-page .notice-item');
+                // यदि <section id="notice-board"> भित्र <article class="notice-item"> छ भने:
+                // const noticeItems = noticeDoc.querySelectorAll('#notice-board .notice-item'); 
+                console.log(`६. सूचना टिकर: ${noticeItems.length} वटा सूचना आइटमहरू भेटिए।`);
                 
                 let tickerLinks = [];
-                noticeItems.forEach((item, index) => {
-                    const titleElement = item.querySelector('h3'); // सूचनाको शीर्षक <h3> मा छ भन्ने अनुमान
-                    const noticeId = item.getAttribute('id'); // <article id="notice1"> बाट id लिने
+                // `notice.html` मा नयाँ सूचना माथि छ भन्ने अनुमान छ, त्यसैले `slice(0, 5)`
+                const latestNoticeItems = Array.from(noticeItems).slice(0, 5); // बढीमा ५ वटा लिने
+                console.log(`७. सूचना टिकर: पछिल्ला ${latestNoticeItems.length} वटा सूचनाहरू प्रोसेस गरिँदै...`);
+
+
+                latestNoticeItems.forEach((item, index) => {
+                    const titleElement = item.querySelector('h3'); 
+                    const noticeId = item.getAttribute('id'); 
 
                     if (titleElement && noticeId) {
-                        // पछिल्ला ५ वटा मात्र लिने (noticeItems पहिले नै क्रममा छन् भन्ने अनुमान)
-                        // यदि notice.html मा नयाँ सूचना माथि आउँछ भने, slice(0, 5) ले काम गर्छ।
-                        // यदि पुरानो माथि आउँछ भने, slice(-5) गर्नुपर्ने हुनसक्छ वा array लाई reverse गर्नुपर्छ।
-                        // अहिलेलाई, notice.html मा नयाँ सूचना माथि छ भन्ने मानौं।
-                        if (tickerLinks.length < 5) {
-                             // शीर्षकबाट "सूचना X:" जस्तो भाग हटाउने (यदि छ भने)
-                            let titleText = titleElement.textContent.trim();
-                            // वैकल्पिक: यदि तपाईंको शीर्षकमा "सूचना १:", "सूचना २:" जस्तो छ र त्यो हटाउन चाहनुहुन्छ भने:
-                            // titleText = titleText.replace(/^सूचना \d+:\s*/, ''); 
-                            
-                            tickerLinks.push(`<a href="notice.html#${noticeId}">${titleText}</a>`);
-                        }
+                        let titleText = titleElement.textContent.trim();
+                        // वैकल्पिक: यदि शीर्षकबाट "सूचना X:" जस्तो ढाँचा हटाउनु परेमा
+                        // titleText = titleText.replace(/^सूचना \d+[:.]\s*/i, '');
+                        tickerLinks.push(`<a href="notice.html#${noticeId}">${escapeHTML(titleText)}</a>`);
+                        console.log(`   - सूचना ${index + 1}: शीर्षक='${titleText}', id='${noticeId}' टिकरमा थपियो।`);
+                    } else {
+                        console.warn(`   - चेतावनी: सूचना आइटम ${index + 1} मा शीर्षक वा id भेटिएन।`, item);
                     }
                 });
 
                 if (tickerLinks.length > 0) {
                     noticeTickerMarquee.innerHTML = tickerLinks.join(' | ');
+                    console.log("८. सूचना टिकर: टिकर सफलतापूर्वक अपडेट गरियो।");
                 } else {
                     noticeTickerMarquee.innerHTML = '<span>हाल कुनै नयाँ सूचना छैन।</span>';
+                    console.log("८. सूचना टिकर: कुनै लिङ्क नभएकोले 'हाल कुनै नयाँ सूचना छैन' देखाइयो।");
                 }
 
             } catch (error) {
-                console.error('सूचना टिकर लोड गर्न असफल:', error);
-                noticeTickerMarquee.innerHTML = '<span>सूचनाहरू लोड हुन सकेन।</span>';
+                console.error('Catch Block - सूचना टिकर लोड गर्न असफल:', error);
+                noticeTickerMarquee.innerHTML = '<span>सूचनाहरू लोड हुन सकेन। कन्सोल हेर्नुहोस्।</span>';
             }
+        }
+
+        // Helper function to escape HTML special characters (title को लागि)
+        function escapeHTML(str) {
+            if (typeof str !== 'string') return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
         }
 
         // DOM लोड भएपछि सूचनाहरू लोड गर्ने
