@@ -111,12 +111,11 @@
         }
 
         if (totalSlides > 0) {
-            showSlide(currentSlide); // Show first slide immediately
+            showSlide(currentSlide); 
             setInterval(() => {
                 showSlide(currentSlide + 1);
-            }, 3000); // Change slide every 3 seconds
+            }, 3000); 
         }
-
 
         // --- सूचना टिकरको लागि JavaScript ---
         async function loadAndDisplayNotices() {
@@ -129,7 +128,6 @@
 
             try {
                 console.log("२. सूचना टिकर: `notice.html` फाइल fetch गर्ने प्रयास गर्दै...");
-                // './notice.html' ले index.html भएकै ठाउँमा notice.html खोज्छ
                 const response = await fetch('./notice.html'); 
                 console.log("३. सूचना टिकर: Fetch response प्राप्त भयो। Status:", response.status, response.statusText);
 
@@ -144,18 +142,13 @@
                 const noticeDoc = parser.parseFromString(htmlText, 'text/html');
                 console.log("५. सूचना टिकर: HTML सामग्री DOM object मा पार्स गरियो।");
 
-                // तपाईंको notice.html को संरचना अनुसार selector प्रयोग गर्नुहोस्
-                // यदि <section id="notice-board-page"> भित्र <article class="notice-item"> छ भने:
-                const noticeItems = noticeDoc.querySelectorAll('#notice-board-page .notice-item');
-                // यदि <section id="notice-board"> भित्र <article class="notice-item"> छ भने:
-                // const noticeItems = noticeDoc.querySelectorAll('#notice-board .notice-item'); 
+                // ***** यहाँ selector परिवर्तन गरिएको छ *****
+                const noticeItems = noticeDoc.querySelectorAll('#notice-board .notice-item'); 
                 console.log(`६. सूचना टिकर: ${noticeItems.length} वटा सूचना आइटमहरू भेटिए।`);
                 
                 let tickerLinks = [];
-                // `notice.html` मा नयाँ सूचना माथि छ भन्ने अनुमान छ, त्यसैले `slice(0, 5)`
-                const latestNoticeItems = Array.from(noticeItems).slice(0, 5); // बढीमा ५ वटा लिने
+                const latestNoticeItems = Array.from(noticeItems).slice(0, 5); 
                 console.log(`७. सूचना टिकर: पछिल्ला ${latestNoticeItems.length} वटा सूचनाहरू प्रोसेस गरिँदै...`);
-
 
                 latestNoticeItems.forEach((item, index) => {
                     const titleElement = item.querySelector('h3'); 
@@ -163,8 +156,6 @@
 
                     if (titleElement && noticeId) {
                         let titleText = titleElement.textContent.trim();
-                        // वैकल्पिक: यदि शीर्षकबाट "सूचना X:" जस्तो ढाँचा हटाउनु परेमा
-                        // titleText = titleText.replace(/^सूचना \d+[:.]\s*/i, '');
                         tickerLinks.push(`<a href="notice.html#${noticeId}">${escapeHTML(titleText)}</a>`);
                         console.log(`   - सूचना ${index + 1}: शीर्षक='${titleText}', id='${noticeId}' टिकरमा थपियो।`);
                     } else {
@@ -186,7 +177,6 @@
             }
         }
 
-        // Helper function to escape HTML special characters (title को लागि)
         function escapeHTML(str) {
             if (typeof str !== 'string') return '';
             const div = document.createElement('div');
@@ -194,7 +184,6 @@
             return div.innerHTML;
         }
 
-        // DOM लोड भएपछि सूचनाहरू लोड गर्ने
         document.addEventListener('DOMContentLoaded', loadAndDisplayNotices);
     </script>
 </body>
