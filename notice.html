@@ -39,200 +39,6 @@
             <h1 class="main-page-title">सूचना पाटी</h1> <!-- वा h2, तपाईंको notice.html अनुसार -->
 <article class="notice-item" id="notice1">
                 <div class="notice-header">
-                    <h3>राष्ट्रिय सेवा दल(NCC) तालिमका लागि छात्र-छात्रा छनौट गरिएको सम्बन्धमा ।</h3>
-                    <p class="notice-date">२०८२ साल असार ६ गते</p>
-                </div>
-                <div class="notice-content">
-                    <!DOCTYPE html>
-<html lang="ne">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- तपाईंले यो <title> ट्यागलाई आफ्नो वेबसाइटको आवश्यकता अनुसार परिवर्तन गर्न सक्नुहुन्छ वा हटाउन सक्नुहुन्छ -->
-    <title>सूचनाको विवरण</title>
-    <style>
-        /* यो CSS ले सूचनालाई आकर्षक र व्यवस्थित देखाउन मद्दत गर्छ। */
-        /* तपाईंले यसलाई आफ्नो वेबसाइटको मुख्य CSS फाइलमा पनि सार्न सक्नुहुन्छ। */
-        
-        /* Base styles for the content area */
-        .notice-content-body {
-            font-family: 'Arial', 'Preeti', 'Kantipur', sans-serif;
-            background-color: #ffffff;
-            padding: 10px;
-            color: #333;
-        }
-
-        /* Main body text of the notice */
-        .notice-body-paragraph {
-            text-align: justify;
-            line-height: 1.8;
-            margin-bottom: 30px;
-            font-size: 16px;
-        }
-
-        /* Container for the two student lists */
-        .student-lists-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            justify-content: space-between;
-        }
-
-        /* Styling for each student list (boys and girls) */
-        .student-list {
-            flex: 1;
-            min-width: 300px; /* Ensures lists don't get too narrow on smaller screens */
-        }
-
-        .student-list h3 {
-            color: #333;
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 8px;
-            font-size: 18px;
-        }
-        
-        /* Table styling */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 15px;
-        }
-
-        th, td {
-            border: 1px solid #dddddd;
-            padding: 10px;
-            text-align: left;
-        }
-
-        thead th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-
-        tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        
-        /* Special styling for "वैकल्पिक" (Alternate) students */
-        .alternate {
-            background-color: #fffbe6 !important; /* Light yellow background */
-            font-style: italic;
-            color: #5c5c5c;
-        }
-
-        /* Styling for the final note */
-        .notice-footer {
-            margin-top: 30px;
-            padding: 15px;
-            background-color: #eef7ff;
-            border-left: 5px solid #0056b3;
-            line-height: 1.8;
-            border-radius: 5px;
-        }
-
-        .notice-footer strong {
-            color: #d9534f; /* Red color for "नोट:" */
-        }
-    </style>
-</head>
-<body>
-
-<!-- यो div बाट कपि गरेर आफ्नो वेबसाइटमा राख्नुहोस् -->
-<div class="notice-content-body">
-
-    <p class="notice-body-paragraph">
-        उपरोक्त सम्बन्धमा राष्ट्रिय सेवा दल (NCC) तालिमका लागि यस विद्यालयमा मिति २०८२/०३/०५ गते भएको शारीरिक तन्दुरुस्ती र स्वास्थ्य परीक्षण नतिजाका आधारमा यस विद्यालयमा अध्ययनरत तपसिल बमोजिमका छात्र/छात्रालाई छनौट गरिएको सम्बन्धित सबैमा जानकारीका लागि यो सूचना प्रकाशित गरिएको छ।
-    </p>
-
-    <div class="student-lists-container">
-        <!-- छात्र (Boys) List -->
-        <div class="student-list">
-            <h3>छात्र (Boys)</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>सि.नं.</th>
-                        <th>नाम, थर</th>
-                        <th>कक्षा</th>
-                        <th>कैफियत</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>१</td><td>सुजल बस्नेत</td><td>८</td><td>छनौट</td></tr>
-                    <tr><td>२</td><td>अनिष खत्री</td><td>९</td><td>छनौट</td></tr>
-                    <tr><td>३</td><td>जितेन्द्र गिरी</td><td>९</td><td>छनौट</td></tr>
-                    <tr><td>४</td><td>दिपेश वि.क.</td><td>१०</td><td>छनौट</td></tr>
-                    <tr><td>५</td><td>विवेक वस्नेत</td><td>९</td><td>छनौट</td></tr>
-                    <tr><td>६</td><td>प्रकाश डाङ्गी</td><td>१०</td><td>छनौट</td></tr>
-                    <tr><td>७</td><td>सुजन थापा मगर</td><td>९</td><td>छनौट</td></tr>
-                    <tr><td>८</td><td>सुजन पौडेल</td><td>९</td><td>छनौट</td></tr>
-                    <tr><td>९</td><td>एलिम फौजा मगर</td><td>१०</td><td>छनौट</td></tr>
-                    <tr><td>१०</td><td>नविन सुनार</td><td>१०</td><td>छनौट</td></tr>
-                    <tr><td>११</td><td>आशिष सुनार</td><td>१०</td><td>छनौट</td></tr>
-                    <tr><td>१२</td><td>दिलिप खड्का</td><td>१०</td><td>छनौट</td></tr>
-                    <tr><td>१३</td><td>आशिष थापा क्षेत्री</td><td>९</td><td>छनौट</td></tr>
-                    <tr><td>१४</td><td>ललित सुनार</td><td>१०</td><td>छनौट</td></tr>
-                    <tr><td>१५</td><td>दिलिप सुनार</td><td>८</td><td>छनौट</td></tr>
-                    <tr class="alternate"><td>१६</td><td>पंख रावत</td><td>९</td><td>वैकल्पिक</td></tr>
-                    <tr class="alternate"><td>१७</td><td>सुबास परियार</td><td>८</td><td>वैकल्पिक</td></tr>
-                    <tr class="alternate"><td>१८</td><td>यामराज बि.क</td><td>९</td><td>वैकल्पिक</td></tr>
-                    <tr class="alternate"><td>१९</td><td>हरि बि.क</td><td>८</td><td>वैकल्पिक</td></tr>
-                    <tr class="alternate"><td>२०</td><td>अर्जुन टमटा</td><td>१०</td><td>वैकल्पिक</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- छात्रा (Girls) List -->
-        <div class="student-list">
-            <h3>छात्रा (Girls)</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>सि.नं.</th>
-                        <th>नाम, थर</th>
-                        <th>कक्षा</th>
-                        <th>कैफियत</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr><td>१</td><td>निस्ता थापा मगर</td><td>१०</td><td>छनौट</td></tr>
-                    <tr><td>२</td><td>प्रिया खत्री</td><td>९</td><td>छनौट</td></tr>
-                    <tr><td>३</td><td>सलिना थापा मगर</td><td>९</td><td>छनौट</td></tr>
-                    <tr><td>४</td><td>अस्मिता बिष्ट</td><td>१०</td><td>छनौट</td></tr>
-                    <tr><td>५</td><td>अनु थापा</td><td>९</td><td>छनौट</td></tr>
-                    <tr><td>६</td><td>रविना सुनार</td><td>९</td><td>छनौट</td></tr>
-                    <tr><td>७</td><td>बर्षा सिँजाली</td><td>९</td><td>छनौट</td></tr>
-                    <tr><td>८</td><td>एन्जल ज्ञवाली</td><td>९</td><td>छनौट</td></tr>
-                    <tr><td>९</td><td>विपना वि.सी</td><td>९</td><td>छनौट</td></tr>
-                    <tr><td>१०</td><td>समिक्षा पुन</td><td>९</td><td>छनौट</td></tr>
-                    <tr><td>११</td><td>समिक्षा थापा</td><td>९</td><td>छनौट</td></tr>
-                    <tr><td>१२</td><td>दिपिका खड्का</td><td>९</td><td>छनौट</td></tr>
-                    <tr><td>१३</td><td>दिपिका खत्री</td><td>९</td><td>छनौट</td></tr>
-                    <tr><td>१४</td><td>बर्षा घर्ती मगर</td><td>८</td><td>छनौट</td></tr>
-                    <tr><td>१५</td><td>सुनिता खत्री</td><td>९</td><td>छनौट</td></tr>
-                    <tr class="alternate"><td>१६</td><td>मुना परियार</td><td>८</td><td>वैकल्पिक</td></tr>
-                    <tr class="alternate"><td>१७</td><td>खिमा बि.क.</td><td>९</td><td>वैकल्पिक</td></tr>
-                    <tr class="alternate"><td>१८</td><td>निर्मला गिरी</td><td>८</td><td>वैकल्पिक</td></tr>
-                    <tr class="alternate"><td>१९</td><td>नेहा बुढा</td><td>९</td><td>वैकल्पिक</td></tr>
-                    <tr class="alternate"><td>२०</td><td>तारा बि.क.</td><td>९</td><td>वैकल्पिक</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div class="notice-footer">
-        <p><strong>नोटः</strong> छनौट भएका क्याडेटहरूले मिति २०८२ साल असार ७ गते बिहान ७ बजे जन्मदर्ताको प्रतिलिपी र १ प्रति हालसालै खिचिएको फोटो सहित अनिवार्य विद्यालयमा उपस्थित हुनुपर्नेछ।</p>
-    </div>
-
-</div>
-<!-- यहाँसम्मको कोड कपि गर्नुहोस् -->
-
-</body>
-</html>
-                </div>
-            </article>
-            <article class="notice-item" id="notice2">
-                <div class="notice-header">
                     <h3>कक्षा ११ का विद्यार्थीहरूको राष्ट्रिय परीक्षा बोर्ड (NEB) दर्ता विवरण सम्बन्धमा जरुरी सूचना</h3>
                     <p class="notice-date">२०८२ जेठ ७ गते</p>
                 </div>
@@ -245,7 +51,7 @@
             </p>
                 </div>
             </article>
-            <article class="notice-item" id="notice3">
+            <article class="notice-item" id="notice2">
                 <div class="notice-header">
                     <h3>कक्षा १० को विद्यार्थी दर्ता फारम भर्ने सम्बन्धमा</h3>
                     <p class="notice-date">२०८२ जेठ ५</p>
@@ -261,7 +67,7 @@
 </ol>
                 </div>
             </article>
-            <article class="notice-item" id="notice4">
+            <article class="notice-item" id="notice3">
                 <div class="notice-header">
                     <h3>PMT छात्रवृत्ति खाता सम्बन्धमा</h3>
                     <p class="notice-date">२०८२ बैशाख २८</p>
@@ -282,7 +88,7 @@
 <p><strong>नोट:</strong> कृपया सम्बन्धित विद्यार्थीहरूले आफ्नो खाता विवरण अविलम्ब विद्यालयको प्रशासन शाखामा बुझाउनुहोला।</p>
                 </div>
             </article>
-            <article class="notice-item" id="notice5">
+            <article class="notice-item" id="notice4">
                 <div class="notice-header">
                     <h3>विद्यार्थी भर्ना सम्बन्धि सूचना</h3>
                     <p class="notice-date">२०८२ बैशाख १५</p>
