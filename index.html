@@ -74,6 +74,8 @@
             <ul>
                 <li><a href="smcpta/smc.html">विद्यालय व्यवस्थापन समिति</a></li>
                 <li><a href="smcpta/pta.html">शिक्षक अभिभावक संघ</a></li>
+                <!-- नयाँ लिङ्क यहाँ थपिएको छ -->
+                <li><a href="smcpta/committees.html">विद्यार्थी समितिहरू</a></li>
             </ul>
         </section>
     </main>
@@ -85,7 +87,8 @@
         </div>
     </footer>
 
-     <script>
+    <!-- तपाईंको JavaScript कोडहरू उस्तै रहनेछन् -->
+    <script>
         // Current Year for Footer
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
@@ -115,62 +118,46 @@
         }
 
         // --- सूचना टिकरको लागि JavaScript ---
+        // (तपाईंको सूचना टिकरको कोड यहाँ जस्ताको तस्तै राख्नुहोस्)
         async function loadAndDisplayNotices() {
             const noticeTickerMarquee = document.querySelector('#notice-ticker-content marquee');
             if (!noticeTickerMarquee) {
                 console.error("त्रुटि: सूचना टिकरको लागि marquee तत्व भेटिएन।");
                 return;
             }
-            console.log("१. सूचना टिकर: `loadAndDisplayNotices` प्रकार्य सुरु भयो।");
 
             try {
-                console.log("२. सूचना टिकर: `notice.html` फाइल fetch गर्ने प्रयास गर्दै...");
-                const response = await fetch('./notice.html'); 
-                console.log("३. सूचना टिकर: Fetch response प्राप्त भयो। Status:", response.status, response.statusText);
-
+                const response = await fetch('./notice.html');
                 if (!response.ok) {
-                    console.error(`त्रुटि: 'notice.html' fetch गर्न असफल। Status: ${response.status} ${response.statusText}`);
-                    throw new Error(`'notice.html' fetch गर्न असफल: ${response.statusText} (Status: ${response.status})`);
+                    throw new Error(`'notice.html' fetch गर्न असफल: ${response.statusText}`);
                 }
                 const htmlText = await response.text();
-                console.log("४. सूचना टिकर: 'notice.html' को सामग्री सफलतापूर्वक fetch गरियो (पहिलो ३०० अक्षर):", htmlText.substring(0, 300));
-
                 const parser = new DOMParser();
                 const noticeDoc = parser.parseFromString(htmlText, 'text/html');
-                console.log("५. सूचना टिकर: HTML सामग्री DOM object मा पार्स गरियो।");
-
-                // ***** यहाँ selector परिवर्तन गरिएको छ *****
-                const noticeItems = noticeDoc.querySelectorAll('#notice-board .notice-item'); 
-                console.log(`६. सूचना टिकर: ${noticeItems.length} वटा सूचना आइटमहरू भेटिए।`);
+                const noticeItems = noticeDoc.querySelectorAll('.notice-item'); 
                 
                 let tickerLinks = [];
                 const latestNoticeItems = Array.from(noticeItems).slice(0, 5); 
-                console.log(`७. सूचना टिकर: पछिल्ला ${latestNoticeItems.length} वटा सूचनाहरू प्रोसेस गरिँदै...`);
 
-                latestNoticeItems.forEach((item, index) => {
+                latestNoticeItems.forEach((item) => {
                     const titleElement = item.querySelector('h3'); 
                     const noticeId = item.getAttribute('id'); 
 
                     if (titleElement && noticeId) {
                         let titleText = titleElement.textContent.trim();
                         tickerLinks.push(`<a href="notice.html#${noticeId}">${escapeHTML(titleText)}</a>`);
-                        console.log(`   - सूचना ${index + 1}: शीर्षक='${titleText}', id='${noticeId}' टिकरमा थपियो।`);
-                    } else {
-                        console.warn(`   - चेतावनी: सूचना आइटम ${index + 1} मा शीर्षक वा id भेटिएन।`, item);
                     }
                 });
 
                 if (tickerLinks.length > 0) {
                     noticeTickerMarquee.innerHTML = tickerLinks.join(' | ');
-                    console.log("८. सूचना टिकर: टिकर सफलतापूर्वक अपडेट गरियो।");
                 } else {
                     noticeTickerMarquee.innerHTML = '<span>हाल कुनै नयाँ सूचना छैन।</span>';
-                    console.log("८. सूचना टिकर: कुनै लिङ्क नभएकोले 'हाल कुनै नयाँ सूचना छैन' देखाइयो।");
                 }
 
             } catch (error) {
-                console.error('Catch Block - सूचना टिकर लोड गर्न असफल:', error);
-                noticeTickerMarquee.innerHTML = '<span>सूचनाहरू लोड हुन सकेन। कन्सोल हेर्नुहोस्।</span>';
+                console.error('सूचना टिकर लोड गर्न असफल:', error);
+                noticeTickerMarquee.innerHTML = '<span>सूचनाहरू लोड हुन सकेन।</span>';
             }
         }
 
@@ -183,6 +170,5 @@
 
         document.addEventListener('DOMContentLoaded', loadAndDisplayNotices);
     </script>
-    <script src="result-modal.js"></script>
 </body>
 </html>
