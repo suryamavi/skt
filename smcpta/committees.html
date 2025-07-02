@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>विद्यार्थी समितिहरू - सूर्य ज्योति माध्यमिक विद्यालय</title>
+    <link rel="stylesheet" href="../style.css"> <!-- CSS फाइलको बाटो ध्यान दिनुहोस् -->
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-content-wrapper">
+            <div class="logo-name-group">
+                <img src="../logo.png" alt="विद्यालयको लोगो" class="logo-img"> <!-- लोगोको बाटो ध्यान दिनुहोस् -->
+                <div class="school-details">
+                    <h1>सूर्य ज्योति माध्यमिक विद्यालय मेहेलकुना, गुर्भाकोट-८, सुर्खेत</h1>
+                    <p>ज्ञान, अनुशासन र प्रगति</p>
+                </div>
+            </div>
+        </div>
+    </header>
+    <nav class="main-navigation">
+        <div class="container nav-list-wrapper">
+            <ul class="nav-menu">
+                <!-- लिङ्कको बाटोहरू ध्यान दिनुहोस् -->
+                <li><a href="../index.html">गृहपृष्ठ</a></li>
+                <li><a href="../about.html">हाम्रो बारेमा</a></li>
+                <li><a href="../notice.html">सूचना पाटी</a></li>
+                <li><a href="../results.html">नतिजा</a></li>
+                <li><a href="../teachers.html">शिक्षक/कर्मचारी</a></li>
+                <li><a href="../gallery.html">फोटो ग्यालेरी</a></li>
+                <li><a href="../contact.html">सम्पर्क</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container page-content">
+        <h1 class="main-page-title">विद्यार्थी समितिहरू</h1>
+        
+        <div class="committee-hub-grid">
+            <a href="sadan-bibhajan.html" class="committee-card">
+                <h3>सदन विभाजन</h3>
+                <p>विद्यार्थीहरूलाई विभिन्न सदनमा विभाजन गरी अतिरिक्त क्रियाकलापमा सक्रिय गराइन्छ।</p>
+            </a>
+            <a href="bal-club.html" class="committee-card">
+                <h3>बाल क्लब</h3>
+                <p>बालबालिकाको हक, अधिकार र नेतृत्व विकासका लागि गठित सक्रिय विद्यार्थी क्लब।</p>
+            </a>
+            <a href="junior-redcross.html" class="committee-card">
+                <h3>जुनियर रेडक्रस सर्कल</h3>
+                <p>सेवा, सहयोग र मानवीय भावनाको विकासका लागि रेडक्रसको सिद्धान्तमा आधारित समिति।</p>
+            </a>
+            <a href="wash-committee.html" class="committee-card">
+                <h3>खानेपानी, सरसफाई तथा स्वच्छता समिति</h3>
+                <p>विद्यालयको सरसफाई र स्वच्छ वातावरण कायम राख्न जिम्मेवार समिति।</p>
+            </a>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>© <span id="current-year"></span> सूर्य ज्योति माध्यमिक विद्यालय, मेहेलकुना। सर्वाधिकार सुरक्षित।</p>
+            <p>गुर्भाकोट-८, मेहेलकुना, सुर्खेत, नेपाल</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
