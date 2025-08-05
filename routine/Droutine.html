@@ -1,0 +1,1193 @@
+
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Timetable</title>
+    <style>
+        body { font-family: "Noto Sans Devanagari", Arial, sans-serif; background-color: #f0f4f8; margin: 0; padding: 20px; }
+        .timetable-container { max-width: 1200px; margin: 0 auto; background-color: #fff; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden; }
+        h1 { text-align: center; color: #1a5276; padding: 20px; margin: 0; background-color: #eaf5ff; font-size: 1.8em; }
+        .timetable-wrapper { overflow-x: auto; padding: 10px; }
+        .timetable { width: 100%; border-collapse: separate; border-spacing: 5px; }
+        .timetable th, .timetable td { padding: 12px 8px; text-align: center; border-radius: 6px; transition: background-color 0.5s ease, transform 0.2s; }
+        .timetable th { background-color: #4a6984; color: #fff; font-weight: bold; position: sticky; top: 0; z-index: 2; }
+        .timetable .class-header { background-color: #6c7a89; color: #fff; text-align: left; padding-left: 15px; position: sticky; left: 0; z-index: 1; }
+        .timetable .period-time { font-size: 0.8em; font-weight: normal; color: #d0dce7; display: block; margin-top: 3px; }
+        .timetable td { background-color: #f8f9fa; border: 1px solid #e9ecef; }
+        .subject-teacher-pair { padding: 5px 0; }
+        .split-cell-container:not(.single-entry) .subject-teacher-pair:first-of-type { border-bottom: 1px dashed #ced4da; margin-bottom: 5px; padding-bottom: 5px; }
+        .subject-display { font-weight: bold; color: #34495e; font-size: 14px; }
+        .teacher-display { color: #7f8c8d; font-size: 12px; }
+        .live-header { background-color: #28a745 !important; transform: scale(1.05); box-shadow: 0 0 15px rgba(40, 167, 69, 0.7); z-index: 3 !important; }
+        .live-period { background-color: #d4edda !important; border: 1px solid #28a745; }
+        .color-code-1 { background-color: #e3f2fd; } .color-code-2 { background-color: #e8f5e9; } .color-code-3 { background-color: #fff3e0; } .color-code-4 { background-color: #f3e5f5; } .color-code-5 { background-color: #e0f7fa; } .color-code-6 { background-color: #fbe9e7; } .color-code-7 { background-color: #e8eaf6; }
+    </style>
+</head>
+<body>
+    <div class="timetable-container">
+        <h1 id="timetableTitle"></h1>
+        <div class="timetable-wrapper">
+            <div id="timetableOutput"></div>
+        </div>
+    </div>
+    <script>
+        const timetableBundle = {
+  "schoolInfo": {
+    "name": "Surya Jyoti Secondary School Mehelkuna",
+    "year": "2082 B.S."
+  },
+  "timeSlots": [
+    {
+      "id": "p1753681749354",
+      "name": "M First",
+      "start": "08:15",
+      "end": "09:00"
+    },
+    {
+      "id": "p1753681788394",
+      "name": "M Second",
+      "start": "09:00",
+      "end": "09:45"
+    },
+    {
+      "id": "p1753681862106",
+      "name": "M Third",
+      "start": "09:45",
+      "end": "10:30"
+    },
+    {
+      "id": "p1746107332406",
+      "name": "First",
+      "start": "10:15",
+      "end": "11:00"
+    },
+    {
+      "id": "p1746107355462",
+      "name": "Second",
+      "start": "11:00",
+      "end": "11:45"
+    },
+    {
+      "id": "p1746107385774",
+      "name": "Third",
+      "start": "11:45",
+      "end": "12:30"
+    },
+    {
+      "id": "p1746107421774",
+      "name": "Fourth",
+      "start": "12:30",
+      "end": "13:15"
+    },
+    {
+      "id": "p1746107458950",
+      "name": "Interval",
+      "start": "13:15",
+      "end": "13:45"
+    },
+    {
+      "id": "p1746107516078",
+      "name": "Fifth",
+      "start": "13:45",
+      "end": "14:30"
+    },
+    {
+      "id": "p1746107539782",
+      "name": "Sixth",
+      "start": "14:30",
+      "end": "15:15"
+    },
+    {
+      "id": "p1746107571710",
+      "name": "Seventh",
+      "start": "15:15",
+      "end": "16:00"
+    }
+  ],
+  "classes": [
+    {
+      "id": "c1753681341514",
+      "name": "12 Education"
+    },
+    {
+      "id": "c1753681334147",
+      "name": "12 Management"
+    },
+    {
+      "id": "c1753681326242",
+      "name": "11 Education"
+    },
+    {
+      "id": "c1753681317459",
+      "name": "11 Management"
+    },
+    {
+      "id": "c1746107225958",
+      "name": "10 A"
+    },
+    {
+      "id": "c1746107231910",
+      "name": "10 B"
+    },
+    {
+      "id": "c1746107264150",
+      "name": "9 A"
+    },
+    {
+      "id": "c1746107268406",
+      "name": "9 B"
+    },
+    {
+      "id": "c1746107240501",
+      "name": "8"
+    },
+    {
+      "id": "c1746107243933",
+      "name": "7"
+    },
+    {
+      "id": "c1746107246862",
+      "name": "6"
+    },
+    {
+      "id": "c1747976093435",
+      "name": "6 English"
+    },
+    {
+      "id": "c1746107250958",
+      "name": "5"
+    },
+    {
+      "id": "c1746107257038",
+      "name": "4"
+    },
+    {
+      "id": "c1746156543293",
+      "name": "3"
+    },
+    {
+      "id": "c1746156545885",
+      "name": "2"
+    },
+    {
+      "id": "c1746156548965",
+      "name": "1"
+    },
+    {
+      "id": "c1746156557061",
+      "name": "ECD"
+    }
+  ],
+  "subjects": [
+    {
+      "id": "s1746107787366",
+      "fullName": "Accountancy",
+      "shortName": "Acc"
+    },
+    {
+      "id": "s1753681507178",
+      "fullName": "Business Studies",
+      "shortName": "Bus"
+    },
+    {
+      "id": "s1753681407826",
+      "fullName": "Child Development",
+      "shortName": "CDL"
+    },
+    {
+      "id": "s1746107813734",
+      "fullName": "Economics",
+      "shortName": "Eco"
+    },
+    {
+      "id": "s1746107800806",
+      "fullName": "Education",
+      "shortName": "Edu"
+    },
+    {
+      "id": "s1753681378627",
+      "fullName": "Education & Development",
+      "shortName": "EdDev"
+    },
+    {
+      "id": "s1746107834286",
+      "fullName": "Elect. Math",
+      "shortName": "Opm"
+    },
+    {
+      "id": "s1753681494906",
+      "fullName": "Elective Nepali",
+      "shortName": "ENep"
+    },
+    {
+      "id": "s1746107730678",
+      "fullName": "English",
+      "shortName": "Eng"
+    },
+    {
+      "id": "s1746156615734",
+      "fullName": "Gread Teaching",
+      "shortName": "GTeaching"
+    },
+    {
+      "id": "s1746107935262",
+      "fullName": "Hamro Gurbhakot",
+      "shortName": "Hgk"
+    },
+    {
+      "id": "s1746107915934",
+      "fullName": "Health Phy. & Creative Arts",
+      "shortName": "Hpc"
+    },
+    {
+      "id": "s1753681474722",
+      "fullName": "Instructional Evaluation & Pedagogy",
+      "shortName": "EvPed"
+    },
+    {
+      "id": "s1746107750430",
+      "fullName": "Mathematics",
+      "shortName": "Math"
+    },
+    {
+      "id": "s1746107737942",
+      "fullName": "Nepali",
+      "shortName": "Nep"
+    },
+    {
+      "id": "s1753681389874",
+      "fullName": "Population",
+      "shortName": "Pop"
+    },
+    {
+      "id": "s1746107762742",
+      "fullName": "Science",
+      "shortName": "Sci"
+    },
+    {
+      "id": "s1746107774030",
+      "fullName": "Social Studies",
+      "shortName": "Soc"
+    }
+  ],
+  "teachers": [
+    {
+      "id": "t1746108361062",
+      "fullName": "Dhan Bahadur Thapa",
+      "shortName": "DBT"
+    },
+    {
+      "id": "t1746108430550",
+      "fullName": "Dhanmaya Bohara",
+      "shortName": "DMB"
+    },
+    {
+      "id": "t1746164116831",
+      "fullName": "Dilli Bahadur Khatri",
+      "shortName": "DKC"
+    },
+    {
+      "id": "t1746108317686",
+      "fullName": "Gobinda Kumar B K",
+      "shortName": "GBK"
+    },
+    {
+      "id": "t1746108400558",
+      "fullName": "Harikala Dangi",
+      "shortName": "HKD"
+    },
+    {
+      "id": "t1746108506998",
+      "fullName": "Hasta Oli",
+      "shortName": "HTO"
+    },
+    {
+      "id": "t1746107978510",
+      "fullName": "Hikmat Roka",
+      "shortName": "HKR"
+    },
+    {
+      "id": "t1746108045566",
+      "fullName": "Hum Kumari Khand",
+      "shortName": "HKK"
+    },
+    {
+      "id": "t1746108267902",
+      "fullName": "Indra Bahadur Thapa",
+      "shortName": "IBT"
+    },
+    {
+      "id": "t1753681539170",
+      "fullName": "Man Bahadur Khatri",
+      "shortName": "MAN"
+    },
+    {
+      "id": "t1746108228150",
+      "fullName": "Mohanlal Khatri",
+      "shortName": "MLK"
+    },
+    {
+      "id": "t1746107989598",
+      "fullName": "Nabaraj Sharma",
+      "shortName": "NAB"
+    },
+    {
+      "id": "t1746108241278",
+      "fullName": "Nilkantha Bhattarai",
+      "shortName": "NIL"
+    },
+    {
+      "id": "t1746164157815",
+      "fullName": "Nitadevi Sunar",
+      "shortName": "NDS"
+    },
+    {
+      "id": "t1746108004830",
+      "fullName": "Padmaraj Paudel",
+      "shortName": "PRP"
+    },
+    {
+      "id": "t1746164141063",
+      "fullName": "Prakash Gurung",
+      "shortName": "PRK"
+    },
+    {
+      "id": "t1746165380549",
+      "fullName": "Prithbi Raj Sunar",
+      "shortName": "PRS"
+    },
+    {
+      "id": "t1746108343150",
+      "fullName": "Ram Bahadur B C",
+      "shortName": "RBC"
+    },
+    {
+      "id": "t1753682043770",
+      "fullName": "Santu Raji",
+      "shortName": "SAN"
+    },
+    {
+      "id": "t1746108255006",
+      "fullName": "Tara Bahadur Saru",
+      "shortName": "TBS"
+    },
+    {
+      "id": "t1746164212807",
+      "fullName": "Tilak Prasad Sharma",
+      "shortName": "TSH"
+    },
+    {
+      "id": "t1746108329678",
+      "fullName": "Tilbir Nepali",
+      "shortName": "TBN"
+    }
+  ],
+  "timetableData": {
+    "c1746107225958_p1746107332406": [
+      {
+        "subjectId": "s1746107730678",
+        "teacherId": "t1746108004830"
+      }
+    ],
+    "c1746107225958_p1746107355462": [
+      {
+        "subjectId": "s1746107774030",
+        "teacherId": "t1746108045566"
+      }
+    ],
+    "c1746107225958_p1746107385774": [
+      {
+        "subjectId": "s1746107750430",
+        "teacherId": "t1746164141063"
+      }
+    ],
+    "c1746107225958_p1746107421774": [
+      {
+        "subjectId": "s1746107762742",
+        "teacherId": "t1746107989598"
+      }
+    ],
+    "c1746107225958_p1746107516078": [
+      {
+        "subjectId": "s1746107813734",
+        "teacherId": "t1746108361062"
+      }
+    ],
+    "c1746107225958_p1746107539782": [
+      {
+        "subjectId": "s1746107787366",
+        "teacherId": "t1746164212807"
+      },
+      {
+        "subjectId": "s1746107800806",
+        "teacherId": "t1746164116831"
+      }
+    ],
+    "c1746107225958_p1746107571710": [
+      {
+        "subjectId": "s1746107737942",
+        "teacherId": "t1746108506998"
+      }
+    ],
+    "c1746156557061_p1746107332406": [
+      {
+        "subjectId": "s1746156615734",
+        "teacherId": "t1746164157815"
+      }
+    ],
+    "c1746156557061_p1746107355462": [
+      {
+        "subjectId": "s1746156615734",
+        "teacherId": "t1746164157815"
+      }
+    ],
+    "c1746107231910_p1746107332406": [
+      {
+        "subjectId": "s1746107737942",
+        "teacherId": "t1746108506998"
+      }
+    ],
+    "c1746107231910_p1746107355462": [
+      {
+        "subjectId": "s1746107750430",
+        "teacherId": "t1746164141063"
+      }
+    ],
+    "c1746107231910_p1746107385774": [
+      {
+        "subjectId": "s1746107762742",
+        "teacherId": "t1746107989598"
+      }
+    ],
+    "c1746107231910_p1746107421774": [
+      {
+        "subjectId": "s1746107730678",
+        "teacherId": "t1746108004830"
+      }
+    ],
+    "c1746107231910_p1746107516078": [
+      {
+        "subjectId": "s1746107774030",
+        "teacherId": "t1746108045566"
+      }
+    ],
+    "c1746107231910_p1746107539782": [
+      {
+        "subjectId": "s1746107787366",
+        "teacherId": ""
+      },
+      {
+        "subjectId": "s1746107800806",
+        "teacherId": ""
+      }
+    ],
+    "c1746107231910_p1746107571710": [
+      {
+        "subjectId": "s1746107813734",
+        "teacherId": "t1746108361062"
+      },
+      {
+        "subjectId": "s1746107834286",
+        "teacherId": "t1746164141063"
+      }
+    ],
+    "c1746107268406_p1746107332406": [
+      {
+        "subjectId": "s1746107774030",
+        "teacherId": "t1746108045566"
+      }
+    ],
+    "c1746107268406_p1746107355462": [
+      {
+        "subjectId": "s1746107762742",
+        "teacherId": "t1746107989598"
+      }
+    ],
+    "c1746107268406_p1746107385774": [
+      {
+        "subjectId": "s1746107730678",
+        "teacherId": "t1746108004830"
+      }
+    ],
+    "c1746107268406_p1746107421774": [
+      {
+        "subjectId": "s1746107750430",
+        "teacherId": "t1746165380549"
+      }
+    ],
+    "c1746107268406_p1746107516078": [
+      {
+        "subjectId": "s1746107737942",
+        "teacherId": "t1746108506998"
+      }
+    ],
+    "c1746107268406_p1746107539782": [
+      {
+        "subjectId": "s1746107813734",
+        "teacherId": "t1746108228150"
+      },
+      {
+        "subjectId": "s1746107834286",
+        "teacherId": "t1746164141063"
+      }
+    ],
+    "c1746107268406_p1746107571710": [
+      {
+        "subjectId": "s1746107787366",
+        "teacherId": "t1746108045566"
+      }
+    ],
+    "c1746107264150_p1746107332406": [
+      {
+        "subjectId": "s1746107762742",
+        "teacherId": "t1746107989598"
+      }
+    ],
+    "c1746107264150_p1746107355462": [
+      {
+        "subjectId": "s1746107730678",
+        "teacherId": "t1746108004830"
+      }
+    ],
+    "c1746107264150_p1746107385774": [
+      {
+        "subjectId": "s1746107737942",
+        "teacherId": "t1746108241278"
+      }
+    ],
+    "c1746107264150_p1746107421774": [
+      {
+        "subjectId": "s1746107750430",
+        "teacherId": "t1746164141063"
+      }
+    ],
+    "c1746107264150_p1746107516078": [
+      {
+        "subjectId": "s1746107813734",
+        "teacherId": "t1746108228150"
+      }
+    ],
+    "c1746107240501_p1746107332406": [
+      {
+        "subjectId": "s1746107730678",
+        "teacherId": "t1746108267902"
+      }
+    ],
+    "c1746107240501_p1746107355462": [
+      {
+        "subjectId": "s1746107762742",
+        "teacherId": "t1746165380549"
+      }
+    ],
+    "c1746107240501_p1746107385774": [
+      {
+        "subjectId": "s1746107774030",
+        "teacherId": "t1746108255006"
+      }
+    ],
+    "c1746107240501_p1746107421774": [
+      {
+        "subjectId": "s1746107750430",
+        "teacherId": "t1746108228150"
+      }
+    ],
+    "c1746107240501_p1746107516078": [
+      {
+        "subjectId": "s1746107915934",
+        "teacherId": "t1746108317686"
+      }
+    ],
+    "c1746107240501_p1746107539782": [
+      {
+        "subjectId": "s1746107737942",
+        "teacherId": "t1746108241278"
+      }
+    ],
+    "c1746107240501_p1746107571710": [
+      {
+        "subjectId": "s1746107935262",
+        "teacherId": "t1746164116831"
+      }
+    ],
+    "c1746156557061_p1746107385774": [
+      {
+        "subjectId": "s1746156615734",
+        "teacherId": "t1746164157815"
+      }
+    ],
+    "c1746156557061_p1746107421774": [
+      {
+        "subjectId": "s1746156615734",
+        "teacherId": "t1746164157815"
+      }
+    ],
+    "c1746156548965_p1746107332406": [
+      {
+        "subjectId": "s1746156615734",
+        "teacherId": "t1746108400558"
+      }
+    ],
+    "c1746156548965_p1746107355462": [
+      {
+        "subjectId": "s1746156615734",
+        "teacherId": "t1746108400558"
+      }
+    ],
+    "c1746156548965_p1746107385774": [
+      {
+        "subjectId": "s1746156615734",
+        "teacherId": "t1746108400558"
+      }
+    ],
+    "c1746156548965_p1746107421774": [
+      {
+        "subjectId": "s1746156615734",
+        "teacherId": "t1746108400558"
+      }
+    ],
+    "c1746156548965_p1746107516078": [
+      {
+        "subjectId": "s1746156615734",
+        "teacherId": "t1746108400558"
+      }
+    ],
+    "c1746156548965_p1746107539782": [
+      {
+        "subjectId": "s1746156615734",
+        "teacherId": "t1746108400558"
+      }
+    ],
+    "c1746156548965_p1746107571710": [
+      {
+        "subjectId": "s1746156615734",
+        "teacherId": "t1746108400558"
+      }
+    ],
+    "c1746156545885_p1746107332406": [
+      {
+        "subjectId": "s1746156615734",
+        "teacherId": "t1746108329678"
+      }
+    ],
+    "c1746156545885_p1746107355462": [
+      {
+        "subjectId": "s1746156615734",
+        "teacherId": "t1746108329678"
+      }
+    ],
+    "c1746156545885_p1746107385774": [
+      {
+        "subjectId": "s1746156615734",
+        "teacherId": "t1746108329678"
+      }
+    ],
+    "c1746156545885_p1746107421774": [
+      {
+        "subjectId": "s1746156615734",
+        "teacherId": "t1746108329678"
+      }
+    ],
+    "c1746156545885_p1746107516078": [
+      {
+        "subjectId": "s1746156615734",
+        "teacherId": "t1746108329678"
+      }
+    ],
+    "c1746156545885_p1746107539782": [
+      {
+        "subjectId": "s1746156615734",
+        "teacherId": "t1746108329678"
+      }
+    ],
+    "c1746156545885_p1746107571710": [
+      {
+        "subjectId": "s1746156615734",
+        "teacherId": "t1746108329678"
+      }
+    ],
+    "c1746156543293_p1746107332406": [
+      {
+        "subjectId": "s1746156615734",
+        "teacherId": "t1746108430550"
+      }
+    ],
+    "c1746156543293_p1746107355462": [
+      {
+        "subjectId": "s1746156615734",
+        "teacherId": "t1746108430550"
+      }
+    ],
+    "c1746156543293_p1746107385774": [
+      {
+        "subjectId": "s1746156615734",
+        "teacherId": "t1746108430550"
+      }
+    ],
+    "c1746156543293_p1746107421774": [
+      {
+        "subjectId": "s1746156615734",
+        "teacherId": "t1746108430550"
+      }
+    ],
+    "c1746156543293_p1746107516078": [
+      {
+        "subjectId": "s1746156615734",
+        "teacherId": "t1746108430550"
+      }
+    ],
+    "c1746156543293_p1746107539782": [
+      {
+        "subjectId": "s1746156615734",
+        "teacherId": "t1746108430550"
+      }
+    ],
+    "c1746156543293_p1746107571710": [
+      {
+        "subjectId": "s1746156615734",
+        "teacherId": "t1746108430550"
+      }
+    ],
+    "c1746107243933_p1746107332406": [
+      {
+        "subjectId": "s1746107750430",
+        "teacherId": "t1746108228150"
+      }
+    ],
+    "c1746107243933_p1746107355462": [
+      {
+        "subjectId": "s1746107774030",
+        "teacherId": "t1746108255006"
+      }
+    ],
+    "c1746107243933_p1746107385774": [
+      {
+        "subjectId": "s1746107730678",
+        "teacherId": "t1746108267902"
+      }
+    ],
+    "c1746107243933_p1746107421774": [
+      {
+        "subjectId": "s1746107737942",
+        "teacherId": "t1746108241278"
+      }
+    ],
+    "c1746107243933_p1746107516078": [
+      {
+        "subjectId": "s1746107935262",
+        "teacherId": "t1746108267902"
+      }
+    ],
+    "c1746107243933_p1746107539782": [
+      {
+        "subjectId": "s1746107762742",
+        "teacherId": "t1746165380549"
+      }
+    ],
+    "c1746107243933_p1746107571710": [
+      {
+        "subjectId": "s1746107915934",
+        "teacherId": "t1746108317686"
+      }
+    ],
+    "c1746107246862_p1746107332406": [
+      {
+        "subjectId": "s1746107730678",
+        "teacherId": "t1746164116831"
+      }
+    ],
+    "c1746107246862_p1746107355462": [
+      {
+        "subjectId": "s1746107750430",
+        "teacherId": "t1746108228150"
+      }
+    ],
+    "c1746107246862_p1746107385774": [
+      {
+        "subjectId": "s1746107762742",
+        "teacherId": "t1746165380549"
+      }
+    ],
+    "c1746107246862_p1746107421774": [
+      {
+        "subjectId": "s1746107915934",
+        "teacherId": "t1746108343150"
+      }
+    ],
+    "c1746107246862_p1746107516078": [
+      {
+        "subjectId": "s1746107737942",
+        "teacherId": "t1746108241278"
+      }
+    ],
+    "c1746107246862_p1746107539782": [
+      {
+        "subjectId": "s1746107774030",
+        "teacherId": "t1746108255006"
+      }
+    ],
+    "c1746107246862_p1746107571710": [
+      {
+        "subjectId": "s1746107935262",
+        "teacherId": "t1746165380549"
+      }
+    ],
+    "c1746107250958_p1746107332406": [
+      {
+        "subjectId": "s1746107730678",
+        "teacherId": "t1746108361062"
+      }
+    ],
+    "c1746107250958_p1746107355462": [
+      {
+        "subjectId": "s1746107737942",
+        "teacherId": "t1746108317686"
+      }
+    ],
+    "c1746107250958_p1746107385774": [
+      {
+        "subjectId": "s1746107915934",
+        "teacherId": "t1746108343150"
+      }
+    ],
+    "c1746107250958_p1746107421774": [
+      {
+        "subjectId": "s1746107750430",
+        "teacherId": "t1746108317686"
+      }
+    ],
+    "c1746107250958_p1746107516078": [
+      {
+        "subjectId": "s1746107774030",
+        "teacherId": "t1746108255006"
+      }
+    ],
+    "c1746107250958_p1746107539782": [
+      {
+        "subjectId": "s1746107762742",
+        "teacherId": "t1746108361062"
+      }
+    ],
+    "c1746107250958_p1746107571710": [
+      {
+        "subjectId": "s1746107935262",
+        "teacherId": "t1746108267902"
+      }
+    ],
+    "c1746107257038_p1746107332406": [
+      {
+        "subjectId": "s1746107762742",
+        "teacherId": "t1746108343150"
+      }
+    ],
+    "c1746107257038_p1746107355462": [
+      {
+        "subjectId": "s1746107730678",
+        "teacherId": "t1746108361062"
+      }
+    ],
+    "c1746107257038_p1746107385774": [
+      {
+        "subjectId": "s1746107750430",
+        "teacherId": "t1746108317686"
+      }
+    ],
+    "c1746107257038_p1746107421774": [
+      {
+        "subjectId": "s1746107774030",
+        "teacherId": "t1746108255006"
+      }
+    ],
+    "c1746107257038_p1746107516078": [
+      {
+        "subjectId": "s1746107915934",
+        "teacherId": "t1746164157815"
+      }
+    ],
+    "c1746107257038_p1746107539782": [
+      {
+        "subjectId": "s1746107935262",
+        "teacherId": "t1746108267902"
+      }
+    ],
+    "c1746107257038_p1746107571710": [
+      {
+        "subjectId": "s1746107737942",
+        "teacherId": "t1746108343150"
+      }
+    ],
+    "c1746107264150_p1746107539782": [
+      {
+        "subjectId": "s1746107774030",
+        "teacherId": "t1746108045566"
+      }
+    ],
+    "c1746107264150_p1746107571710": [
+      {
+        "subjectId": "s1746107800806",
+        "teacherId": "t1746108004830"
+      }
+    ],
+    "c1747976093435_p1746107332406": [
+      {
+        "subjectId": "s1746107762742",
+        "teacherId": "t1746165380549"
+      }
+    ],
+    "c1747976093435_p1746107385774": [
+      {
+        "subjectId": "s1746107750430",
+        "teacherId": "t1746108228150"
+      }
+    ],
+    "c1747976093435_p1746107355462": [
+      {
+        "subjectId": "s1746107915934",
+        "teacherId": "t1746108267902"
+      }
+    ],
+    "c1747976093435_p1746107421774": [
+      {
+        "subjectId": "s1746107730678",
+        "teacherId": "t1746164116831"
+      }
+    ],
+    "c1753681334147_p1753681749354": [
+      {
+        "subjectId": "s1746107730678",
+        "teacherId": "t1746108004830"
+      }
+    ],
+    "c1753681341514_p1753681749354": [
+      {
+        "subjectId": "s1753681494906",
+        "teacherId": "t1753681539170"
+      }
+    ],
+    "c1753681334147_p1753681788394": [
+      {
+        "subjectId": "s1753681507178",
+        "teacherId": "t1746164212807"
+      }
+    ],
+    "c1753681341514_p1753681788394": [
+      {
+        "subjectId": "s1746107730678",
+        "teacherId": "t1746108004830"
+      }
+    ],
+    "c1753681334147_p1753681862106": [
+      {
+        "subjectId": "s1746107787366",
+        "teacherId": "t1746164212807"
+      }
+    ],
+    "c1753681341514_p1753681862106": [
+      {
+        "subjectId": "s1753681389874",
+        "teacherId": "t1746164141063"
+      },
+      {
+        "subjectId": "s1753681378627",
+        "teacherId": "t1753681539170"
+      }
+    ],
+    "c1753681334147_p1746107355462": [
+      {
+        "subjectId": "s1746107737942",
+        "teacherId": "t1746108506998"
+      }
+    ],
+    "c1753681341514_p1746107355462": [
+      {
+        "subjectId": "s1746107774030",
+        "teacherId": "t1753682043770"
+      }
+    ],
+    "c1753681334147_p1746107385774": [
+      {
+        "subjectId": "s1746107813734",
+        "teacherId": "t1746108045566"
+      }
+    ],
+    "c1753681341514_p1746107385774": [
+      {
+        "subjectId": "s1753681474722",
+        "teacherId": "t1746108361062"
+      },
+      {
+        "subjectId": "s1746107915934",
+        "teacherId": "t1746107978510"
+      }
+    ],
+    "c1753681334147_p1746107421774": [
+      {
+        "subjectId": "s1746107774030",
+        "teacherId": "t1753682043770"
+      }
+    ],
+    "c1753681326242_p1753681749354": [
+      {
+        "subjectId": "s1746107774030",
+        "teacherId": "t1746107989598"
+      }
+    ],
+    "c1753681317459_p1753681749354": [
+      {
+        "subjectId": "s1753681507178",
+        "teacherId": "t1753682043770"
+      }
+    ],
+    "c1753681317459_p1753681788394": [
+      {
+        "subjectId": "s1746107774030",
+        "teacherId": "t1746107989598"
+      }
+    ],
+    "c1753681326242_p1753681788394": [
+      {
+        "subjectId": "s1753681389874",
+        "teacherId": "t1746164141063"
+      },
+      {
+        "subjectId": "s1753681378627",
+        "teacherId": "t1753681539170"
+      }
+    ],
+    "c1753681317459_p1746107355462": [
+      {
+        "subjectId": "s1746107787366",
+        "teacherId": "t1746164212807"
+      }
+    ],
+    "c1753681317459_p1746107385774": [
+      {
+        "subjectId": "s1746107730678",
+        "teacherId": "t1746164116831"
+      }
+    ],
+    "c1753681317459_p1746107421774": [
+      {
+        "subjectId": "s1746107813734",
+        "teacherId": "t1746108045566"
+      }
+    ],
+    "c1753681326242_p1746107385774": [
+      {
+        "subjectId": "s1753681494906",
+        "teacherId": "t1753681539170"
+      }
+    ],
+    "c1753681326242_p1746107355462": [
+      {
+        "subjectId": "s1746107730678",
+        "teacherId": "t1746164116831"
+      }
+    ],
+    "c1753681326242_p1746107421774": [
+      {
+        "subjectId": "s1746107915934",
+        "teacherId": "t1746107978510"
+      },
+      {
+        "subjectId": "s1753681407826",
+        "teacherId": "t1746108361062"
+      }
+    ],
+    "c1753681341514_p1746107421774": [
+      {
+        "subjectId": "s1746107737942",
+        "teacherId": "t1746108506998"
+      }
+    ],
+    "c1753681326242_p1753681862106": [
+      {
+        "subjectId": "s1746107737942",
+        "teacherId": "t1746108241278"
+      }
+    ],
+    "c1753681317459_p1746107332406": [
+      {
+        "subjectId": "s1746107737942",
+        "teacherId": "t1746108241278"
+      }
+    ]
+  }
+};
+
+        function formatTime12Hour(timeString) {
+            if (!timeString) return '';
+            const [hour, minute] = timeString.split(':');
+            const hourInt = parseInt(hour, 10);
+            const ampm = hourInt >= 12 ? 'PM' : 'AM';
+            let hour12 = hourInt % 12;
+            if (hour12 === 0) hour12 = 12;
+            return `${hour12 < 10 ? '0' + hour12 : hour12}:${minute} ${ampm}`;
+        }
+
+        function generateTimetable() {
+            const { schoolInfo, timeSlots, classes, subjects, teachers, timetableData } = timetableBundle;
+            const titleElement = document.getElementById('timetableTitle');
+            titleElement.textContent = `${schoolInfo.name || 'विद्यालय'} - ${schoolInfo.year || 'समयतालिका'}`;
+            
+            let html = '<table class="timetable"><thead><tr><th>कक्षा/समय</th>';
+            timeSlots.forEach(slot => {
+                html += `<th data-slot-id="${slot.id}">${slot.name}<br><span class="period-time">${formatTime12Hour(slot.start)} - ${formatTime12Hour(slot.end)}</span></th>`;
+            });
+            html += '</tr></thead><tbody>';
+
+            const colors = ['color-code-1', 'color-code-2', 'color-code-3', 'color-code-4', 'color-code-5', 'color-code-6', 'color-code-7'];
+            let colorIndex = 0;
+
+            classes.forEach(cls => {
+                html += `<tr><th class="class-header">${cls.name}</th>`;
+                timeSlots.forEach(slot => {
+                    const cellKey = `${cls.id}_${slot.id}`;
+                    const cellData = timetableData[cellKey] || [];
+                    let cellContent = '';
+                    if (cellData.length === 0) {
+                        cellContent = '-';
+                    } else {
+                        cellData.forEach(entry => {
+                            const subject = subjects.find(s => s.id === entry.subjectId);
+                            const teacher = teachers.find(t => t.id === entry.teacherId);
+                            cellContent += `<div class="subject-teacher-pair"><div class="subject-display">${subject ? subject.shortName : ''}</div><div class="teacher-display">${teacher ? teacher.shortName : ''}</div></div>`;
+                        });
+                    }
+                    const colorClass = cellData.length > 0 ? colors[colorIndex % colors.length] : '';
+                    html += `<td data-cell-key="${cellKey}" class="${colorClass}"><div class="split-cell-container ${cellData.length < 2 ? 'single-entry' : ''}">${cellContent}</div></td>`;
+                    if (cellData.length > 0) colorIndex++;
+                });
+                html += '</tr>';
+            });
+            html += '</tbody></table>';
+            document.getElementById('timetableOutput').innerHTML = html;
+        }
+
+        function updateLiveStatus() {
+            const now = new Date();
+            const currentTime = ('0' + now.getHours()).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2);
+            let activeSlotId = null;
+            for (const slot of timetableBundle.timeSlots) {
+                if (currentTime >= slot.start && currentTime < slot.end) {
+                    activeSlotId = slot.id;
+                    break;
+                }
+            }
+            document.querySelectorAll('.live-header, .live-period').forEach(el => el.classList.remove('live-header', 'live-period'));
+            if (activeSlotId) {
+                const header = document.querySelector(`th[data-slot-id="${activeSlotId}"]`);
+                if (header) header.classList.add('live-header');
+                document.querySelectorAll(`td[data-cell-key$="_${activeSlotId}"]`).forEach(cell => cell.classList.add('live-period'));
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            generateTimetable();
+            updateLiveStatus();
+            setInterval(updateLiveStatus, 60000);
+        });
+    </script>
+</body>
+</html>
