@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>गृहपृष्ठ - सूर्य ज्योति माध्यमिक विद्यालय मेहेलकुना</title>
-    <link rel="stylesheet" href="style.css"> <!-- Your main stylesheet -->
-    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css"> <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
@@ -34,27 +33,22 @@
         </div>
     </nav>
 
-    <main class="container"> <!-- Main content wrapper -->
-        <!-- Notice Ticker Section -->
-        <section id="notice-ticker-section">
+    <main class="container"> <section id="notice-ticker-section">
             <div class="notice-ticker-wrapper">
                 <span class="material-icons">campaign</span>
                 <div class="notice-ticker" id="notice-ticker-content">
                     <marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();">
-                        <!-- सूचनाहरू यहाँ JavaScript बाट लोड हुनेछन् -->
                         <span>सूचनाहरू लोड हुँदै...</span>
                     </marquee>
                 </div>
             </div>
         </section>
 
-        <!-- Welcome Section -->
         <section id="welcome">
             <h2>स्वागतम्!</h2>
             <p>सूर्य ज्योति माध्यमिक विद्यालय, मेहेलकुनाको आधिकारिक वेबसाइटमा तपाईंलाई हार्दिक स्वागत छ। हाम्रो विद्यालय गुणस्तरीय शिक्षा प्रदान गर्न र विद्यार्थीहरूको सर्वाङ्गीण विकासमा समर्पित छ। हामी नवीनतम शिक्षण पद्धतिहरू र प्रविधिहरूको प्रयोग गर्दै विद्यार्थीहरूलाई भविष्यका चुनौतीहरूको सामना गर्न सक्षम बनाउने प्रयास गर्दछौं।</p>
         </section>
 
-        <!-- Slideshow Section -->
         <section class="school-photo-section-container">
             <div class="school-photo-section">
                 <div class="photo-slideshow">
@@ -68,14 +62,12 @@
             </div>
         </section>
 
-        <!-- Quick Links Section - यहाँ परिवर्तन गरिएको छ -->
         <section id="quick-links">
             <h2>द्रुत लिङ्कहरू</h2>
             <ul>
                 <li><a href="smcpta/smc.html">विद्यालय व्यवस्थापन समिति</a></li>
                 <li><a href="smcpta/pta.html">शिक्षक अभिभावक संघ</a></li>
-                <!-- नयाँ लिङ्क यहाँ थपिएको छ -->
-                <li><a href="smcpta/committees.html">विद्यार्थी समितिहरू</a></li>
+                <li><a href="routine/Droutine.html">दैनिक कक्षा सञ्चालन तालिका</a></li> <li><a href="smcpta/committees.html">विद्यार्थी समितिहरू</a></li>
             </ul>
         </section>
     </main>
@@ -87,7 +79,6 @@
         </div>
     </footer>
 
-    <!-- तपाईंको JavaScript कोडहरू उस्तै रहनेछन् -->
     <script>
         // Current Year for Footer
         document.getElementById('current-year').textContent = new Date().getFullYear();
