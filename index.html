@@ -26,6 +26,8 @@
                 <li><a href="about.html">हाम्रो बारेमा</a></li>
                 <li><a href="notice.html">सूचना पाटी</a></li>
                 <li><a href="results.html">नतिजा</a></li>
+                <!-- नयाँ लिङ्क यहाँ थपिएको छ -->
+                <li><a href="student/portal.html">विद्यार्थी पोर्टल</a></li>
                 <li><a href="teachers.html">शिक्षक/कर्मचारी</a></li>
                 <li><a href="gallery.html">फोटो ग्यालेरी</a></li>
                 <li><a href="contact.html">सम्पर्क</a></li>
@@ -109,7 +111,6 @@
         }
 
         // --- सूचना टिकरको लागि JavaScript ---
-        // (तपाईंको सूचना टिकरको कोड यहाँ जस्ताको तस्तै राख्नुहोस्)
         async function loadAndDisplayNotices() {
             const noticeTickerMarquee = document.querySelector('#notice-ticker-content marquee');
             if (!noticeTickerMarquee) {
@@ -118,7 +119,11 @@
             }
 
             try {
-                const response = await fetch('./notice.html');
+                // Fix: Construct an absolute URL to prevent fetch errors in blob/preview environments.
+                const base = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
+                const noticeURL = base + 'notice.html';
+                const response = await fetch(noticeURL);
+                
                 if (!response.ok) {
                     throw new Error(`'notice.html' fetch गर्न असफल: ${response.statusText}`);
                 }
