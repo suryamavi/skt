@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>विद्यार्थी पोर्टल - सूर्य ज्योति माध्यमिक विद्यालय</title>
+    <!-- होमपेजको CSS र Fonts लाई लिंक गरिएको छ -->
+    <link rel="stylesheet" href="../style.css"> 
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-content-wrapper">
+            <div class="logo-name-group">
+                <!-- लोगोको path मिलाइएको छ -->
+                <img src="../logo.png" alt="विद्यालयको लोगो" class="logo-img">
+                <div class="school-details">
+                    <h1>सूर्य ज्योति माध्यमिक विद्यालय मेहेलकुना, गुर्भाकोट-८, सुर्खेत</h1>
+                    <p>ज्ञान, अनुशासन र प्रगति</p>
+                </div>
+            </div>
+        </div>
+    </header>
+    <nav class="main-navigation">
+        <div class="container nav-list-wrapper">
+            <ul class="nav-menu">
+                <!-- path हरू मिलाइएको छ -->
+                <li><a href="../index.html">गृहपृष्ठ</a></li>
+                <li><a href="../about.html">हाम्रो बारेमा</a></li>
+                <li><a href="../notice.html">सूचना पाटी</a></li>
+                <li><a href="../results.html">नतिजा</a></li>
+                <!-- यो पेजलाई active बनाइएको छ -->
+                <li><a href="portal.html" class="active">विद्यार्थी पोर्टल</a></li>
+                <li><a href="../teachers.html">शिक्षक/कर्मचारी</a></li>
+                <li><a href="../gallery.html">फोटो ग्यालेरी</a></li>
+                <li><a href="../contact.html">सम्पर्क</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section id="student-portal-content">
+            <h2>विद्यार्थी पोर्टल</h2>
+            <p>यस पोर्टलमा विद्यार्थीहरूका लागि आवश्यक शैक्षिक सामग्रीहरू र लिङ्कहरू उपलब्ध छन्।</p>
+            
+            <div class="portal-links">
+                <h3>अध्ययन सामग्रीहरू</h3>
+                <ul>
+                    <li>
+                        <!-- सामाजिक अध्ययनको लिङ्क यहाँ राखिएको छ -->
+                        <a href="class12-social.html" class="portal-link-item">कक्षा १२ सामाजिक अध्ययन तथा जीवनोपयोगी शिक्षा द्रुत अध्ययन</a>
+                    </li>
+                    <!-- भविष्यमा अरू लिङ्कहरू यहाँ थप्न सकिन्छ -->
+                    <!-- <li><a href="#" class="portal-link-item">कक्षा ११ को सामग्री</a></li> -->
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>© <span id="current-year"></span> सूर्य ज्योति माध्यमिक विद्यालय, मेहेलकुना। सर्वाधिकार सुरक्षित।</p>
+            <p>गुर्भाकोट-८, मेहेलकुना, सुर्खेत, नेपाल</p>
+        </div>
+    </footer>
+
+    <script>
+        // Current Year for Footer
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
