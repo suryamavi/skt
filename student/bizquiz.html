@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>व्यावसायिक ज्ञान च्यालेन्ज</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
+            background-color: #f0f4f8;
+            background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .game-card {
+            background: #ffffff;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+        .unit-button {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .unit-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+        }
+        .option-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .option-btn:hover:not(:disabled) {
+            transform: scale(1.03);
+            background-color: #e0e7ff;
+            border-color: #a5b4fc;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        .correct {
+            animation: correct-pulse 0.5s ease;
+            background-color: #22c55e !important;
+            border-color: #16a34a !important;
+            color: white !important;
+        }
+        .incorrect {
+            animation: incorrect-shake 0.5s ease;
+            background-color: #ef4444 !important;
+            border-color: #dc2626 !important;
+            color: white !important;
+        }
+        @keyframes correct-pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        @keyframes incorrect-shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div id="game-container" class="w-full max-w-2xl mx-auto">
+        <!-- Start Screen will be rendered here -->
+    </div>
+
+    <script>
+        const gameContainer = document.getElementById('game-container');
+        
+        const synth = new Tone.Synth().toDestination();
+        const sounds = {
+            correct: () => synth.triggerAttackRelease("C5", "8n", Tone.now()),
+            incorrect: () => synth.triggerAttackRelease("A2", "8n", Tone.now()),
+            click: () => synth.triggerAttackRelease("C4", "16n", Tone.now()),
+            start: () => synth.triggerAttackRelease("G4", "8n", Tone.now())
+        };
+
+        const questions = {
+            unit1: [
+                { question: "व्यवसाय कस्तो प्रकारको मानवीय क्रियाकलाप हो?", options: ["आर्थिक", "सामाजिक", "धार्मिक", "राजनीतिक"], correctAnswer: "आर्थिक" },
+                { question: "व्यवसायको मुख्य उद्देश्य के हो?", options: ["नाफा कमाउनु", "सेवा गर्नु", "दान दिनु", "कर तिर्नु"], correctAnswer: "नाफा कमाउनु" },
+                { question: "वस्तुको उत्पादन गर्ने कार्य कुन आयाम अन्तर्गत पर्छ?", options: ["उद्योग", "वाणिज्य", "सेवा", "व्यापार"], correctAnswer: "उद्योग" },
+                { question: "बैंक र बीमा कस्तो प्रकारको व्यवसाय हो?", options: ["सेवामूलक", "उत्पादनमूलक", "प्राथमिक", "निर्माण"], correctAnswer: "सेवामूलक" },
+                { question: "गुणस्तरीय वस्तु उपलब्ध गराउनु व्यवसायको कुन उद्देश्य हो?", options: ["सामाजिक", "आर्थिक", "मानवीय", "व्यक्तिगत"], correctAnswer: "सामाजिक" },
+                { question: "पैसाको व्यवस्थापन गर्ने कार्य कुन हो?", options: ["वित्त", "उत्पादन", "बजारीकरण", "मानव संसाधन"], correctAnswer: "वित्त" },
+                { question: "विज्ञापन र बिक्री प्रवर्द्धन कुन कार्य अन्तर्गत पर्छ?", options: ["बजारीकरण", "उत्पादन", "वित्त", "मानव संसाधन"], correctAnswer: "बजारीकरण" },
+                { question: "व्यवसायले नियन्त्रण गर्न सक्ने वातावरण कुन हो?", options: ["आन्तरिक", "बाह्य", "आर्थिक", "राजनीतिक"], correctAnswer: "आन्तरिक" },
+                { question: "ग्राहक र प्रतिस्पर्धीहरू कुन वातावरण अन्तर्गत पर्छन्?", options: ["बाह्य", "आन्तरिक", "वित्तीय", "भौतिक"], correctAnswer: "बाह्य" },
+                { question: "SWOT विश्लेषणमा 'O' ले के जनाउँछ?", options: ["Opportunities (अवसरहरू)", "Organization (संगठन)", "Output (उत्पादन)", "Objectives (उद्देश्यहरू)"], correctAnswer: "Opportunities (अवसरहरू)" }
+            ],
+            unit2: [
+                { question: "नयाँ र उपयोगी विचारहरू सोच्ने क्षमतालाई के भनिन्छ?", options: ["सिर्जनशीलता", "नवप्रवर्तन", "अनुसन्धान", "विकास"], correctAnswer: "सिर्जनशीलता" },
+                { question: "सिर्जनात्मक विचारलाई व्यावहारिक रूपमा कार्यान्वयन गर्नुलाई के भनिन्छ?", options: ["नवप्रवर्तन", "सिर्जनशीलता", "कल्पना", "अध्ययन"], correctAnswer: "नवप्रवर्तन" },
+                { question: "राइड-सेयरिङ एप (जस्तै: पठाओ) के को उत्कृष्ट उदाहरण हो?", options: ["नवप्रवर्तन", "केवल सिर्जनशीलता", "केवल अनुसन्धान", "सरकारी नीति"], correctAnswer: "नवप्रवर्तन" },
+                { question: "परम्परागत सोचभन्दा बाहिर गएर सोच्नुलाई के भनिन्छ?", options: ["Out-of-the-box thinking", "तार्किक सोच", "विश्लेषणात्मक सोच", "नकारात्मक सोच"], correctAnswer: "Out-of-the-box thinking" },
+                { question: "सामूहिक रूपमा नयाँ विचारहरू निकाल्ने विधिलाई के भनिन्छ?", options: ["विचार मन्थन", "बहस", "अन्तर्वार्ता", "सर्वेक्षण"], correctAnswer: "विचार मन्थन" },
+                { question: "सिर्जनात्मकता विकास गर्न सकिन्छ कि सकिँदैन?", options: ["सकिन्छ, अभ्यासबाट", "सकिँदैन, यो जन्मजात हो", "केवल केही व्यक्तिले सक्छन्", "यो भाग्यमा भर पर्छ"], correctAnswer: "सकिन्छ, अभ्यासबाट" },
+                { question: "तलका मध्ये कुन व्यावसायिक विचारको स्रोत होइन?", options: ["कुनै पनि समस्या नहुनु", "ग्राहकको सुझाव", "सरकारी नीति", "अनुसन्धान"], correctAnswer: "कुनै पनि समस्या नहुनु" },
+                { question: "सफल व्यवसायको नाम र प्रणाली प्रयोग गरेर व्यवसाय चलाउने मोडेललाई के भनिन्छ?", options: ["फ्रान्चाइज", "साझेदारी", "कम्पनी", "एकलौटी"], correctAnswer: "फ्रान्चाइज" },
+                { question: "आफ्नो रुचि र सिपलाई व्यवसायमा बदल्न सकिन्छ?", options: ["हो, यो विचारको राम्रो स्रोत हो", "होइन, रुचिबाट व्यवसाय चल्दैन", "यो असम्भव छ", "यो गैरकानुनी हो"], correctAnswer: "हो, यो विचारको राम्रो स्रोत हो" }
+            ],
+            unit3: [
+                { question: "व्यवसायको भौतिक स्रोत कुन हो?", options: ["मेसिनरी", "कर्मचारी", "पुँजी", "बजारको जानकारी"], correctAnswer: "मेसिनरी" },
+                { question: "व्यवसायका लागि आवश्यक पैसा कुन स्रोत अन्तर्गत पर्छ?", options: ["वित्तीय", "भौतिक", "मानव", "सूचना"], correctAnswer: "वित्तीय" },
+                { question: "व्यवसायमा मालिकले लगाउने पुँजीलाई के भनिन्छ?", options: ["इक्विटी पुँजी", "ऋण पुँजी", "कार्यशील पुँजी", "स्थिर पुँजी"], correctAnswer: "इक्विटी पुँजी" },
+                { question: "दैनिक खर्च धान्न प्रयोग हुने पुँजी कुन हो?", options: ["कार्यशील पुँजी", "स्थिर पुँजी", "ऋण पुँजी", "इक्विटी पुँजी"], correctAnswer: "कार्यशील पुँजी" },
+                { question: "बैंकबाट लिइएको ऋण कस्तो पुँजी हो?", options: ["ऋण पुँजी", "इक्विटी पुँजी", "स्थिर पुँजी", "कार्यशील पुँजी"], correctAnswer: "ऋण पुँजी" },
+                { question: "सम्भावित उम्मेदवारहरूलाई आवेदन दिन आकर्षित गर्ने प्रक्रियालाई के भनिन्छ?", options: ["भर्ना", "छनोट", "तालिम", "मूल्याङ्कन"], correctAnswer: "भर्ना" },
+                { question: "व्यवसायको सबैभन्दा महत्त्वपूर्ण जीवित सम्पत्ति कुन हो?", options: ["मानव स्रोत", "पैसा", "मेसिन", "भवन"], correctAnswer: "मानव स्रोत" },
+                { question: "संस्थाभित्र मात्र प्रयोग हुने निजी नेटवर्क कुन हो?", options: ["इन्ट्रानेट", "एक्स्ट्रानेट", "इन्टरनेट", "वेबसाइट"], correctAnswer: "इन्ट्रानेट" },
+                { question: "सूचना स्रोतको मुख्य काम के हो?", options: ["सही निर्णय लिन मद्दत गर्ने", "मनोरञ्जन प्रदान गर्ने", "कर्मचारी भर्ना गर्ने", "पैसा व्यवस्थापन गर्ने"], correctAnswer: "सही निर्णय लिन मद्दत गर्ने" }
+            ],
+            unit4: [
+                { question: "एक जना मात्र मालिक हुने व्यवसायलाई के भनिन्छ?", options: ["एकलौटी व्यापार", "साझेदारी", "कम्पनी", "सहकारी"], correctAnswer: "एकलौटी व्यापार" },
+                { question: "सीमित दायित्व कुन व्यवसायको मुख्य विशेषता हो?", options: ["कम्पनी", "एकलौटी व्यापार", "साझेदारी", "यी सबै"], correctAnswer: "कम्पनी" },
+                { question: "एकलौटी व्यापारको दायित्व कस्तो हुन्छ?", options: ["असीमित", "सीमित", "साधारण", "शून्य"], correctAnswer: "असीमित" },
+                { question: "साझेदारहरूबीचको लिखित सम्झौतालाई के भनिन्छ?", options: ["साझेदारी तमसुक", "प्रबन्धपत्र", "नियमावली", "निवेदन"], correctAnswer: "साझेदारी तमसुक" },
+                { question: "सर्वसाधारणलाई शेयर बिक्री गर्न सक्ने कम्पनी कुन हो?", options: ["सार्वजनिक कम्पनी", "निजी कम्पनी", "साझेदारी फर्म", "एकलौटी व्यापार"], correctAnswer: "सार्वजनिक कम्पनी" },
+                { question: "कम्पनीको बडापत्र भनेर कुन प्रलेखलाई चिनिन्छ?", options: ["प्रबन्धपत्र", "नियमावली", "विवरणपत्र", "दर्ता प्रमाणपत्र"], correctAnswer: "प्रबन्धपत्र" },
+                { question: "हरेक वर्ष अनिवार्य रूपमा बस्नुपर्ने शेयरधनीहरूको सभा कुन हो?", options: ["वार्षिक साधारण सभा", "विशेष साधारण सभा", "सञ्चालक समितिको बैठक", "कर्मचारी बैठक"], correctAnswer: "वार्षिक साधारण सभा" },
+                { question: "सहकारीको मुख्य उद्देश्य के हो?", options: ["सदस्यहरूको सेवा र हित", "अधिकतम नाफा कमाउनु", "सरकारलाई सहयोग गर्नु", "निर्यात बढाउनु"], correctAnswer: "सदस्यहरूको सेवा र हित" },
+                { question: "सरकारको स्वामित्व र नियन्त्रणमा चल्ने संस्था कुन हो?", options: ["सार्वजनिक संस्थान", "बहुराष्ट्रिय कम्पनी", "निजी कम्पनी", "सहकारी"], correctAnswer: "सार्वजनिक संस्थान" }
+            ],
+            unit5: [
+                 { question: "व्यवसायमा के सही र के गलत छुट्याउने सिद्धान्तलाई के भनिन्छ?", options: ["व्यावसायिक आचारसंहिता", "सामाजिक उत्तरदायित्व", "कम्पनी कानुन", "बजारशास्त्र"], correctAnswer: "व्यावसायिक आचारसंहिता" },
+                 { question: "आफ्नो निर्णय र कामको जिम्मेवारी लिनु कुन सिद्धान्त हो?", options: ["जवाफदेहिता", "निष्पक्षता", "इमानदारी", "दया"], correctAnswer: "जवाफदेहिता" },
+                 { question: "व्यावसायिक आचारसंहिता किन महत्त्वपूर्ण छ?", options: ["ग्राहकको विश्वास जित्न", "धेरै नाफा कमाउन", "छिटो धनी बन्न", "कर छल्न"], correctAnswer: "ग्राहकको विश्वास जित्न" },
+                 { question: "नाफा कमाउनुका साथै समाजको हितमा काम गर्नु व्यवसायको के हो?", options: ["सामाजिक उत्तरदायित्व", "कानुनी बाध्यता", "वित्तीय व्यवस्थापन", "बजार प्रवर्द्धन"], correctAnswer: "सामाजिक उत्तरदायित्व" },
+                 { question: "समयमा कर तिर्नु कुन पक्षप्रतिको उत्तरदायित्व हो?", options: ["सरकार", "ग्राहक", "कर्मचारी", "समुदाय"], correctAnswer: "सरकार" },
+                 { question: "गुणस्तरीय वस्तु उत्पादन गर्नु कुन पक्षप्रतिको उत्तरदायित्व हो?", options: ["ग्राहक", "सरकार", "लगानीकर्ता", "वातावरण"], correctAnswer: "ग्राहक" },
+                 { question: "'CSR' को पूरा रूप के हो?", options: ["Corporate Social Responsibility", "Company Social Rules", "Customer Service Rules", "Corporate Stock Regulation"], correctAnswer: "Corporate Social Responsibility" }
+            ],
+            unit6: [
+                 { question: "व्यवसायमा हुन सक्ने सम्भावित नोक्सानीलाई के भनिन्छ?", options: ["जोखिम", "नाफा", "पुँजी", "दायित्व"], correctAnswer: "जोखिम" },
+                 { question: "आगलागीबाट हुने नोक्सानी कस्तो प्रकारको जोखिम हो?", options: ["बीमायोग्य", "अबीमायोग्य", "प्राकृतिक", "आर्थिक"], correctAnswer: "बीमायोग्य" },
+                 { question: "ग्राहकको रुचिमा परिवर्तन आउनु कस्तो जोखिम हो?", options: ["अबीमायोग्य", "बीमायोग्य", "मानवीय", "प्राकृतिक"], correctAnswer: "अबीमायोग्य" },
+                 { question: "बीमा गर्दा सबै कुरा स्पष्टसँग भन्नुपर्छ भन्ने सिद्धान्त कुन हो?", options: ["परम सद्विश्वास", "क्षतिपूर्ति", "योगदान", "निकटतम कारण"], correctAnswer: "परम सद्विश्वास" },
+                 { question: "बीमाबाट नाफा कमाउन पाइँदैन भन्ने सिद्धान्त कुन हो?", options: ["क्षतिपूर्ति", "परम सद्विश्वास", "बीमायोग्य हित", "निकटतम कारण"], correctAnswer: "क्षतिपूर्ति" },
+                 { question: "मानिसको जीवनसँग सम्बन्धित बीमा कुन हो?", options: ["जीवन बीमा", "निर्जीवन बीमा", "अग्नि बीमा", "मोटर बीमा"], correctAnswer: "जीवन बीमा" },
+                 { question: "निश्चित अवधि समाप्त भएपछि पनि रकम पाइने जीवन बीमा कुन हो?", options: ["सावधिक जीवन बीमा", "म्यादी जीवन बीमा", "आजिवन जीवन बीमा", "दुर्घटना बीमा"], correctAnswer: "सावधिक जीवन बीमा" },
+                 { question: "बीमा करारको लिखित प्रमाण के हो?", options: ["बीमालेख", "निवेदन", "बिल", "चेक"], correctAnswer: "बीमालेख" }
+            ],
+            unit7: [
+                 { question: "सरकारले अनिवार्य रूपमा उठाउने रकमलाई के भनिन्छ?", options: ["कर", "ऋण", "अनुदान", "चन्दा"], correctAnswer: "कर" },
+                 { question: "आयकर कस्तो प्रकारको कर हो?", options: ["प्रत्यक्ष कर", "अप्रत्यक्ष कर", "सेवा कर", "बिक्री कर"], correctAnswer: "प्रत्यक्ष कर" },
+                 { question: "मूल्य अभिवृद्धि कर (VAT) कस्तो कर हो?", options: ["अप्रत्यक्ष कर", "प्रत्यक्ष कर", "सम्पत्ति कर", "आयकर"], correctAnswer: "अप्रत्यक्ष कर" },
+                 { question: "कुन करको भार अरूलाई सार्न सकिँदैन?", options: ["प्रत्यक्ष कर", "अप्रत्यक्ष कर", "भन्सार शुल्क", "अन्तःशुल्क"], correctAnswer: "प्रत्यक्ष कर" },
+                 { question: "PAN को पूरा रूप के हो?", options: ["Permanent Account Number", "Personal Account Number", "Primary Account Number", "Permanent Asset Number"], correctAnswer: "Permanent Account Number" },
+                 { question: "PAN नम्बर कति अंकको हुन्छ?", options: ["९", "१०", "१३", "१५"], correctAnswer: "९" },
+                 { question: "नेपालमा PAN कुन निकायले जारी गर्छ?", options: ["आन्तरिक राजस्व विभाग", "नेपाल राष्ट्र बैंक", "वाणिज्य विभाग", "कम्पनी रजिस्ट्रारको कार्यालय"], correctAnswer: "आन्तरिक राजस्व विभाग" }
+            ],
+            unit8: [
+                { question: "संस्थाको 'मस्तिष्क' भनेर कसलाई चिनिन्छ?", options: ["कार्यालय", "कारखाना", "गोदाम", "पसल"], correctAnswer: "कार्यालय" },
+                { question: "सूचना र अभिलेख व्यवस्थापन कुन निकायको मुख्य कार्य हो?", options: ["कार्यालय", "उत्पादन विभाग", "बजार विभाग", "मानव संसाधन"], correctAnswer: "कार्यालय" },
+                { question: "सही समयमा सही व्यक्तिलाई सही सूचना दिनुलाई के भनिन्छ?", options: ["सूचना व्यवस्थापन", "फाइलिङ", "अनुक्रमणिका", "उत्पादन"], correctAnswer: "सूचना व्यवस्थापन" },
+                { question: "कागजातलाई व्यवस्थित रूपमा राख्ने प्रक्रियालाई के भनिन्छ?", options: ["फाइलिङ", "अनुक्रमणिका", "लेखांकन", "विज्ञापन"], correctAnswer: "फाइलिङ" },
+                { question: "फाइल गरिएका कागजात कहाँ छन् भनेर पत्ता लगाउन बनाइएको सूचीलाई के भनिन्छ?", options: ["अनुक्रमणिका", "फाइलिङ", "गोदाम", "रजिष्टर"], correctAnswer: "अनुक्रमणिका" },
+                { question: "कम्प्युटरमा फोल्डर बनाएर फाइल राख्नु कस्तो फाइलिङ हो?", options: ["इलेक्ट्रोनिक फाइलिङ", "ठाडो फाइलिङ", "तेर्सो फाइलिङ", "तार फाइलिङ"], correctAnswer: "इलेक्ट्रोनिक फाइलिङ" },
+                { question: "अनुक्रमणिका बिनाको फाइलिङ प्रणाली कस्तो हुन्छ?", options: ["अनुपयोगी", "धेरै उपयोगी", "छिटो", "सुरक्षित"], correctAnswer: "अनुपयोगी" }
+            ]
+        };
+
+        const unitTitles = {
+            unit1: "एकाइ १: व्यवसायको परिचय",
+            unit2: "एकाइ २: व्यवसायिक विचार",
+            unit3: "एकाइ ३: स्रोत परिचालन",
+            unit4: "एकाइ ४: व्यावसायिक स्वामित्वका स्वरूप",
+            unit5: "एकाइ ५: व्यावसायिक आचार र सामाजिक उत्तरदायित्व",
+            unit6: "एकाइ ६: जोखिम तथा बीमा",
+            unit7: "एकाइ ७: कर",
+            unit8: "एकाइ ८: कार्यालय व्यवस्थापन",
+        };
+        
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timer;
+        let timeLeft;
+        let currentUnitId = null;
+        const TIME_LIMIT = 20;
+
+        function createStartScreen() {
+            let unitButtonsHtml = '';
+            for (const unitId in unitTitles) {
+                unitButtonsHtml += `
+                    <button data-unit-id="${unitId}" class="unit-button w-full text-left p-5 bg-white rounded-lg shadow-md hover:bg-indigo-600 hover:text-white transition-all duration-300">
+                        <span class="text-lg font-semibold">${unitTitles[unitId]}</span>
+                    </button>
+                `;
+            }
+
+            gameContainer.innerHTML = `
+                <div class="game-card p-8 rounded-xl shadow-2xl text-center fade-in">
+                    <h1 class="text-4xl font-bold text-indigo-700 mb-2">व्यावसायिक ज्ञान च्यालेन्ज</h1>
+                    <p class="text-gray-600 mb-8">आफ्नो ज्ञान परीक्षण गर्न कुनै एक एकाइ छनोट गर्नुहोस्!</p>
+                    <div class="space-y-4">
+                        ${unitButtonsHtml}
+                    </div>
+                </div>
+            `;
+            
+            document.querySelectorAll('.unit-button').forEach(button => {
+                button.addEventListener('click', () => selectUnit(button.dataset.unitId));
+            });
+        }
+        
+        function selectUnit(unitId) {
+            currentUnitId = unitId;
+            sounds.start();
+            startGame();
+        }
+
+        function startGame() {
+            currentQuestions = shuffleArray([...questions[currentUnitId]]);
+            currentQuestionIndex = 0;
+            score = 0;
+            showQuestion();
+        }
+        
+        function showQuestion() {
+            clearInterval(timer);
+            const question = currentQuestions[currentQuestionIndex];
+            
+            const optionsHtml = shuffleArray([...question.options]).map(option => 
+                `<button class="option-btn w-full text-left p-4 bg-slate-100 border-2 border-slate-200 rounded-lg focus:outline-none">
+                    ${option}
+                </button>`
+            ).join('');
+
+            gameContainer.innerHTML = `
+                <div class="game-card p-8 rounded-xl shadow-2xl fade-in">
+                     <div class="absolute top-6 right-6 flex items-center justify-center w-16 h-16 bg-slate-100 rounded-full shadow-inner">
+                        <span id="timer-clock" class="text-3xl font-bold text-slate-700">${TIME_LIMIT}</span>
+                    </div>
+                    <div class="mb-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-sm font-medium bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full">प्रश्न ${currentQuestionIndex + 1} / ${currentQuestions.length}</span>
+                            <span class="text-lg font-bold text-indigo-600">स्कोर: ${score}</span>
+                        </div>
+                        <div class="w-full bg-slate-200 rounded-full h-3">
+                            <div id="timer-bar" class="h-3 rounded-full"></div>
+                        </div>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">${question.question}</h2>
+                    <div class="space-y-4">
+                        ${optionsHtml}
+                    </div>
+                </div>
+            `;
+            
+            document.querySelectorAll('.option-btn').forEach(button => {
+                button.addEventListener('click', (event) => selectAnswer(event.target.innerText, event.target));
+            });
+
+            startTimer();
+        }
+
+        function startTimer() {
+            timeLeft = TIME_LIMIT;
+            const timerBar = document.getElementById('timer-bar');
+            const timerClock = document.getElementById('timer-clock');
+            
+            timerBar.style.transition = 'none';
+            timerBar.style.width = '100%';
+            timerBar.style.backgroundColor = '#22c55e';
+            timerClock.textContent = timeLeft;
+
+            void timerBar.offsetWidth;
+
+            timerBar.style.transition = `width ${TIME_LIMIT}s linear, background-color 1s ease`;
+            timerBar.style.width = '0%';
+
+            timer = setInterval(() => {
+                timeLeft--;
+                if (timeLeft >= 0) {
+                    timerClock.textContent = timeLeft;
+                }
+                
+                if (timeLeft === 10) {
+                    timerBar.style.backgroundColor = '#f59e0b';
+                }
+                if (timeLeft === 5) {
+                    timerBar.style.backgroundColor = '#ef4444';
+                }
+
+                if (timeLeft < 0) {
+                    clearInterval(timer);
+                    selectAnswer(null, null);
+                }
+            }, 1000);
+        }
+
+        function selectAnswer(selectedOption, btnElement) {
+            clearInterval(timer);
+            const question = currentQuestions[currentQuestionIndex];
+            const isCorrect = selectedOption === question.correctAnswer;
+            
+            if(isCorrect) {
+                sounds.correct();
+                const bonus = Math.max(0, timeLeft) * 5;
+                score += 100 + bonus;
+            } else {
+                sounds.incorrect();
+                if (btnElement) {
+                    btnElement.classList.add('incorrect');
+                }
+            }
+
+            const optionButtons = document.querySelectorAll('.option-btn');
+            optionButtons.forEach(btn => {
+                btn.disabled = true;
+                if(btn.innerText === question.correctAnswer) {
+                    btn.classList.add('correct');
+                }
+            });
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < currentQuestions.length) {
+                    showQuestion();
+                } else {
+                    showScoreScreen();
+                }
+            }, 1500);
+        }
+        
+        function showScoreScreen() {
+            let rank = "नवप्रवेशी";
+            let remark = "अझै धेरै अभ्यास आवश्यक छ।";
+            const maxPossibleScore = currentQuestions.length * (100 + (TIME_LIMIT * 5));
+            const percentage = (score / maxPossibleScore) * 100;
+            
+            if (percentage > 80) {
+                rank = "बिजनेस टाइकुन";
+                remark = "उत्कृष्ट! तपाईं त व्यवसायका विज्ञ हुनुहुन्छ।";
+            } else if (percentage > 60) {
+                rank = "प्रमुख कार्यकारी अधिकृत (CEO)";
+                remark = "धेरै राम्रो! तपाईंको ज्ञान प्रशंसनीय छ।";
+            } else if (percentage > 40) {
+                rank = "व्यवस्थापक";
+                remark = "राम्रो प्रयास! अभ्यास जारी राख्नुहोस्।";
+            }
+            
+            gameContainer.innerHTML = `
+                <div class="game-card p-8 rounded-xl shadow-2xl text-center fade-in">
+                    <h1 class="text-3xl font-bold text-indigo-700 mb-2">खेल समाप्त!</h1>
+                    <p class="text-gray-600 mb-4">तपाईंको अन्तिम स्कोर:</p>
+                    <div class="text-6xl font-bold text-gray-800 my-4">${score}</div>
+                    <p class="text-xl font-semibold text-amber-500 mb-2">तपाईंको पद: ${rank}</p>
+                    <p class="text-gray-600 mb-8">${remark}</p>
+                    <div class="flex flex-col sm:flex-row gap-4 mt-8">
+                        <button id="retry-btn" class="w-full bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-700 transition-colors">
+                            फेरि प्रयास गर्नुहोस्
+                        </button>
+                        <button id="change-unit-btn" class="w-full bg-slate-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-slate-700 transition-colors">
+                            अर्को एकाइ छनोट गर्नुहोस्
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('retry-btn').addEventListener('click', startGame);
+            document.getElementById('change-unit-btn').addEventListener('click', createStartScreen);
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        createStartScreen();
+    </script>
+</body>
+</html>
+

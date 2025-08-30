@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>सामाजिक ज्ञान च्यालेन्ज</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
+            background-color: #f0f4f8;
+            background-image: linear-gradient(135deg, #007991 0%, #78ffd6 100%);
+        }
+        .game-card {
+            background: #ffffff;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+        .unit-button {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .unit-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+        }
+        .option-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .option-btn:hover:not(:disabled) {
+            transform: scale(1.03);
+            background-color: #cceeff;
+            border-color: #99ddff;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        .correct {
+            animation: correct-pulse 0.5s ease;
+            background-color: #22c55e !important;
+            border-color: #16a34a !important;
+            color: white !important;
+        }
+        .incorrect {
+            animation: incorrect-shake 0.5s ease;
+            background-color: #ef4444 !important;
+            border-color: #dc2626 !important;
+            color: white !important;
+        }
+        @keyframes correct-pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        @keyframes incorrect-shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div id="game-container" class="w-full max-w-2xl mx-auto">
+        <!-- Start Screen will be rendered here -->
+    </div>
+
+    <script>
+        const gameContainer = document.getElementById('game-container');
+        
+        const synth = new Tone.Synth().toDestination();
+        const sounds = {
+            correct: () => synth.triggerAttackRelease("C5", "8n", Tone.now()),
+            incorrect: () => synth.triggerAttackRelease("A2", "8n", Tone.now()),
+            click: () => synth.triggerAttackRelease("C4", "16n", Tone.now()),
+            start: () => synth.triggerAttackRelease("G4", "8n", Tone.now())
+        };
+
+        const questions = {
+            unit1: [
+                { question: "जीवनोपयोगी सीपको मुख्य उद्देश्य के हो?", options: ["समस्या समाधान गर्न र सफल जीवनयापन गर्न", "पैसा कमाउन", "जागिर खान", "परीक्षा पास गर्न"], correctAnswer: "समस्या समाधान गर्न र सफल जीवनयापन गर्न" },
+                { question: "आत्म-जागरूकता (Self-awareness) भनेको के हो?", options: ["आफ्नो क्षमता र कमजोरी चिन्नु", "अरूको बारेमा जान्नु", "किताब पढ्नु", "विद्यालय जानु"], correctAnswer: "आफ्नो क्षमता र कमजोरी चिन्नु" },
+                { question: "विश्व स्वास्थ्य संगठन (WHO) ले जीवनोपयोगी सीपका कतिवटा क्षेत्र निर्धारण गरेको छ?", options: ["३ (सोचाइ, सामाजिक, भावनात्मक)", "५", "१०", "२"], correctAnswer: "३ (सोचाइ, सामाजिक, भावनात्मक)" },
+                { question: "सकारात्मक सोच राख्नु कुन सीप अन्तर्गत पर्दछ?", options: ["भावनात्मक सीप", "सञ्चार सीप", "निर्णय गर्ने सीप", "लेख्ने सीप"], correctAnswer: "भावनात्मक सीप" },
+                { question: "'बक्स बाहिर सोच्नु' (Thinking outside the box) कुन सीपसँग सम्बन्धित छ?", options: ["सिर्जनात्मक सोच", "आलोचनात्मक सोच", "सकारात्मक सोच", "नकारात्मक सोच"], correctAnswer: "सिर्जनात्मक सोच" },
+                { question: "जीवनोपयोगी शिक्षाको प्रमुख लक्ष्य के हो?", options: ["व्यक्तिलाई दैनिक जीवनका चुनौतीहरूको सामना गर्न सक्षम बनाउनु", "पाठ्यक्रम पूरा गर्नु", "विद्यार्थीलाई अनुशासित बनाउनु", "राम्रो अंक ल्याउनु"], correctAnswer: "व्यक्तिलाई दैनिक जीवनका चुनौतीहरूको सामना गर्न सक्षम बनाउनु" },
+                { question: "तलका मध्ये कुन एक सामाजिक सीप हो?", options: ["सञ्चार", "तनाव व्यवस्थापन", "आत्म-बोध", "निर्णय लिने"], correctAnswer: "सञ्चार" },
+                { question: "तनाव र भावनाहरूसँग सामना गर्ने सीपलाई के भनिन्छ?", options: ["भावनात्मक व्यवस्थापन सीप", "सोचाइ सीप", "सञ्चार सीप", "सामाजिक सीप"], correctAnswer: "भावनात्मक व्यवस्थापन सीप" },
+                { question: "समस्या समाधान सीप किन महत्त्वपूर्ण छ?", options: ["कठिन परिस्थितिमा सही समाधान खोज्न मद्दत गर्छ", "पैसा कमाउन सिकाउँछ", "झगडा गर्न सिकाउँछ", "समय बर्बाद गर्छ"], correctAnswer: "कठिन परिस्थितिमा सही समाधान खोज्न मद्दत गर्छ" },
+                { question: "आफ्नो अधिकारको लागि अडान लिने तर अरूको अधिकारको पनि सम्मान गर्ने सीप कुन हो?", options: ["दृढता (Assertiveness)", "आक्रामकता", "निष्क्रियता", "समानुभूति"], correctAnswer: "दृढता (Assertiveness)" }
+            ],
+            unit2: [
+                { question: "अनुसन्धानमा 'साहित्यिक चोरी' (Plagiarism) भनेको के हो?", options: ["अरूको लेख जस्ताको तस्तै चोर्नु", "किताबबाट पढ्नु", "सन्दर्भ स्रोत उल्लेख गर्नु", "साथीसँग सोध्नु"], correctAnswer: "अरूको लेख जस्ताको तस्तै चोर्नु" },
+                { question: "इन्टरनेटबाट प्राप्त सबै जानकारी विश्वसनीय हुन्छ?", options: ["हुँदैन, स्रोत जाँच गर्नुपर्छ", "हुन्छ, सबै सही हुन्छ", "प्रायः सही हुन्छ", "शिक्षकले भनेमा मात्र सही हुन्छ"], correctAnswer: "हुँदैन, स्रोत जाँच गर्नुपर्छ" },
+                { question: "अनुसन्धानको पहिलो चरण के हो?", options: ["समस्याको पहिचान", "तथ्याङ्क सङ्कलन", "निष्कर्ष निकाल्नु", "प्रतिवेदन लेख्नु"], correctAnswer: "समस्याको पहिचान" },
+                { question: "आफैले फिल्डमा गएर सङ्कलन गरेको तथ्याङ्कलाई के भनिन्छ?", options: ["प्राथमिक तथ्याङ्क", "द्वितीयक तथ्याङ्क", "सरकारी तथ्याङ्क", "अविश्वसनीय तथ्याङ्क"], correctAnswer: "प्राथमिक तथ्याङ्क" },
+                { question: "डिजिटल नागरिकता (Digital Citizenship) ले के कुरामा जोड दिन्छ?", options: ["इन्टरनेटको सुरक्षित र जिम्मेवार प्रयोग", "इन्टरनेट चलाउन जान्नु", "अनलाइनमा खाता खोल्नु", "कम्प्युटर किन्नु"], correctAnswer: "इन्टरनेटको सुरक्षित र जिम्मेवार प्रयोग" },
+                { question: "अनुसन्धानमा 'परिकल्पना' (Hypothesis) भनेको के हो?", options: ["परीक्षण गर्न सकिने अनुमानित कथन", "अनुसन्धानको निष्कर्ष", "समस्याको विवरण", "तथ्याङ्कको विश्लेषण"], correctAnswer: "परीक्षण गर्न सकिने अनुमानित कथन" },
+                { question: "शैक्षिक अनुसन्धानका लागि कुन स्रोत सबैभन्दा विश्वसनीय मानिन्छ?", options: ["विद्वत जर्नल (Peer-reviewed journal)", "ब्लग", "सामाजिक सञ्जाल", "समाचारपत्र"], correctAnswer: "विद्वत जर्नल (Peer-reviewed journal)" },
+                { question: "साइबरबुलिङ (Cyberbullying) भनेको के हो?", options: ["अनलाइन मार्फत कसैलाई दुःख दिनु वा धम्क्याउनु", "इन्टरनेट चलाउनु", "गेम खेल्नु", "अनलाइन किनमेल गर्नु"], correctAnswer: "अनलाइन मार्फत कसैलाई दुःख दिनु वा धम्क्याउनु" },
+                { question: "अनुसन्धानमा सन्दर्भ सामग्री उल्लेख गर्नु किन महत्त्वपूर्ण छ?", options: ["साहित्यिक चोरीबाट बच्न र स्रोतलाई श्रेय दिन", "लेख लामो बनाउन", "पढ्न सजिलो बनाउन", "यो आवश्यक छैन"], correctAnswer: "साहित्यिक चोरीबाट बच्न र स्रोतलाई श्रेय दिन" },
+                { question: "अरूले प्रकाशित गरिसकेको तथ्याङ्क प्रयोग गर्नु कस्तो स्रोत हो?", options: ["द्वितीयक स्रोत", "प्राथमिक स्रोत", "मौलिक स्रोत", "गोप्य स्रोत"], correctAnswer: "द्वितीयक स्रोत" }
+            ],
+            unit3: [
+                { question: "अरूको भावना बुझ्ने र महसुस गर्ने सीपलाई के भनिन्छ?", options: ["समानुभूति (Empathy)", "सहानुभूति (Sympathy)", "रिस", "घमण्ड"], correctAnswer: "समानुभूति (Empathy)" },
+                { question: "तनाव व्यवस्थापन गर्ने उत्तम तरिका कुन हो?", options: ["व्यायाम र ध्यान गर्नु", "एक्लै बस्नु", "धेरै सोच्नु", "अरूलाई दोष दिनु"], correctAnswer: "व्यायाम र ध्यान गर्नु" },
+                { question: "सञ्चार सीपमा के पर्दैन?", options: ["झगडा गर्नु", "स्पष्ट बोल्नु", "ध्यान दिएर सुन्नु", "शारीरिक हाउभाउ मिलाउनु"], correctAnswer: "झगडा गर्नु" },
+                { question: "कुनै विषयको फाइदा र बेफाइदा दुवै पक्ष केलाएर निष्कर्षमा पुग्नु कुन सोचाइ हो?", options: ["आलोचनात्मक सोच (Critical Thinking)", "सिर्जनात्मक सोच", "सकारात्मक सोच", "नकारात्मक सोच"], correctAnswer: "आलोचनात्मक सोच (Critical Thinking)" },
+                { question: "दुई वा दुईभन्दा बढी व्यक्तिहरूबीच सुमधुर सम्बन्ध कायम राख्ने सीप कुन हो?", options: ["अन्तरव्यक्तिगत सीप (Interpersonal Skills)", "निर्णय गर्ने सीप", "समय व्यवस्थापन", "आत्म-बोध"], correctAnswer: "अन्तरव्यक्तिगत सीप (Interpersonal Skills)" },
+                { question: "ध्यान दिएर सुन्ने कलालाई के भनिन्छ?", options: ["सक्रिय श्रवण (Active Listening)", "निष्क्रिय श्रवण", "हस्तक्षेप", "बहस"], correctAnswer: "सक्रिय श्रवण (Active Listening)" },
+                { question: "सफल वार्तालाप (Negotiation) का लागि कुन सीप सबैभन्दा महत्त्वपूर्ण हुन्छ?", options: ["सञ्चार र समस्या समाधान", "आक्रामकता", "धैर्यताको कमी", "आफ्नो कुरा मात्र राख्नु"], correctAnswer: "सञ्चार र समस्या समाधान" },
+                { question: "समय व्यवस्थापन कुन सीपसँग सम्बन्धित छ?", options: ["स्व-व्यवस्थापन", "सामाजिक व्यवस्थापन", "आर्थिक व्यवस्थापन", "पारिवारिक व्यवस्थापन"], correctAnswer: "स्व-व्यवस्थापन" },
+                { question: "विपत्तिबाट सहजै सामान्य अवस्थामा फर्कन सक्ने क्षमतालाई के भनिन्छ?", options: ["लचकता (Resilience)", "कमजोरी", "भाग्य", "अहंकार"], correctAnswer: "लचकता (Resilience)" },
+                { question: "प्रभावकारी निर्णय प्रक्रियामा के समावेश हुन्छ?", options: ["विकल्पहरू र परिणामहरूको विश्लेषण", "आँखा चिम्लेर निर्णय गर्नु", "अरूको मात्र कुरा सुन्नु", "हतारमा निर्णय गर्नु"], correctAnswer: "विकल्पहरू र परिणामहरूको विश्लेषण" }
+            ],
+            unit4: [
+                { question: "समाजवादका प्रवर्तक को हुन्?", options: ["कार्ल मार्क्स", "प्लेटो", "अरस्तु", "सुकरात"], correctAnswer: "कार्ल मार्क्स" },
+                { question: "'मानिस सामाजिक प्राणी हो' - यो भनाइ कसको हो?", options: ["अरस्तु", "कार्ल मार्क्स", "प्लेटो", "चाणक्य"], correctAnswer: "अरस्तु" },
+                { question: "दर्शनशास्त्रको मुख्य काम के हो?", options: ["सत्य, ज्ञान र मूल्यको खोजी गर्नु", "पैसा कमाउनु", "युद्ध गर्नु", "शासन गर्नु"], correctAnswer: "सत्य, ज्ञान र मूल्यको खोजी गर्नु" },
+                { question: "नेपाल संवत्‌का प्रवर्तक को हुन्?", options: ["शंखधर साख्वा", "पृथ्वीनारायण शाह", "अंशुवर्मा", "मानदेव"], correctAnswer: "शंखधर साख्वा" },
+                { question: "सामाजिक परिवर्तनको मुख्य कारक तत्व कुन हो?", options: ["शिक्षा र प्रविधि", "राजनीति", "धर्म", "भूगोल"], correctAnswer: "शिक्षा र प्रविधि" },
+                { question: "प्लेटोले लेखेको आदर्श राज्यसम्बन्धी प्रसिद्ध पुस्तक कुन हो?", options: ["द रिपब्लिक", "द प्रिन्स", "लेभियाथन", "दास क्यापिटल"], correctAnswer: "द रिपब्लिक" },
+                { question: "सामन्तवाद मुख्यतया केमा आधारित थियो?", options: ["भूमि स्वामित्व र बफादारी", "व्यापार र वाणिज्य", "प्रजातन्त्र", "उद्योग"], correctAnswer: "भूमि स्वामित्व र बफादारी" },
+                { question: "औद्योगिक क्रान्तिको सुरुवात कुन देशबाट भएको हो?", options: ["बेलायत", "फ्रान्स", "अमेरिका", "नेपाल"], correctAnswer: "बेलायत" },
+                { question: "भूमण्डलीकरण (Globalization) भनेको के हो?", options: ["विश्वका अर्थतन्त्र र संस्कृतिहरूको अन्तरसम्बन्ध", "आफ्नो देशमा मात्र सीमित रहनु", "गाउँको विकास गर्नु", "सहरमा बस्नु"], correctAnswer: "विश्वका अर्थतन्त्र र संस्कृतिहरूको अन्तरसम्बन्ध" },
+                { question: "समाजशास्त्रका पिता भनेर कसलाई चिनिन्छ?", options: ["अगस्टे कोम्टे", "इमाइल दुर्खिम", "म्याक्स वेबर", "कार्ल मार्क्स"], correctAnswer: "अगस्टे कोम्टे" }
+            ],
+            unit5: [
+                { question: "नेपालको सबैभन्दा अग्लो हिमाल सगरमाथा कुन प्रदेशमा पर्छ?", options: ["कोशी प्रदेश", "बागमती प्रदेश", "गण्डकी प्रदेश", "कर्णाली प्रदेश"], correctAnswer: "कोशी प्रदेश" },
+                { question: "तराई प्रदेशको मुख्य आर्थिक क्रियाकलाप के हो?", options: ["कृषि", "पर्यटन", "पशुपालन", "उद्योग"], correctAnswer: "कृषि" },
+                { question: "जलवायु परिवर्तनले नेपालको कुन क्षेत्रमा सबैभन्दा बढी असर गरेको छ?", options: ["हिमाली क्षेत्र", "पहाडी क्षेत्र", "तराई क्षेत्र", "सबैमा बराबर"], correctAnswer: "हिमाली क्षेत्र" },
+                { question: "नेपालको सबैभन्दा ठूलो नदी कुन हो?", options: ["कोशी", "गण्डकी", "कर्णाली", "महाकाली"], correctAnswer: "कोशी" },
+                { question: "GPS को पूरा रूप के हो?", options: ["Global Positioning System", "Global Peace System", "Geographic Position Service", "General Public Service"], correctAnswer: "Global Positioning System" },
+                { question: "नेपालको सबैभन्दा गहिरो ताल कुन हो?", options: ["शे-फोक्सुन्डो", "रारा", "तिलिचो", "फेवा"], correctAnswer: "शे-फोक्सुन्डो" },
+                { question: "हिमाली प्रदेशका मानिसहरूको मुख्य पेशा के हो?", options: ["पर्यटन र पशुपालन", "कृषि र उद्योग", "व्यापार", "माछापालन"], correctAnswer: "पर्यटन र पशुपालन" },
+                { question: "एक सिङ्गे गैंडाका लागि प्रसिद्ध राष्ट्रिय निकुञ्ज कुन हो?", options: ["चितवन राष्ट्रिय निकुञ्ज", "सगरमाथा राष्ट्रिय निकुञ्ज", "बर्दिया राष्ट्रिय निकुञ्ज", "लाङटाङ राष्ट्रिय निकुञ्ज"], correctAnswer: "चितवन राष्ट्रिय निकुञ्ज" },
+                { question: " नक्सामा 'स्केल' केका लागि प्रयोग गरिन्छ?", options: ["नक्सा र वास्तविक दूरीको सम्बन्ध देखाउन", "नक्सा रङ्गाउन", "दिशाहरू देखाउन", "ठाउँको नाम लेख्न"], correctAnswer: "नक्सा र वास्तविक दूरीको सम्बन्ध देखाउन" },
+                { question: "चुरे पर्वतलाई अर्को के नामले चिनिन्छ?", options: ["सिवालिक", "महाभारत", "हिमालय", "भित्री मधेश"], correctAnswer: "सिवालिक" }
+            ],
+            unit6: [
+                { question: "नेपाल एकीकरणको अभियान कसले सुरु गरेका थिए?", options: ["पृथ्वीनारायण शाह", "अंशुवर्मा", "राम शाह", "रणबहादुर शाह"], correctAnswer: "पृथ्वीनारायण शाह" },
+                { question: "नेपालको पहिलो जननिर्वाचित प्रधानमन्त्री को हुन्?", options: ["विश्वेश्वरप्रसाद कोइराला", "मातृकाप्रसाद कोइराला", "टंकप्रसाद आचार्य", "सूर्यबहादुर थापा"], correctAnswer: "विश्वेश्वरप्रसाद कोइराला" },
+                { question: "कोतपर्व कहिले भएको थियो?", options: ["वि.सं. १९०३", "वि.सं. १८२५", "वि.सं. २००७", "वि.सं. २०४६"], correctAnswer: "वि.सं. १९०३" },
+                { question: "लिच्छविकालका 'मानगृह' कसले बनाएका थिए?", options: ["मानदेव", "अंशुवर्मा", "नरेन्द्रदेव", "गुणकामदेव"], correctAnswer: "मानदेव" },
+                { question: "नेपाल र अंग्रेजबीच सुगौली सन्धि कहिले भएको थियो?", options: ["सन् १८१६ मार्च ४", "सन् १८१४", "सन् १८६०", "सन् १९४७"], correctAnswer: "सन् १८१६ मार्च ४" },
+                { question: "काठमाडौँ उपत्यकाका अन्तिम मल्ल राजा को थिए?", options: ["जयप्रकाश मल्ल", "रणजीत मल्ल", "तेज नरसिंह मल्ल", "योगनरेन्द्र मल्ल"], correctAnswer: "जयप्रकाश मल्ल" },
+                { question: "नेपालमा राणा शासन कति वर्ष चल्यो?", options: ["१०४ वर्ष", "९४ वर्ष", "११४ वर्ष", "८४ वर्ष"], correctAnswer: "१०४ वर्ष" },
+                { question: "वि.सं. २००७ सालको क्रान्तिले नेपालमा के स्थापना गर्यो?", options: ["प्रजातन्त्र", "गणतन्त्र", "पञ्चायत", "राजतन्त्र"], correctAnswer: "प्रजातन्त्र" },
+                { question: "भक्तपुरको न्यातपोल मन्दिर कसले बनाएका हुन्?", options: ["भूपतीन्द्र मल्ल", "सिद्धिनरसिंह मल्ल", "प्रताप मल्ल", "जयस्थिति मल्ल"], correctAnswer: "भूपतीन्द्र मल्ल" },
+                { question: "वि.सं. २०४६ सालको जनआन्दोलनको मुख्य उपलब्धि के थियो?", options: ["बहुदलीय प्रजातन्त्रको पुनर्स्थापना", "गणतन्त्रको स्थापना", "संविधानसभाको निर्वाचन", "राणा शासनको अन्त्य"], correctAnswer: "बहुदलीय प्रजातन्त्रको पुनर्स्थापना" }
+            ],
+            unit7: [
+                { question: "नेपालमा सबैभन्दा धेरै बोलिने मातृभाषा कुन हो?", options: ["नेपाली", "मैथिली", "भोजपुरी", "नेवारी"], correctAnswer: "नेपाली" },
+                { question: "गाईजात्रा पर्व कुन समुदायले विशेष रूपमा मनाउँछन्?", options: ["नेवार", "राई", "गुरुङ", "थारु"], correctAnswer: "नेवार" },
+                { question: "सामाजिक विविधताले राष्ट्रियतालाई कस्तो बनाउँछ?", options: ["बलियो र समृद्ध", "कमजोर", "असर गर्दैन", "विभाजित"], correctAnswer: "बलियो र समृद्ध" },
+                { question: "तराईमा मनाइने छठ पर्वमा कुन देवताको पूजा गरिन्छ?", options: ["सूर्य", "शिव", "विष्णु", "इन्द्र"], correctAnswer: "सूर्य" },
+                { question: "सबै जातजाति, भाषाभाषी र धर्म-संस्कृतिका मानिसहरूलाई राज्यको मूलधारमा ल्याउनुलाई के भनिन्छ?", options: ["सामाजिक समावेशीकरण", "राष्ट्रिय एकता", "धार्मिक सहिष्णुता", "भाषिक समानता"], correctAnswer: "सामाजिक समावेशीकरण" },
+                { question: "लोसार पर्व कुन समुदायले मनाउँछन्?", options: ["गुरुङ, तामाङ, शेर्पा", "थारु, मगर", "बाहुन, क्षेत्री", "नेवार, यादव"], correctAnswer: "गुरुङ, तामाङ, शेर्पा" },
+                { question: "नेपालको राष्ट्रिय फूल के हो?", options: ["लालीगुराँस", "सयपत्री", "कमल", "गुलाब"], correctAnswer: "लालीगुराँस" },
+                { question: "छुवाछुत प्रथालाई केले निषेध गरेको छ?", options: ["नेपालको संविधानले", "सामाजिक परम्पराले", "विदेशी कानुनले", "कसैले पनि गरेको छैन"], correctAnswer: "नेपालको संविधानले" },
+                { question: "नेपालको सन्दर्भमा 'धर्मनिरपेक्षता' को अर्थ के हो?", options: ["धार्मिक स्वतन्त्रता र राज्यको तटस्थता", "सबैले एउटै धर्म मान्नुपर्ने", "धर्म मान्न नपाइने", "राज्यले धर्मको प्रचार गर्ने"], correctAnswer: "धार्मिक स्वतन्त्रता र राज्यको तटस्थता" },
+                { question: "देउकी प्रथा कस्तो सामाजिक अभ्यास हो?", options: ["एक हानिकारक सामाजिक कुप्रथा", "राम्रो परम्परा", "धार्मिक रीतिरिवाज", "कानुनी अभ्यास"], correctAnswer: "एक हानिकारक सामाजिक कुप्रथा" }
+            ],
+            unit8: [
+                { question: "नेपालको वर्तमान संविधान कहिले जारी भएको हो?", options: ["वि.सं. २०७२ असोज ३", "वि.सं. २०६३ माघ १", "वि.सं. २०४७ कार्तिक २३", "वि.सं. २०१९ पुष १"], correctAnswer: "वि.सं. २०७२ असोज ३" },
+                { question: "नेपालमा कति तहको सरकारको व्यवस्था छ?", options: ["तीन (संघ, प्रदेश, स्थानीय)", "दुई (केन्द्रीय, स्थानीय)", "एक (केन्द्रीय)", "चार"], correctAnswer: "तीन (संघ, प्रदेश, स्थानीय)" },
+                { question: "नागरिकको कर्तव्यमा कुन पर्दैन?", options: ["अरूको अधिकार हनन गर्नु", "सार्वजनिक सम्पत्तिको रक्षा गर्नु", "कर तिर्नु", "कानुन मान्नु"], correctAnswer: "अरूको अधिकार हनन गर्नु" },
+                { question: "संविधानमा उल्लेखित मौलिक हकहरू कसले प्रयोग गर्न पाउँछ?", options: ["सबै नागरिकले", "नेताले मात्र", "धनीले मात्र", "पढेलेखेकाले मात्र"], correctAnswer: "सबै नागरिकले" },
+                { question: "नेपालको संघीय संसदमा कतिवटा सदन छन्?", options: ["दुई (प्रतिनिधि सभा र राष्ट्रिय सभा)", "एक (प्रतिनिधि सभा)", "तीन", "सदन छैन"], correctAnswer: "दुई (प्रतिनिधि सभा र राष्ट्रिय सभा)" },
+                { question: "नेपालमा मतदान गर्न कति वर्ष उमेर पुगेको हुनुपर्छ?", options: ["१८ वर्ष", "१६ वर्ष", "२० वर्ष", "२१ वर्ष"], correctAnswer: "१८ वर्ष" },
+                { question: "नेपालको राष्ट्राध्यक्ष को हुन्?", options: ["राष्ट्रपति", "प्रधानमन्त्री", "प्रधानन्यायाधीश", "सभामुख"], correctAnswer: "राष्ट्रपति" },
+                { question: "न्यायपालिकाको काम के हो?", options: ["कानुनको व्याख्या र न्याय प्रदान गर्नु", "कानुन बनाउनु", "देश चलाउनु", "कर उठाउनु"], correctAnswer: "कानुनको व्याख्या र न्याय प्रदान गर्नु" },
+                { question: "सूचनाको हक कस्तो अधिकार हो?", options: ["मौलिक हक", "नागरिक कर्तव्य", "राजनीतिक अधिकार", "कानुनी अधिकार"], correctAnswer: "मौलिक हक" },
+                { question: "'कानुनको शासन' को अर्थ के हो?", options: ["कानुनको नजरमा सबै बराबर हुनु", "राजाले शासन गर्नु", "एक जनाले शासन गर्नु", "कानुन नहुनु"], correctAnswer: "कानुनको नजरमा सबै बराबर हुनु" }
+            ],
+            unit9: [
+                { question: "'ब्रेन ड्रेन' (Brain Drain) भनेको के हो?", options: ["प्रतिभा पलायन", "बसाइँसराइ", "सहरीकरण", "औद्योगिकीकरण"], correctAnswer: "प्रतिभा पलायन" },
+                { question: "अव्यवस्थित सहरीकरणको मुख्य समस्या के हो?", options: ["प्रदूषण र फोहोरमैला", "रोजगारी", "शिक्षा", "यातायात"], correctAnswer: "प्रदूषण र फोहोरमैला" },
+                { question: "मानिसहरू गाउँबाट सहरमा बसाइँ सर्नुको प्रमुख कारण के हो?", options: ["राम्रो अवसर र सुविधाको खोजी", "रमाइलोको लागि", "कृषि गर्न", "शान्त वातावरणको लागि"], correctAnswer: "राम्रो अवसर र सुविधाको खोजी" },
+                { question: "आधुनिक सुविधाहरू सहित योजनाबद्ध रूपमा विकास गरिएका सहरलाई के भनिन्छ?", options: ["स्मार्ट सिटी", "औद्योगिक सहर", "ग्रामीण सहर", "पुराना सहर"], correctAnswer: "स्मार्ट सिटी" },
+                { question: "बसाइँसराइले गन्तव्य स्थानमा कस्तो प्रभाव पार्छ?", options: ["जनसंख्याको चाप बढ्छ", "जनसंख्या घट्छ", "कुनै असर पर्दैन", "प्राकृतिक स्रोत बढ्छ"], correctAnswer: "जनसंख्याको चाप बढ्छ" },
+                { question: "एउटै देश भित्र हुने बसाइँसराइलाई के भनिन्छ?", options: ["आन्तरिक बसाइँसराइ", "अन्तर्राष्ट्रिय बसाइँसराइ", "मौसमी बसाइँसराइ", "स्थायी बसाइँसराइ"], correctAnswer: "आन्तरिक बसाइँसराइ" },
+                { question: "अव्यवस्थित बसोबास (slum) के को परिणाम हो?", options: ["योजनाविहीन सहरीकरण", "ग्रामीण विकास", "कृषि क्रान्ति", "औद्योगिक विकास"], correctAnswer: "योजनाविहीन सहरीकरण" },
+                { question: "बसाइँसराइका लागि 'खिच्ने तत्व' (Pull factor) कुन हो?", options: ["गन्तव्य स्थानमा राम्रो शिक्षाको अवसर", "उत्पत्ति स्थानमा रोजगारीको अभाव", "प्राकृतिक प्रकोप", "राजनीतिक अस्थिरता"], correctAnswer: "गन्तव्य स्थानमा राम्रो शिक्षाको अवसर" },
+                { question: "बसाइँसराइका लागि 'धकेल्ने तत्व' (Push factor) कुन हो?", options: ["उत्पत्ति स्थानमा रोजगारीको अभाव", "गन्तव्य स्थानमा राम्रो तलब", "राम्रो स्वास्थ्य सेवा", "शान्ति सुरक्षा"], correctAnswer: "उत्पत्ति स्थानमा रोजगारीको अभाव" },
+                { question: "बसाइँसराइ रोक्न ग्रामीण क्षेत्रमा के गर्नुपर्छ?", options: ["विकास र रोजगारी सिर्जना", "सडक बन्द गर्ने", "विद्यालय बन्द गर्ने", "मानिसहरूलाई सहर जानबाट रोक्ने"], correctAnswer: "विकास र रोजगारी सिर्जना" }
+            ],
+            unit10: [
+                { question: "नेपालको अर्थतन्त्रको मुख्य आधार के हो?", options: ["कृषि", "उद्योग", "सेवा", "पर्यटन"], correctAnswer: "कृषि" },
+                { question: "संयुक्त राष्ट्र संघले तय गरेका दिगो विकासका लक्ष्यहरू (SDGs) कतिवटा छन्?", options: ["१७", "१५", "१०", "८"], correctAnswer: "१७" },
+                { question: "विप्रेषण (Remittance) भनेको के हो?", options: ["विदेशमा कमाएको पैसा पठाउनु", "देशभित्रै पैसा पठाउनु", "कर तिर्नु", "बैंकमा बचत गर्नु"], correctAnswer: "विदेशमा कमाएको पैसा पठाउनु" },
+                { question: "कुनै देशको कुल राष्ट्रिय आयलाई जनसंख्याले भाग गर्दा के प्राप्त हुन्छ?", options: ["प्रतिव्यक्ति आय", "कुल गार्हस्थ्य उत्पादन", "कुल राष्ट्रिय उत्पादन", "गरिबी दर"], correctAnswer: "प्रतिव्यक्ति आय" },
+                { question: "नेपालको अर्थतन्त्र कस्तो प्रकारको हो?", options: ["मिश्रित", "पुँजीवादी", "समाजवादी", "साम्यवादी"], correctAnswer: "मिश्रित" },
+                { question: "मानव विकास सूचकांक (HDI) ले के मापन गर्छ?", options: ["शिक्षा, स्वास्थ्य र जीवनस्तर", "प्रतिव्यक्ति आय मात्र", "खुसी", "वातावरणको अवस्था"], correctAnswer: "शिक्षा, स्वास्थ्य र जीवनस्तर" },
+                { question: "गरिबी निवारण कुन विकासको प्रमुख लक्ष्य हो?", options: ["दिगो विकास", "आर्थिक वृद्धि", "औद्योगिकीकरण", "सहरीकरण"], correctAnswer: "दिगो विकास" },
+                { question: "प्रत्यक्ष वैदेशिक लगानी (FDI) भनेको के हो?", options: ["विदेशी कम्पनीले गर्ने लगानी", "सरकारले गर्ने लगानी", "नेपालीले विदेशमा गर्ने लगानी", "बैंकले दिने ऋण"], correctAnswer: "विदेशी कम्पनीले गर्ने लगानी" },
+                { question: "नेपाल राष्ट्र बैंकको मुख्य काम के हो?", options: ["मौद्रिक नीति बनाउने र बैंकलाई नियमन गर्ने", "कर उठाउने", "विकास योजना बनाउने", "निर्वाचन गराउने"], correctAnswer: "मौद्रिक नीति बनाउने र बैंकलाई नियमन गर्ने" },
+                { question: "व्यापार घाटा कहिले हुन्छ?", options: ["आयातभन्दा निर्यात कम भएमा", "निर्यातभन्दा आयात कम भएमा", "आयात र निर्यात बराबर भएमा", "निर्यात बन्द भएमा"], correctAnswer: "आयातभन्दा निर्यात कम भएमा" }
+            ],
+            unit11: [
+                { question: "शिक्षाले सामाजिक परिवर्तनमा कस्तो भूमिका खेल्छ?", options: ["सकारात्मक र महत्त्वपूर्ण", "नकारात्मक", "कुनै भूमिका खेल्दैन", "विभेद बढाउँछ"], correctAnswer: "सकारात्मक र महत्त्वपूर्ण" },
+                { question: "नेपालको पहिलो विश्वविद्यालय कुन हो?", options: ["त्रिभुवन विश्वविद्यालय", "काठमाडौं विश्वविद्यालय", "पोखरा विश्वविद्यालय", "नेपाल संस्कृत विश्वविद्यालय"], correctAnswer: "त्रिभुवन विश्वविद्यालय" },
+                { question: "सबैका लागि शिक्षा कार्यक्रमको मुख्य उद्देश्य के हो?", options: ["सबैलाई आधारभूत शिक्षाको पहुँच पुर्याउनु", "सबैलाई डाक्टर बनाउनु", "सबैलाई विदेश पठाउनु", "सबैलाई जागिर दिनु"], correctAnswer: "सबैलाई आधारभूत शिक्षाको पहुँच पुर्याउनु" },
+                { question: "नेपालको वर्तमान विद्यालय शिक्षा संरचना कुन हो?", options: ["आधारभूत (१-८) र माध्यमिक (९-१२)", "प्राथमिक (१-५) र निम्नमाध्यमिक (६-८)", "१०+२", "५+३+२+२"], correctAnswer: "आधारभूत (१-८) र माध्यमिक (९-१२)" },
+                { question: "प्राविधिक तथा व्यावसायिक शिक्षाले के कुरामा जोड दिन्छ?", options: ["सीपमूलक र रोजगारी उन्मुख शिक्षा", "सैद्धान्तिक ज्ञान मात्र", "भाषा र साहित्य", "कला र संगीत"], correctAnswer: "सीपमूलक र रोजगारी उन्मुख शिक्षा" },
+                { question: "साक्षरता दरले के मापन गर्छ?", options: ["पढ्न र लेख्न सक्ने जनसंख्याको प्रतिशत", "स्नातक गरेकाहरूको संख्या", "विद्यालय जानेहरूको संख्या", "कम्प्युटर जान्नेहरूको संख्या"], correctAnswer: "पढ्न र लेख्न सक्ने जनसंख्याको प्रतिशत" },
+                { question: "महिला शिक्षा किन महत्त्वपूर्ण छ?", options: ["महिला सशक्तीकरण र परिवारको भलाइका लागि", "पुरुषसरह काम गर्न", "केवल जागिर खान", "घरको काम गर्न"], correctAnswer: "महिला सशक्तीकरण र परिवारको भलाइका लागि" },
+                { question: "जीवनपर्यन्त सिकाइ (Lifelong learning) भनेको के हो?", options: ["जीवनभर निरन्तर सिकिरहने प्रक्रिया", "विद्यालयमा मात्र सिक्नु", "कलेजमा मात्र सिक्नु", "वृद्धावस्थामा सिक्नु"], correctAnswer: "जीवनभर निरन्तर सिकिरहने प्रक्रिया" },
+                { question: "नेपालमा निःशुल्क आधारभूत शिक्षाको व्यवस्था गर्नुको उद्देश्य के हो?", options: ["सबै बालबालिकाको शिक्षामा पहुँच सुनिश्चित गर्नु", "निजी विद्यालय बन्द गर्नु", "सरकारी विद्यालयको संख्या बढाउनु", "शिक्षकको तलब बढाउनु"], correctAnswer: "सबै बालबालिकाको शिक्षामा पहुँच सुनिश्चित गर्नु" },
+                { question: "शिक्षाले सामाजिक गतिशीलतामा कसरी मद्दत गर्छ?", options: ["व्यक्तिलाई आफ्नो सामाजिक स्तर सुधार गर्ने अवसर दिएर", "मानिसलाई अल्छी बनाएर", "समाजमा विभेद बढाएर", "कुनै मद्दत गर्दैन"], correctAnswer: "व्यक्तिलाई आफ्नो सामाजिक स्तर सुधार गर्ने अवसर दिएर" }
+            ]
+        };
+
+        const unitTitles = {
+            unit1: "एकाइ १: जीवनोपयोगी शिक्षाको अवधारणा",
+            unit2: "एकाइ २: डिजिटल तथा अनुसन्धान सिप",
+            unit3: "एकाइ ३: जीवनोपयोगी सिप",
+            unit4: "एकाइ ४: समाजको विकास र दर्शन",
+            unit5: "एकाइ ५: भूगोल र सामाजिक जीवन",
+            unit6: "एकाइ ६: नेपालको इतिहास",
+            unit7: "एकाइ ७: सामाजिक पहिचान र विविधता",
+            unit8: "एकाइ ८: संविधान र नागरिक सचेतना",
+            unit9: "एकाइ ९: सहरीकरण र बसाइसराइ",
+            unit10: "एकाइ १०: अर्थतन्त्र र विकास",
+            unit11: "एकाइ ११: शिक्षा र सामाजिक विकास"
+        };
+        
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timer;
+        let timeLeft;
+        let currentUnitId = null;
+        const TIME_LIMIT = 20;
+
+        function createStartScreen() {
+            let unitButtonsHtml = '';
+            for (const unitId in unitTitles) {
+                unitButtonsHtml += `
+                    <button data-unit-id="${unitId}" class="unit-button w-full text-left p-5 bg-white rounded-lg shadow-md hover:bg-cyan-500 hover:text-white transition-all duration-300">
+                        <span class="text-lg font-semibold">${unitTitles[unitId]}</span>
+                    </button>
+                `;
+            }
+
+            gameContainer.innerHTML = `
+                <div class="game-card p-8 rounded-xl shadow-2xl text-center fade-in">
+                    <h1 class="text-4xl font-bold text-cyan-700 mb-2">सामाजिक ज्ञान च्यालेन्ज</h1>
+                    <p class="text-gray-600 mb-8">आफ्नो ज्ञान परीक्षण गर्न कुनै एक एकाइ छनोट गर्नुहोस्!</p>
+                    <div class="space-y-4">
+                        ${unitButtonsHtml}
+                    </div>
+                </div>
+            `;
+            
+            document.querySelectorAll('.unit-button').forEach(button => {
+                button.addEventListener('click', () => selectUnit(button.dataset.unitId));
+            });
+        }
+        
+        function selectUnit(unitId) {
+            currentUnitId = unitId;
+            sounds.start();
+            startGame();
+        }
+
+        function startGame() {
+            currentQuestions = shuffleArray([...questions[currentUnitId]]);
+            currentQuestionIndex = 0;
+            score = 0;
+            showQuestion();
+        }
+        
+        function showQuestion() {
+            clearInterval(timer);
+            const question = currentQuestions[currentQuestionIndex];
+            
+            const optionsHtml = shuffleArray([...question.options]).map(option => 
+                `<button class="option-btn w-full text-left p-4 bg-slate-100 border-2 border-slate-200 rounded-lg focus:outline-none">
+                    ${option}
+                </button>`
+            ).join('');
+
+            gameContainer.innerHTML = `
+                <div class="game-card p-8 rounded-xl shadow-2xl fade-in">
+                     <div class="absolute top-6 right-6 flex items-center justify-center w-16 h-16 bg-slate-100 rounded-full shadow-inner">
+                        <span id="timer-clock" class="text-3xl font-bold text-slate-700">${TIME_LIMIT}</span>
+                    </div>
+                    <div class="mb-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-sm font-medium bg-cyan-100 text-cyan-700 px-3 py-1 rounded-full">प्रश्न ${currentQuestionIndex + 1} / ${currentQuestions.length}</span>
+                            <span class="text-lg font-bold text-cyan-600">स्कोर: ${score}</span>
+                        </div>
+                        <div class="w-full bg-slate-200 rounded-full h-3">
+                            <div id="timer-bar" class="h-3 rounded-full"></div>
+                        </div>
+                    </div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">${question.question}</h2>
+                    <div class="space-y-4">
+                        ${optionsHtml}
+                    </div>
+                </div>
+            `;
+            
+            document.querySelectorAll('.option-btn').forEach(button => {
+                button.addEventListener('click', (event) => selectAnswer(event.target.innerText, event.target));
+            });
+
+            startTimer();
+        }
+
+        function startTimer() {
+            timeLeft = TIME_LIMIT;
+            const timerBar = document.getElementById('timer-bar');
+            const timerClock = document.getElementById('timer-clock');
+            
+            timerBar.style.transition = 'none';
+            timerBar.style.width = '100%';
+            timerBar.style.backgroundColor = '#22c55e';
+            timerClock.textContent = timeLeft;
+
+            void timerBar.offsetWidth;
+
+            timerBar.style.transition = `width ${TIME_LIMIT}s linear, background-color 1s ease`;
+            timerBar.style.width = '0%';
+
+            timer = setInterval(() => {
+                timeLeft--;
+                if (timeLeft >= 0) {
+                    timerClock.textContent = timeLeft;
+                }
+                
+                if (timeLeft === 10) {
+                    timerBar.style.backgroundColor = '#f59e0b';
+                }
+                if (timeLeft === 5) {
+                    timerBar.style.backgroundColor = '#ef4444';
+                }
+
+                if (timeLeft < 0) {
+                    clearInterval(timer);
+                    selectAnswer(null, null);
+                }
+            }, 1000);
+        }
+
+        function selectAnswer(selectedOption, btnElement) {
+            clearInterval(timer);
+            const question = currentQuestions[currentQuestionIndex];
+            const isCorrect = selectedOption === question.correctAnswer;
+            
+            if(isCorrect) {
+                sounds.correct();
+                const bonus = Math.max(0, timeLeft) * 5;
+                score += 100 + bonus;
+            } else {
+                sounds.incorrect();
+                if (btnElement) {
+                    btnElement.classList.add('incorrect');
+                }
+            }
+
+            const optionButtons = document.querySelectorAll('.option-btn');
+            optionButtons.forEach(btn => {
+                btn.disabled = true;
+                if(btn.innerText === question.correctAnswer) {
+                    btn.classList.add('correct');
+                }
+            });
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < currentQuestions.length) {
+                    showQuestion();
+                } else {
+                    showScoreScreen();
+                }
+            }, 1500);
+        }
+        
+        function showScoreScreen() {
+            let rank = "उदीयमान नागरिक";
+            let remark = "अझै धेरै अभ्यास आवश्यक छ।";
+            const maxPossibleScore = currentQuestions.length * (100 + (TIME_LIMIT * 5));
+            const percentage = (score / maxPossibleScore) * 100;
+            
+            if (percentage > 80) {
+                rank = "सामाजिक विज्ञ";
+                remark = "उत्कृष्ट! तपाईं त सामाजिक अध्ययनका ज्ञाता हुनुहुन्छ।";
+            } else if (percentage > 60) {
+                rank = "सचेत नागरिक";
+                remark = "धेरै राम्रो! तपाईंको ज्ञान प्रशंसनीय छ।";
+            } else if (percentage > 40) {
+                rank = "जिज्ञासु विद्यार्थी";
+                remark = "राम्रो प्रयास! अभ्यास जारी राख्नुहोस्।";
+            }
+            
+            gameContainer.innerHTML = `
+                <div class="game-card p-8 rounded-xl shadow-2xl text-center fade-in">
+                    <h1 class="text-3xl font-bold text-cyan-700 mb-2">खेल समाप्त!</h1>
+                    <p class="text-gray-600 mb-4">तपाईंको अन्तिम स्कोर:</p>
+                    <div class="text-6xl font-bold text-gray-800 my-4">${score}</div>
+                    <p class="text-xl font-semibold text-amber-500 mb-2">तपाईंको पद: ${rank}</p>
+                    <p class="text-gray-600 mb-8">${remark}</p>
+                    <div class="flex flex-col sm:flex-row gap-4 mt-8">
+                        <button id="retry-btn" class="w-full bg-cyan-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-cyan-700 transition-colors">
+                            फेरि प्रयास गर्नुहोस्
+                        </button>
+                        <button id="change-unit-btn" class="w-full bg-slate-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-slate-700 transition-colors">
+                            अर्को एकाइ छनोट गर्नुहोस्
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('retry-btn').addEventListener('click', startGame);
+            document.getElementById('change-unit-btn').addEventListener('click', createStartScreen);
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        createStartScreen();
+    </script>
+</body>
+</html>
+
