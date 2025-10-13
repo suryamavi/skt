@@ -3,276 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>नेपाली भाडा व्यवस्थापन प्रणाली</title>
+    <title>हाम्रो भाडा प्रणाली</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* --- सामान्य स्टाइल --- */
         :root {
-            --primary-color: #00796b; /* Teal color */
-            --primary-light: #e0f2f1;
-            --secondary-color: #f4f6f7;
-            --text-color: #333;
-            --border-color: #e0e0e0;
-            --danger-color: #d32f2f;
-            --success-color: #388e3c;
-            --warning-color: #fbc02d;
-            --white-color: #fff;
+            --primary-color: #00796b; --primary-light: #e0f2f1; --secondary-color: #f4f6f7;
+            --text-color: #333; --border-color: #e0e0e0; --danger-color: #d32f2f;
+            --success-color: #388e3c; --warning-color: #fbc02d; --white-color: #fff;
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Noto Serif Devanagari', serif;
-            background-color: var(--secondary-color);
-            color: var(--text-color);
-            line-height: 1.8;
-            font-size: 16px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: var(--white-color);
-            border-radius: 12px;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
-        }
-
-        h1, h2, h3 {
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-        }
-        
-        h1 { font-size: 2rem; }
-        h2 { font-size: 1.7rem; }
-        h3 { font-size: 1.3rem; }
-
-        /* --- हेडर र नेभिगेसन --- */
-        .app-header {
-            text-align: center;
-            padding-bottom: 20px;
-            border-bottom: 2px solid var(--primary-color);
-            margin-bottom: 20px;
-        }
-        #org-name-header { color: var(--primary-color); }
-        #org-address-header { font-size: 1rem; color: #666; }
-
-        nav {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-        }
-
-        .nav-btn {
-            background-color: var(--white-color);
-            color: var(--primary-color);
-            border: 1px solid var(--primary-color);
-            padding: 10px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-family: 'Noto Serif Devanagari', serif;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .nav-btn:hover, .nav-btn.active {
-            background-color: var(--primary-color);
-            color: var(--white-color);
-            box-shadow: 0 4px 8px rgba(0, 121, 107, 0.2);
-        }
-        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Noto Serif Devanagari', serif; background-color: var(--secondary-color); color: var(--text-color); line-height: 1.8; font-size: 16px; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 20px; background-color: var(--white-color); border-radius: 12px; box-shadow: 0 6px 12px rgba(0,0,0,0.08); }
+        h1, h2, h3 { font-weight: 700; margin-bottom: 1rem; color: var(--primary-color); }
+        h1 { font-size: 2rem; } h2 { font-size: 1.7rem; } h3 { font-size: 1.3rem; }
+        .app-header { text-align: center; padding-bottom: 20px; border-bottom: 2px solid var(--primary-color); margin-bottom: 20px; }
+        nav { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
+        .nav-btn { background-color: var(--white-color); color: var(--primary-color); border: 1px solid var(--primary-color); padding: 10px 20px; border-radius: 25px; cursor: pointer; font-family: 'Noto Serif Devanagari', serif; font-size: 1rem; transition: all 0.3s ease; }
+        .nav-btn:hover, .nav-btn.active { background-color: var(--primary-color); color: var(--white-color); box-shadow: 0 4px 8px rgba(0, 121, 107, 0.2); }
         .print-btn { border-color: var(--success-color); color: var(--success-color); }
         .print-btn:hover { background-color: var(--success-color); color: var(--white-color); }
-
-        /* --- पृष्ठ र ड्यासबोर्ड --- */
-        .page { display: none; }
-        .page.active { display: block; }
-        
-        #dashboard-menu {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            text-align: center;
-        }
-        .menu-btn {
-            background-color: var(--primary-light);
-            color: var(--primary-color);
-            padding: 30px 20px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 1.2rem;
-            font-weight: 500;
-            border: 2px solid transparent;
-        }
-        .menu-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            border-color: var(--primary-color);
-        }
-        .menu-btn svg {
-            width: 48px;
-            height: 48px;
-            margin-bottom: 10px;
-        }
-
-        /* --- फारम तत्वहरू --- */
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; }
-        .form-group input[type="text"],
-        .form-group input[type="number"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-family: 'Noto Serif Devanagari', serif;
-            font-size: 1rem;
-        }
-        .btn {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: 'Noto Serif Devanagari', serif;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
+        .page { display: none; } .page.active { display: block; }
+        #dashboard-menu { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; text-align: center; }
+        .menu-btn { background-color: var(--primary-light); color: var(--primary-color); padding: 30px 20px; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; font-size: 1.2rem; font-weight: 500; border: 2px solid transparent; }
+        .menu-btn:hover { transform: translateY(-5px); box-shadow: 0 8px 16px rgba(0,0,0,0.1); border-color: var(--primary-color); }
+        .menu-btn svg { width: 48px; height: 48px; margin-bottom: 10px; }
+        .form-group { margin-bottom: 15px; } .form-group label { display: block; margin-bottom: 5px; font-weight: 500; }
+        .form-group input { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-family: 'Noto Serif Devanagari', serif; font-size: 1rem; }
+        .btn { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-family: 'Noto Serif Devanagari', serif; font-size: 1rem; transition: all 0.3s; }
         .btn:hover { opacity: 0.9; transform: translateY(-2px); }
         .btn-primary { background-color: var(--primary-color); color: white; box-shadow: 0 2px 4px rgba(0,121,107,0.3); }
         .btn-danger { background-color: var(--danger-color); color: white; box-shadow: 0 2px 4px rgba(211,47,47,0.3); }
         .btn-secondary { background-color: #ccc; color: var(--text-color); }
-        .btn-icon { background: none; border: none; padding: 5px; cursor: pointer; }
-        .btn-icon svg { width: 20px; height: 20px; vertical-align: middle; }
-
-        /* --- कार्ड र तालिका --- */
-        .card {
-            background-color: #fff;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
+        .btn-icon { background: none; border: none; padding: 5px; cursor: pointer; } .btn-icon svg { width: 20px; height: 20px; vertical-align: middle; }
+        .card { background-color: #fff; border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .danger-zone { border-left: 5px solid var(--danger-color); }
-        
         .balance { font-size: 1.1rem; font-weight: 700; padding: 3px 8px; border-radius: 15px; }
-        .balance.due { color: var(--danger-color); background-color: #ffebee; }
-        .balance.advance { color: var(--success-color); background-color: #e8f5e9; }
-        
+        .balance.due { color: var(--danger-color); background-color: #ffebee; } .balance.advance { color: var(--success-color); background-color: #e8f5e9; }
         .styled-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         .styled-table th, .styled-table td { border: 1px solid var(--border-color); padding: 12px; text-align: left; }
         .styled-table thead th { background-color: var(--primary-light); color: var(--primary-color); font-weight: 700; }
         .styled-table tfoot td { font-weight: 700; background-color: #f5f5f5; }
         .styled-table tbody tr:hover { background-color: #f9f9f9; }
-        .summary-table tbody tr { cursor: pointer; }
-        .styled-table .actions { text-align: center; }
-
-        /* --- मोडल (Modal) --- */
-        .modal {
-            display: none; position: fixed; z-index: 1000; left: 0; top: 0;
-            width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5);
-            animation: fadeIn 0.3s;
-        }
-        .modal-content {
-            background-color: #fefefe; margin: 8% auto; padding: 25px;
-            border: 1px solid #888; width: 90%; max-width: 500px;
-            border-radius: 12px; position: relative; animation: slideIn 0.3s;
-        }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideIn { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .summary-table tbody tr { cursor: pointer; } .styled-table .actions { text-align: center; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); animation: fadeIn 0.3s; }
+        .modal-content { background-color: #fefefe; margin: 8% auto; padding: 25px; border: 1px solid #888; width: 90%; max-width: 500px; border-radius: 12px; position: relative; animation: slideIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } } @keyframes slideIn { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .close-btn { color: #aaa; position: absolute; top: 10px; right: 20px; font-size: 28px; font-weight: bold; cursor: pointer; }
-        
-        /* --- प्रिन्ट स्टाइल --- */
+        .auth-container { max-width: 400px; margin: 50px auto; } .auth-toggle { text-align: center; margin-top: 15px; } .auth-toggle a { color: var(--primary-color); cursor: pointer; }
+        .error-message { color: var(--danger-color); margin-bottom: 15px; text-align: center; }
+        #app-content, #auth-section { display: none; } #app-content.active, #auth-section.active { display: block; }
         @media print {
-            body { background-color: #fff; font-size: 12pt; color: #000; }
-            .no-print { display: none !important; }
+            body { background-color: #fff; font-size: 12pt; color: #000; } .no-print { display: none !important; }
             .container, .card { box-shadow: none; border: none; margin: 0; padding: 0; }
             .print-header { display: block !important; text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
             .styled-table, th, td { border: 1px solid #666; font-size: 11pt; }
             .styled-table thead th { background-color: #eee !important; color: #000 !important; -webkit-print-color-adjust: exact; }
             .styled-table tfoot td { background-color: #f5f5f5 !important; -webkit-print-color-adjust: exact; }
-            body.print-individual-report .print-header { display: none !important; }
-            @page { size: A4; margin: 0.75in; }
+            body.print-individual-report .print-header { display: none !important; } @page { size: A4; margin: 0.75in; }
             .page-break { page-break-before: always; }
         }
         .print-header { display: none; }
     </style>
 </head>
 <body>
-
-    <!-- मोडलहरू -->
-    <div id="addTenantModal" class="modal no-print"><div class="modal-content"><span class="close-btn">&times;</span><h2></h2><form id="addTenantForm"><input type="hidden" id="editTenantId"><div class="form-group"><label for="fullName">पूरा नाम</label><input type="text" id="fullName" required></div><div class="form-group"><label for="phone">फोन नम्बर</label><input type="text" id="phone"></div><div class="form-group"><label for="rooms">भाडामा लिएको कोठा संख्या</label><input type="number" id="rooms" required min="1" value="1"></div><div class="form-group"><label for="openingBalance">अघिल्लो महिनाको बाँकी (बाँकी भए `-` मा राख्नुहोस्)</label><input type="number" id="openingBalance" required value="0"></div><button type="submit" class="btn btn-primary" id="tenantSubmitBtn"></button></form></div></div>
-    <div id="postRentModal" class="modal no-print"><div class="modal-content"><span class="close-btn">&times;</span><h2>मासिक भाडा चढाउनुहोस्</h2><form id="postRentForm"><div class="form-group"><label for="rentYear">बर्ष (बि.सं.)</label><input type="number" id="rentYear" placeholder="२०८१" required></div><div class="form-group"><label for="rentMonth">महिना</label><input type="number" id="rentMonth" placeholder="४" required min="1" max="12"></div><button type="submit" class="btn btn-primary">भाडा पाकेको जनाउनुहोस्</button></form></div></div>
-    <div id="editTransactionModal" class="modal no-print"><div class="modal-content"><span class="close-btn">&times;</span><h2>कारोबार सम्पादन गर्नुहोस्</h2><form id="editTransactionForm"><input type="hidden" id="editTxTenantId"><input type="hidden" id="editTxId"><div class="form-group"><label for="editTxDate">मिति</label><input type="text" id="editTxDate" required></div><div class="form-group"><label for="editTxDesc">विवरण</label><input type="text" id="editTxDesc" required></div><div class="form-group"><label for="editTxAmount">रकम</label><input type="number" id="editTxAmount" required min="0"></div><button type="submit" class="btn btn-primary">सेभ गर्नुहोस्</button></form></div></div>
-    <div id="deleteAllTransactionsModal" class="modal no-print"><div class="modal-content"><span class="close-btn">&times;</span><h2>सबै कारोबार मेटाउनुहोस्?</h2><p>यो कार्यलाई फर्काउन सकिँदैन। पुष्टि गर्न, तलको बक्समा <strong>DELETE</strong> टाइप गर्नुहोस्।</p><form id="deleteAllTxForm"><div class="form-group"><input type="text" id="deleteConfirmInput" placeholder="DELETE"></div><button type="submit" class="btn btn-danger">मैले बुझेँ, सबै कारोबार मेटाउनुहोस्</button></form></div></div>
-    
-    <!-- मुख्य कन्टेनर -->
-    <div class="container">
-        <header class="app-header no-print">
-            <h1 id="org-name-header">नेपाली भाडा व्यवस्थापन प्रणाली</h1>
-            <p id="org-address-header"></p>
-        </header>
-        
-        <div class="print-header"><h1 id="print-org-name"></h1><p id="print-org-address"></p></div>
-
-        <nav class="no-print">
-            <button class="nav-btn active" data-page="dashboard">ड्यासबोर्ड</button>
-            <button class="nav-btn" data-page="settings">सेटिङ्स</button>
-            <button class="nav-btn" data-page="importExport">इम्पोर्ट/एक्सपोर्ट</button>
-        </nav>
-
-        <!-- ड्यासबोर्ड पृष्ठ -->
-        <main id="dashboard" class="page active">
-            <div id="dashboard-menu">
-                <div class="menu-btn" id="viewSummaryBtn"><svg fill="currentColor" viewBox="0 0 20 20"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fill-rule="evenodd" d="M.458 10C3.732 4.943 7.523 3 10 3s6.268 1.943 9.542 7c-3.274 5.057-7.03 7-9.542 7S3.732 15.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path></svg>सारांश सूची हेर्नुहोस्</div>
-                <div class="menu-btn" id="openAddTenantModalBtn"><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd"></path></svg>नयाँ बहालवाला थप्नुहोस्</div>
-                <div class="menu-btn" id="openPostRentModalBtn"><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>मासिक भाडा चढाउनुहोस्</div>
-                <div class="menu-btn" onclick="printAllReports()"><svg fill="currentColor" viewBox="0 0 20 20"><path d="M5 4a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2H5zm0 2h10v6H5V6z"></path><path d="M15 15H5a1 1 0 00-1 1v2a1 1 0 001 1h10a1 1 0 001-1v-2a1 1 0 00-1-1z"></path></svg>सबै रिपोर्ट प्रिन्ट</div>
+    <!-- लगइन र साइनअप सेक्सन -->
+    <section id="auth-section" class="active">
+        <div class="container auth-container">
+            <div id="login-form">
+                <h2 style="text-align: center;">लगइन गर्नुहोस्</h2>
+                <p id="login-error" class="error-message"></p>
+                <form id="loginForm">
+                    <div class="form-group"><label for="loginEmail">इमेल</label><input type="email" id="loginEmail" required></div>
+                    <div class="form-group"><label for="loginPassword">पासवर्ड</label><input type="password" id="loginPassword" required></div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">लगइन गर्नुहोस्</button>
+                </form>
+                <p class="auth-toggle">खाता छैन? <a id="show-signup">नयाँ खाता बनाउनुहोस्</a></p>
             </div>
-        </main>
-        
-        <!-- सारांश सूची पृष्ठ -->
-        <section id="summaryList" class="page">
-            <div class="no-print" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;"><h2>बहालवालाहरुको सूची</h2><button class="btn print-btn" onclick="printSummaryReport()">सारांश प्रिन्ट गर्नुहोस्</button></div>
-            <div id="summaryTableContainer"></div>
-        </section>
+            <div id="signup-form" style="display: none;">
+                <h2 style="text-align: center;">नयाँ खाता बनाउनुहोस्</h2>
+                 <p id="signup-error" class="error-message"></p>
+                <form id="signupForm">
+                    <div class="form-group"><label for="signupEmail">इमेल</label><input type="email" id="signupEmail" required></div>
+                    <div class="form-group"><label for="signupPassword">पासवर्ड</label><input type="password" id="signupPassword" required></div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">खाता बनाउनुहोस्</button>
+                </form>
+                <p class="auth-toggle">पहिले नै खाता छ? <a id="show-login">यहाँ लगइन गर्नुहोस्</a></p>
+            </div>
+        </div>
+    </section>
 
-        <!-- सेटिङ्स पृष्ठ -->
-        <section id="settings" class="page">
-            <h2>एप्लिकेसन सेटिङ्स</h2>
-            <div class="card"><form id="settingsForm"><div class="form-group"><label for="orgName">संस्थाको नाम</label><input type="text" id="orgName" required></div><div class="form-group"><label for="orgAddress">संस्थाको ठेगाना</label><input type="text" id="orgAddress" required></div><div class="form-group"><label for="rentPerRoom">प्रति कोठा मासिक भाडा दर (रु.)</label><input type="number" id="rentPerRoom" required min="0"></div><button type="submit" class="btn btn-primary">सेभ गर्नुहोस्</button></form></div>
-            <div class="card danger-zone"><h3>खतरनाक क्षेत्र</h3><p>यो कार्यले सबै बहालवालाहरुको सम्पूर्ण कारोबार (भाडा र भुक्तानी) मेटाउनेछ। बहालवालाको विवरण र बाँकी रकम भने यथावत रहनेछ।</p><button class="btn btn-danger" id="openDeleteAllTxModalBtn">सबै कारोबार मेटाउनुहोस्</button></div>
-        </section>
-
-        <!-- बहालवाला विवरण पृष्ठ -->
-        <section id="tenantDetail" class="page"></section>
+    <!-- मुख्य एप्लिकेसन सेक्सन -->
+    <section id="app-content">
+        <!-- मोडलहरू -->
+        <div id="addTenantModal" class="modal no-print"><div class="modal-content"><span class="close-btn">&times;</span><h2></h2><form id="addTenantForm"><input type="hidden" id="editTenantId"><div class="form-group"><label for="fullName">पूरा नाम</label><input type="text" id="fullName" required></div><div class="form-group"><label for="phone">फोन नम्बर</label><input type="text" id="phone"></div><div class="form-group"><label for="rooms">भाडामा लिएको कोठा संख्या</label><input type="number" id="rooms" required min="1" value="1"></div><div class="form-group"><label for="openingBalance">अघिल्लो महिनाको बाँकी (बाँकी भए `-` मा राख्नुहोस्)</label><input type="number" id="openingBalance" required value="0"></div><button type="submit" class="btn btn-primary" id="tenantSubmitBtn"></button></form></div></div>
+        <div id="postRentModal" class="modal no-print"><div class="modal-content"><span class="close-btn">&times;</span><h2>मासिक भाडा चढाउनुहोस्</h2><form id="postRentForm"><div class="form-group"><label for="rentYear">बर्ष (बि.सं.)</label><input type="number" id="rentYear" placeholder="२०८१" required></div><div class="form-group"><label for="rentMonth">महिना</label><input type="number" id="rentMonth" placeholder="४" required min="1" max="12"></div><button type="submit" class="btn btn-primary">भाडा पाकेको जनाउनुहोस्</button></form></div></div>
+        <div id="editTransactionModal" class="modal no-print"><div class="modal-content"><span class="close-btn">&times;</span><h2>कारोबार सम्पादन गर्नुहोस्</h2><form id="editTransactionForm"><input type="hidden" id="editTxTenantId"><input type="hidden" id="editTxId"><div class="form-group"><label for="editTxDate">मिति</label><input type="text" id="editTxDate" required></div><div class="form-group"><label for="editTxDesc">विवरण</label><input type="text" id="editTxDesc" required></div><div class="form-group"><label for="editTxAmount">रकम</label><input type="number" id="editTxAmount" required min="0"></div><button type="submit" class="btn btn-primary">सेभ गर्नुहोस्</button></form></div></div>
+        <div id="deleteAllTransactionsModal" class="modal no-print"><div class="modal-content"><span class="close-btn">&times;</span><h2>सबै कारोबार मेटाउनुहोस्?</h2><p>यो कार्यलाई फर्काउन सकिँदैन। पुष्टि गर्न, तलको बक्समा <strong>DELETE</strong> टाइप गर्नुहोस्।</p><form id="deleteAllTxForm"><div class="form-group"><input type="text" id="deleteConfirmInput" placeholder="DELETE"></div><button type="submit" class="btn btn-danger">मैले बुझेँ, सबै कारोबार मेटाउनुहोस्</button></form></div></div>
         
-        <!-- इम्पोर्ट/एक्सपोर्ट पृष्ठ -->
-        <section id="importExport" class="page">
-            <h2>डाटा इम्पोर्ट/एक्सपोर्ट</h2>
-            <div class="card"><h3>डाटा एक्सपोर्ट</h3><p>सबै एप्लिकेसन डाटा JSON फाइलको रूपमा डाउनलोड गर्नुहोस्।</p><button id="exportDataBtn" class="btn btn-primary">डाटा एक्सपोर्ट गर्नुहोस्</button></div>
-            <div class="card"><h3>डाटा इम्पोर्ट</h3><p>JSON फाइलबाट डाटा इम्पोर्ट गर्नुहोस्। <strong>चेतावनी:</strong> हालको सबै डाटा मेटिनेछ र फायरबेसमा सेभ हुनेछ।</p><input type="file" id="importDataInput" accept=".json"></div>
-        </section>
-    </div>
+        <div class="container">
+            <header class="app-header no-print">
+                <h1 id="org-name-header">नेपाली भाडा व्यवस्थापन प्रणाली</h1>
+                <p id="org-address-header"></p>
+                <div style="margin-top: 10px;"><button id="logoutBtn" class="btn btn-danger">लगआउट</button></div>
+            </header>
+            
+            <div class="print-header"><h1 id="print-org-name"></h1><p id="print-org-address"></p></div>
+
+            <nav class="no-print">
+                <button class="nav-btn active" data-page="dashboard">ड्यासबोर्ड</button>
+                <button class="nav-btn" data-page="settings">सेटिङ्स</button>
+                <button class="nav-btn" data-page="importExport">इम्पोर्ट/एक्सपोर्ट</button>
+            </nav>
+
+            <main id="dashboard" class="page active"><div id="dashboard-menu"><div class="menu-btn" id="viewSummaryBtn"><svg fill="currentColor" viewBox="0 0 20 20"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"></path><path fill-rule="evenodd" d="M.458 10C3.732 4.943 7.523 3 10 3s6.268 1.943 9.542 7c-3.274 5.057-7.03 7-9.542 7S3.732 15.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"></path></svg>सारांश सूची हेर्नुहोस्</div><div class="menu-btn" id="openAddTenantModalBtn"><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd"></path></svg>नयाँ बहालवाला थप्नुहोस्</div><div class="menu-btn" id="openPostRentModalBtn"><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>मासिक भाडा चढाउनुहोस्</div><div class="menu-btn" onclick="printAllReports()"><svg fill="currentColor" viewBox="0 0 20 20"><path d="M5 4a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2V6a2 2 0 00-2-2H5zm0 2h10v6H5V6z"></path><path d="M15 15H5a1 1 0 00-1 1v2a1 1 0 001 1h10a1 1 0 001-1v-2a1 1 0 00-1-1z"></path></svg>सबै रिपोर्ट प्रिन्ट</div></div></main>
+            <section id="summaryList" class="page"><div class="no-print" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;"><h2>बहालवालाहरुको सूची</h2><button class="btn print-btn" onclick="printSummaryReport()">सारांश प्रिन्ट गर्नुहोस्</button></div><div id="summaryTableContainer"></div></section>
+            <section id="settings" class="page"><h2>एप्लिकेसन सेटिङ्स</h2><div class="card"><form id="settingsForm"><div class="form-group"><label for="orgName">संस्थाको नाम</label><input type="text" id="orgName" required></div><div class="form-group"><label for="orgAddress">संस्थाको ठेगाना</label><input type="text" id="orgAddress" required></div><div class="form-group"><label for="rentPerRoom">प्रति कोठा मासिक भाडा दर (रु.)</label><input type="number" id="rentPerRoom" required min="0"></div><button type="submit" class="btn btn-primary">सेभ गर्नुहोस्</button></form></div><div class="card danger-zone"><h3>खतरनाक क्षेत्र</h3><p>यो कार्यले सबै बहालवालाहरुको सम्पूर्ण कारोबार (भाडा र भुक्तानी) मेटाउनेछ। बहालवालाको विवरण र बाँकी रकम भने यथावत रहनेछ।</p><button class="btn btn-danger" id="openDeleteAllTxModalBtn">सबै कारोबार मेटाउनुहोस्</button></div></section>
+            <section id="tenantDetail" class="page"></section>
+            <section id="importExport" class="page"><h2>डाटा इम्पोर्ट/एक्सपोर्ट</h2><div class="card"><h3>डाटा एक्सपोर्ट</h3><p>सबै एप्लिकेसन डाटा JSON फाइलको रूपमा डाउनलोड गर्नुहोस्।</p><button id="exportDataBtn" class="btn btn-primary">डाटा एक्सपोर्ट गर्नुहोस्</button></div><div class="card"><h3>डाटा इम्पोर्ट</h3><p>JSON फाइलबाट डाटा इम्पोर्ट गर्नुहोस्। <strong>चेतावनी:</strong> हालको सबै डाटा मेटिनेछ र फायरबेसमा सेभ हुनेछ।</p><input type="file" id="importDataInput" accept=".json"></div></section>
+        </div>
+    </section>
 
     <!-- Firebase SDK Scripts -->
     <script type="module">
-        // Firebase SDKs लाई इम्पोर्ट गर्ने
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
         import { getFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-        // --- १. फायरबेस कन्फिगरेसन (Firebase Configuration) ---
-        // तपाईंले फायरबेस कन्सोलबाट कपि गर्नुभएको firebaseConfig कोड यहाँ पेस्ट गर्नुहोस्
+        // --- १. फायरबेस कन्फिगरेसन ---
         const firebaseConfig = {
   apiKey: "AIzaSyBaSA5ijQvyikaAIfSiOlyTfY8rZImgWRc",
   authDomain: "mero-rental-app.firebaseapp.com",
@@ -281,19 +140,10 @@
   messagingSenderId: "464139866569",
   appId: "1:464139866569:web:a23fbc9e8a64264bce1818"
 };
-
-        // --- फायरबेस कन्फिगरेसन जाँच गर्ने ---
         if (firebaseConfig.apiKey === "तपाईंको_API_KEY") {
-            const container = document.querySelector('.container');
-            container.innerHTML = `
-                <div class="card" style="border-left: 5px solid var(--danger-color);">
-                    <h2>त्रुटि: फायरबेस कन्फिगरेसन मिलेन</h2>
-                    <p>कृपया <code>index.html</code> फाइल सम्पादन गरी, स्क्रिप्ट ट्याग भित्र रहेको <code>firebaseConfig</code> अब्जेक्टमा तपाईंले आफ्नो फायरबेस कन्सोलबाट पाउनुभएको वास्तविक विवरणहरू राख्नुहोस्।</p>
-                    <p>तपाईंले <code>apiKey</code>, <code>projectId</code>, आदि जस्ता सबै अस्थायी मानहरूलाई आफ्नो प्रोजेक्टको मानले बदल्नुपर्छ।</p>
-                </div>`;
-            throw new Error("Firebase config is not set. Please update the firebaseConfig object in index.html.");
+            document.body.innerHTML = `<div class="container"><div class="card" style="border-left: 5px solid var(--danger-color);"><h2>त्रुटि: फायरबेस कन्फिगरेसन मिलेन</h2><p>कृपया <code>mero-rental-app.html</code> फाइल सम्पादन गरी, <code>firebaseConfig</code> अब्जेक्टमा तपाईंको फायरबेस कन्सोलबाट पाउनुभएको वास्तविक विवरणहरू राख्नुहोस्।</p></div></div>`;
+            throw new Error("Firebase config is not set.");
         }
-
 
         // --- फायरबेस सेवाहरू सुरु गर्ने ---
         const app = initializeApp(firebaseConfig);
@@ -303,397 +153,129 @@
         // --- ग्लोबल भेरिएबलहरू ---
         let appData = { settings: { orgName: 'मेरो घर', orgAddress: 'काठमाडौं, नेपाल', rentPerRoom: 5000 }, tenants: [] };
         let currentUserId = null;
-        let unsubscribeFromFirestore = null; // To stop listening to data changes when needed
+        let unsubscribeFromFirestore = null;
 
         document.addEventListener('DOMContentLoaded', () => {
-            const modals = {
-                addTenant: document.getElementById('addTenantModal'),
-                postRent: document.getElementById('postRentModal'),
-                editTx: document.getElementById('editTransactionModal'),
-                deleteAllTx: document.getElementById('deleteAllTransactionsModal'),
-            };
+            const authSection = document.getElementById('auth-section');
+            const appContent = document.getElementById('app-content');
+            
+            const toNepaliNumber = (numStr) => String(numStr ?? '').replace(/[0-9]/g, d => '०१२३४५६७८९'[d]);
+            const formatNepaliCurrency = (num) => { const s = String(Math.abs(num)), [i] = s.split('.'), l = i.slice(-3), o = i.slice(0, -3); return toNepaliNumber((o ? o.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + ',' : '') + l); };
+            const getNepaliMonthName = (m) => ["बैशाख", "जेठ", "असार", "श्रावण", "भदौ", "असोज", "कार्तिक", "मंसिर", "पुष", "माघ", "फाल्गुन", "चैत्र"][m - 1] || '';
 
-            // --- Helper Functions ---
-            const toNepaliNumber = (numStr) => String(numStr ?? '').replace(/[0-9]/g, d => ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'][d]);
-            const formatNepaliCurrency = (num) => {
-                const numStr = String(Math.abs(num)), [integerPart] = numStr.split('.'), lastThree = integerPart.slice(-3);
-                const otherNumbers = integerPart.slice(0, -3);
-                return toNepaliNumber((otherNumbers ? otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + ',' : '') + lastThree);
-            };
-            const getNepaliMonthName = (monthNumber) => ["बैशाख", "जेठ", "असार", "श्रावण", "भदौ", "असोज", "कार्तिक", "मंसिर", "पुष", "माघ", "फाल्गुन", "चैत्र"][monthNumber - 1] || '';
-
-            // --- Data Persistence (Firebase) ---
             const saveData = async () => {
-                if (!currentUserId) {
-                    console.error("User not authenticated, cannot save data.");
-                    return;
-                }
-                try {
-                    const docRef = doc(db, "rentalData", currentUserId);
-                    await setDoc(docRef, appData);
-                } catch (error) {
-                    console.error("Error saving data to Firestore: ", error);
-                    alert('डाटा सेभ गर्न समस्या भयो।');
-                }
+                if (!currentUserId) return;
+                try { await setDoc(doc(db, "rentalData", currentUserId), appData); } 
+                catch (e) { console.error("Error saving data:", e); alert('डाटा सेभ गर्न समस्या भयो।'); }
             };
 
-            // --- UI Rendering ---
             const switchPage = (pageId) => {
-                document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
                 document.getElementById(pageId)?.classList.add('active');
-                document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.page === pageId));
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.page === pageId));
                 document.body.classList.toggle('print-individual-report', pageId === 'tenantDetail');
             };
-            
+
             const updateUIWithData = () => {
-                updateHeaders();
-                renderSettings();
-                const activePage = document.querySelector('.page.active')?.id || 'dashboard';
-                if (activePage === 'summaryList') renderSummaryTable();
-                else if (activePage === 'tenantDetail') {
-                    // This is tricky, we need to know which tenant was open. For now, go back to summary.
-                    renderSummaryTable();
-                    switchPage('summaryList');
-                } else {
-                    switchPage(activePage);
-                }
-            };
-            
-            const updateHeaders = () => {
                 const { orgName, orgAddress } = appData.settings;
                 document.getElementById('org-name-header').textContent = orgName || 'भाडा व्यवस्थापन';
                 document.getElementById('org-address-header').textContent = orgAddress || '';
                 document.getElementById('print-org-name').textContent = orgName || 'भाडा व्यवस्थापन';
                 document.getElementById('print-org-address').textContent = orgAddress || '';
+                renderSettings();
+                const activePage = document.querySelector('.page.active')?.id || 'dashboard';
+                if (activePage === 'summaryList') renderSummaryTable();
+                else if (activePage === 'tenantDetail') { renderSummaryTable(); switchPage('summaryList'); }
+                else { switchPage(activePage); }
             };
 
-            const calculateBalance = (tenant) => tenant.transactions.reduce((acc, tx) => tx.type === 'rent' ? acc - tx.amount : acc + tx.amount, -tenant.openingBalance);
+            const calculateBalance = (t) => t.transactions.reduce((a, x) => x.type === 'rent' ? a - x.amount : a + x.amount, -t.openingBalance);
 
             const renderSummaryTable = () => {
                 const container = document.getElementById('summaryTableContainer');
-                if (appData.tenants.length === 0) {
-                    container.innerHTML = '<p>कुनै पनि बहालवाला थपिएको छैन।</p>';
-                    return;
-                }
+                if (appData.tenants.length === 0) { container.innerHTML = '<p>कुनै पनि बहालवाला थपिएको छैन।</p>'; return; }
                 let totalRooms = 0, netBalance = 0;
-                let tableBodyHTML = '';
-                appData.tenants.forEach(tenant => {
+                const tableBodyHTML = appData.tenants.map(tenant => {
                     const balance = calculateBalance(tenant);
-                    totalRooms += tenant.rooms;
-                    netBalance += balance;
-                    tableBodyHTML += `<tr data-tenant-id="${tenant.id}">
-                        <td class="view-detail">${tenant.fullName}</td>
-                        <td class="view-detail">${toNepaliNumber(tenant.phone)}</td>
-                        <td class="view-detail">${toNepaliNumber(tenant.rooms)}</td>
-                        <td><span class="balance ${balance >= 0 ? 'advance' : 'due'}">रु. ${formatNepaliCurrency(Math.abs(balance))} (${balance >= 0 ? 'अग्रिम' : 'बाँकी'})</span></td>
-                        <td class="actions no-print">
-                            <button class="btn-icon edit-btn" title="सम्पादन"><svg fill="currentColor" viewBox="0 0 20 20"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path></svg></button>
-                            <button class="btn-icon delete-btn" title="हटाउनुहोस्"><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg></button>
-                        </td></tr>`;
-                });
-                const tableHTML = `<table class="styled-table summary-table">
-                    <thead><tr><th>पूरा नाम</th><th>फोन</th><th>कोठा</th><th>ब्यालेन्स</th><th class="no-print">कार्य</th></tr></thead>
-                    <tbody>${tableBodyHTML}</tbody>
-                    <tfoot><tr><td colspan="2"><strong>कूल जम्मा</strong></td><td><strong>${toNepaliNumber(totalRooms)}</strong></td><td><strong>रु. ${formatNepaliCurrency(Math.abs(netBalance))} (${netBalance >= 0 ? 'कूल अग्रिम' : 'कूल बाँकी'})</strong></td><td class="no-print"></td></tr></tfoot>
-                </table>`;
-                container.innerHTML = tableHTML;
+                    totalRooms += tenant.rooms; netBalance += balance;
+                    return `<tr data-tenant-id="${tenant.id}"><td class="view-detail">${tenant.fullName}</td><td class="view-detail">${toNepaliNumber(tenant.phone)}</td><td class="view-detail">${toNepaliNumber(tenant.rooms)}</td><td><span class="balance ${balance >= 0 ? 'advance' : 'due'}">रु. ${formatNepaliCurrency(Math.abs(balance))} (${balance >= 0 ? 'अग्रिम' : 'बाँकी'})</span></td><td class="actions no-print"><button class="btn-icon edit-btn" title="सम्पादन"><svg fill="currentColor" viewBox="0 0 20 20"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path></svg></button><button class="btn-icon delete-btn" title="हटाउनुहोस्"><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg></button></td></tr>`;
+                }).join('');
+                container.innerHTML = `<table class="styled-table summary-table"><thead><tr><th>पूरा नाम</th><th>फोन</th><th>कोठा</th><th>ब्यालेन्स</th><th class="no-print">कार्य</th></tr></thead><tbody>${tableBodyHTML}</tbody><tfoot><tr><td colspan="2"><strong>कूल जम्मा</strong></td><td><strong>${toNepaliNumber(totalRooms)}</strong></td><td><strong>रु. ${formatNepaliCurrency(Math.abs(netBalance))} (${netBalance >= 0 ? 'कूल अग्रिम' : 'कूल बाँकी'})</strong></td><td class="no-print"></td></tr></tfoot></table>`;
             };
-
+            
             const renderTenantDetail = (tenantId) => {
                 const tenant = appData.tenants.find(t => t.id === tenantId);
                 if (!tenant) return;
                 const detailPage = document.getElementById('tenantDetail');
-                
-                const ledgerItems = [
-                    { id: 'ob', date: '', description: 'अघिल्लो महिनाको बाँकी', rent: tenant.openingBalance, payment: 0 },
-                    ...tenant.transactions.map(tx => ({ ...tx, rent: tx.type === 'rent' ? tx.amount : 0, payment: tx.type === 'payment' ? tx.amount : 0 }))
-                ].sort((a, b) => a.date.localeCompare(b.date));
-
+                const ledgerItems = [{ id: 'ob', date: '', description: 'अघिल्लो महिनाको बाँकी', rent: tenant.openingBalance, payment: 0 }, ...tenant.transactions.map(tx => ({ ...tx, rent: tx.type === 'rent' ? tx.amount : 0, payment: tx.type === 'payment' ? tx.amount : 0 }))].sort((a, b) => a.date.localeCompare(b.date));
                 let runningBalance = 0;
-                let transactionRows = '';
-                ledgerItems.forEach((item, index) => {
-                    if(item.rent > 0 || item.payment > 0 || item.description === 'अघिल्लो महिनाको बाँकी') {
-                        if (index === 0) {
-                            runningBalance = -item.rent;
-                        } else {
-                            runningBalance = runningBalance - item.rent + item.payment;
-                        }
-                        const actionsHTML = item.id !== 'ob' ? `<td class="actions no-print">
-                            <button class="btn-icon edit-tx-btn" data-tenant-id="${tenant.id}" data-tx-id="${item.id}" title="सम्पादन"><svg fill="currentColor" viewBox="0 0 20 20"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path></svg></button>
-                            <button class="btn-icon delete-tx-btn" data-tenant-id="${tenant.id}" data-tx-id="${item.id}" title="हटाउनुहोस्"><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg></button>
-                        </td>` : '<td class="no-print"></td>';
-                        transactionRows += `<tr>
-                            <td>${toNepaliNumber(item.date)}</td><td>${item.description}</td>
-                            <td style="text-align: right;">${item.rent ? `रु. ${formatNepaliCurrency(item.rent)}` : '-'}</td>
-                            <td style="text-align: right;">${item.payment ? `रु. ${formatNepaliCurrency(item.payment)}` : '-'}</td>
-                            <td style="text-align: right;">रु. ${formatNepaliCurrency(Math.abs(runningBalance))} (${runningBalance >= 0 ? 'अग्रिम' : 'बाँकी'})</td>
-                            ${actionsHTML}
-                        </tr>`;
-                    }
-                });
-                
-                detailPage.innerHTML = `
-                    <div class="no-print" style="margin-bottom: 20px;">
-                        <button class="btn btn-secondary" onclick="document.dispatchEvent(new CustomEvent('switchPage', { detail: { pageId: 'summaryList' } }))">पछाडी जानुहोस्</button>
-                        <button class="btn print-btn" onclick="window.print()">यो रिपोर्ट प्रिन्ट गर्नुहोस्</button>
-                    </div>
-                    <div class="card" id="tenant-report-content">
-                        <h2>${tenant.fullName} को विवरण</h2>
-                        <p><strong>फोन:</strong> ${toNepaliNumber(tenant.phone)} | <strong>कोठा संख्या:</strong> ${toNepaliNumber(tenant.rooms)}</p><hr style="margin: 15px 0;">
-                        <div class="card no-print" style="margin-top: 20px;"><h3>भुक्तानी रेकर्ड गर्नुहोस्</h3><form id="paymentForm" data-tenant-id="${tenant.id}"><div class="form-group"><label for="paymentDate">भुक्तानी मिति (YYYY-MM-DD)</label><input type="text" id="paymentDate" placeholder="२०८१-०४-१५ or २०८१०४१५" required></div><div class="form-group"><label for="paymentAmount">रकम</label><input type="number" id="paymentAmount" required min="1"></div><button type="submit" class="btn btn-primary">भुक्तानी चढाउनुहोस्</button></form></div>
-                        <h3>कारोबारको लेजर</h3>
-                        <table class="styled-table"><thead><tr><th>मिति</th><th>विवरण</th><th style="text-align: right;">भाडा (रु)</th><th style="text-align: right;">भुक्तानी (रु)</th><th style="text-align: right;">ब्यालेन्स (रु)</th><th class="no-print">कार्य</th></tr></thead><tbody>${transactionRows}</tbody></table>
-                    </div>`;
+                const transactionRows = ledgerItems.filter(item => item.rent > 0 || item.payment > 0 || item.description === 'अघिल्लो महिनाको बाँकी').map((item, index) => {
+                    runningBalance = index === 0 ? -item.rent : runningBalance - item.rent + item.payment;
+                    const actionsHTML = item.id !== 'ob' ? `<td class="actions no-print"><button class="btn-icon edit-tx-btn" data-tenant-id="${tenant.id}" data-tx-id="${item.id}" title="सम्पादन"><svg fill="currentColor" viewBox="0 0 20 20"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path></svg></button><button class="btn-icon delete-tx-btn" data-tenant-id="${tenant.id}" data-tx-id="${item.id}" title="हटाउनुहोस्"><svg fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg></button></td>` : '<td class="no-print"></td>';
+                    return `<tr><td>${toNepaliNumber(item.date)}</td><td>${item.description}</td><td style="text-align: right;">${item.rent ? `रु. ${formatNepaliCurrency(item.rent)}` : '-'}</td><td style="text-align: right;">${item.payment ? `रु. ${formatNepaliCurrency(item.payment)}` : '-'}</td><td style="text-align: right;">रु. ${formatNepaliCurrency(Math.abs(runningBalance))} (${runningBalance >= 0 ? 'अग्रिम' : 'बाँकी'})</td>${actionsHTML}</tr>`;
+                }).join('');
+                detailPage.innerHTML = `<div class="no-print" style="margin-bottom: 20px;"><button class="btn btn-secondary" onclick="document.dispatchEvent(new CustomEvent('switchPage', { detail: { pageId: 'summaryList' } }))">पछाडी जानुहोस्</button><button class="btn print-btn" onclick="window.print()">यो रिपोर्ट प्रिन्ट गर्नुहोस्</button></div><div class="card" id="tenant-report-content"><h2>${tenant.fullName} को विवरण</h2><p><strong>फोन:</strong> ${toNepaliNumber(tenant.phone)} | <strong>कोठा संख्या:</strong> ${toNepaliNumber(tenant.rooms)}</p><hr style="margin: 15px 0;"><div class="card no-print" style="margin-top: 20px;"><h3>भुक्तानी रेकर्ड गर्नुहोस्</h3><form id="paymentForm" data-tenant-id="${tenant.id}"><div class="form-group"><label for="paymentDate">भुक्तानी मिति (YYYY-MM-DD)</label><input type="text" id="paymentDate" placeholder="२०८१-०४-१५ or २०८१०४१५" required></div><div class="form-group"><label for="paymentAmount">रकम</label><input type="number" id="paymentAmount" required min="1"></div><button type="submit" class="btn btn-primary">भुक्तानी चढाउनुहोस्</button></form></div><h3>कारोबारको लेजर</h3><table class="styled-table"><thead><tr><th>मिति</th><th>विवरण</th><th style="text-align: right;">भाडा (रु)</th><th style="text-align: right;">भुक्तानी (रु)</th><th style="text-align: right;">ब्यालेन्स (रु)</th><th class="no-print">कार्य</th></tr></thead><tbody>${transactionRows}</tbody></table></div>`;
                 switchPage('tenantDetail');
             };
+            const renderSettings = () => { const { orgName, orgAddress, rentPerRoom } = appData.settings; document.getElementById('orgName').value = orgName; document.getElementById('orgAddress').value = orgAddress; document.getElementById('rentPerRoom').value = rentPerRoom; };
 
-            const renderSettings = () => {
-                const { orgName, orgAddress, rentPerRoom } = appData.settings;
-                document.getElementById('orgName').value = orgName; document.getElementById('orgAddress').value = orgAddress; document.getElementById('rentPerRoom').value = rentPerRoom;
-            };
-            
-            // --- Event Handlers (No changes here, they operate on appData) ---
+            // Authentication UI
+            document.getElementById('show-signup').addEventListener('click', () => { document.getElementById('login-form').style.display = 'none'; document.getElementById('signup-form').style.display = 'block'; });
+            document.getElementById('show-login').addEventListener('click', () => { document.getElementById('signup-form').style.display = 'none'; document.getElementById('login-form').style.display = 'block'; });
+
+            // Event Handlers
             document.querySelectorAll('.nav-btn').forEach(btn => btn.addEventListener('click', () => switchPage(btn.dataset.page)));
             document.addEventListener('switchPage', (e) => switchPage(e.detail.pageId));
             document.getElementById('viewSummaryBtn').addEventListener('click', () => { renderSummaryTable(); switchPage('summaryList'); });
-            const openModal = (modal) => modal.style.display = 'block';
-            const closeModal = (modal) => modal.style.display = 'none';
-            document.getElementById('openAddTenantModalBtn').addEventListener('click', () => {
-                document.getElementById('addTenantForm').reset();
-                document.getElementById('editTenantId').value = '';
-                modals.addTenant.querySelector('h2').textContent = 'नयाँ बहालवाला थप्नुहोस्';
-                document.getElementById('tenantSubmitBtn').textContent = 'थप्नुहोस्';
-                openModal(modals.addTenant);
-            });
+            const modals = { addTenant: document.getElementById('addTenantModal'), postRent: document.getElementById('postRentModal'), editTx: document.getElementById('editTransactionModal'), deleteAllTx: document.getElementById('deleteAllTransactionsModal'), };
+            const openModal = (modal) => modal.style.display = 'block'; const closeModal = (modal) => modal.style.display = 'none';
+            document.getElementById('openAddTenantModalBtn').addEventListener('click', () => { document.getElementById('addTenantForm').reset(); document.getElementById('editTenantId').value = ''; modals.addTenant.querySelector('h2').textContent = 'नयाँ बहालवाला थप्नुहोस्'; document.getElementById('tenantSubmitBtn').textContent = 'थप्नुहोस्'; openModal(modals.addTenant); });
             document.getElementById('openPostRentModalBtn').addEventListener('click', () => openModal(modals.postRent));
             document.getElementById('openDeleteAllTxModalBtn').addEventListener('click', () => openModal(modals.deleteAllTx));
-            Object.values(modals).forEach(modal => {
-                modal.querySelector('.close-btn').addEventListener('click', () => closeModal(modal));
-                window.addEventListener('click', (e) => { if (e.target === modal) closeModal(modal); });
-            });
-            document.getElementById('addTenantForm').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const tenantId = document.getElementById('editTenantId').value;
-                const tenantData = { fullName: document.getElementById('fullName').value.trim(), phone: document.getElementById('phone').value.trim(), rooms: parseInt(document.getElementById('rooms').value), openingBalance: parseFloat(document.getElementById('openingBalance').value) || 0 };
-                if (!tenantData.fullName) { alert('कृपया पूरा नाम भर्नुहोस्।'); return; }
-                if (tenantId) {
-                    const tenantIndex = appData.tenants.findIndex(t => t.id === tenantId);
-                    if (tenantIndex !== -1) appData.tenants[tenantIndex] = { ...appData.tenants[tenantIndex], ...tenantData };
-                } else {
-                    appData.tenants.push({ id: `T${Date.now()}`, ...tenantData, transactions: [] });
-                }
-                saveData(); renderSummaryTable(); closeModal(modals.addTenant);
-            });
-            document.getElementById('summaryTableContainer').addEventListener('click', (e) => {
-                const row = e.target.closest('tr');
-                if (!row) return;
-                const tenantId = row.dataset.tenantId, tenant = appData.tenants.find(t => t.id === tenantId);
-                if (e.target.closest('.edit-btn')) {
-                    document.getElementById('editTenantId').value = tenant.id;
-                    document.getElementById('fullName').value = tenant.fullName;
-                    document.getElementById('phone').value = tenant.phone;
-                    document.getElementById('rooms').value = tenant.rooms;
-                    document.getElementById('openingBalance').value = tenant.openingBalance;
-                    modals.addTenant.querySelector('h2').textContent = 'विवरण सम्पादन गर्नुहोस्';
-                    document.getElementById('tenantSubmitBtn').textContent = 'सेभ गर्नुहोस्';
-                    openModal(modals.addTenant);
-                } else if (e.target.closest('.delete-btn')) {
-                    if (confirm('के तपाईं यो बहालवालालाई साँच्चै हटाउन चाहनुहुन्छ?')) {
-                        appData.tenants = appData.tenants.filter(t => t.id !== tenantId);
-                        saveData(); renderSummaryTable();
-                    }
-                } else if (e.target.closest('.view-detail')) {
-                    renderTenantDetail(tenantId);
-                }
-            });
-            document.getElementById('tenantDetail').addEventListener('click', (e) => {
-                const editBtn = e.target.closest('.edit-tx-btn');
-                const deleteBtn = e.target.closest('.delete-tx-btn');
-                if(editBtn) {
-                    const { tenantId, txId } = editBtn.dataset;
-                    const tenant = appData.tenants.find(t => t.id === tenantId);
-                    const tx = tenant.transactions.find(t => t.id === txId);
-                    document.getElementById('editTxTenantId').value = tenantId;
-                    document.getElementById('editTxId').value = txId;
-                    document.getElementById('editTxDate').value = tx.date;
-                    document.getElementById('editTxDesc').value = tx.description;
-                    document.getElementById('editTxAmount').value = tx.amount;
-                    openModal(modals.editTx);
-                } else if (deleteBtn) {
-                    const { tenantId, txId } = deleteBtn.dataset;
-                    if(confirm('के तपाईं यो कारोबार मेटाउन चाहनुहुन्छ?')) {
-                        const tenant = appData.tenants.find(t => t.id === tenantId);
-                        tenant.transactions = tenant.transactions.filter(t => t.id !== txId);
-                        saveData();
-                        renderTenantDetail(tenantId);
-                    }
-                }
-            });
-            document.getElementById('editTransactionForm').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const tenantId = document.getElementById('editTxTenantId').value;
-                const txId = document.getElementById('editTxId').value;
-                const tenant = appData.tenants.find(t => t.id === tenantId);
-                const txIndex = tenant.transactions.findIndex(t => t.id === txId);
-                tenant.transactions[txIndex].date = document.getElementById('editTxDate').value;
-                tenant.transactions[txIndex].description = document.getElementById('editTxDesc').value;
-                tenant.transactions[txIndex].amount = parseFloat(document.getElementById('editTxAmount').value);
-                saveData();
-                closeModal(modals.editTx);
-                renderTenantDetail(tenantId);
-            });
+            Object.values(modals).forEach(m => { m.querySelector('.close-btn').addEventListener('click', () => closeModal(m)); window.addEventListener('click', (e) => { if (e.target === m) closeModal(m); }); });
+            document.getElementById('addTenantForm').addEventListener('submit', (e) => { e.preventDefault(); const id = document.getElementById('editTenantId').value; const data = { fullName: document.getElementById('fullName').value.trim(), phone: document.getElementById('phone').value.trim(), rooms: parseInt(document.getElementById('rooms').value), openingBalance: parseFloat(document.getElementById('openingBalance').value) || 0 }; if (!data.fullName) { alert('कृपया पूरा नाम भर्नुहोस्।'); return; } if (id) { const i = appData.tenants.findIndex(t => t.id === id); if (i !== -1) appData.tenants[i] = { ...appData.tenants[i], ...data }; } else { appData.tenants.push({ id: `T${Date.now()}`, ...data, transactions: [] }); } saveData(); renderSummaryTable(); closeModal(modals.addTenant); });
+            document.getElementById('summaryTableContainer').addEventListener('click', (e) => { const r = e.target.closest('tr'); if (!r) return; const id = r.dataset.tenantId, t = appData.tenants.find(x => x.id === id); if (e.target.closest('.edit-btn')) { document.getElementById('editTenantId').value = t.id; document.getElementById('fullName').value = t.fullName; document.getElementById('phone').value = t.phone; document.getElementById('rooms').value = t.rooms; document.getElementById('openingBalance').value = t.openingBalance; modals.addTenant.querySelector('h2').textContent = 'विवरण सम्पादन गर्नुहोस्'; document.getElementById('tenantSubmitBtn').textContent = 'सेभ गर्नुहोस्'; openModal(modals.addTenant); } else if (e.target.closest('.delete-btn')) { if (confirm('के तपाईं यो बहालवालालाई साँच्चै हटाउन चाहनुहुन्छ?')) { appData.tenants = appData.tenants.filter(x => x.id !== id); saveData(); renderSummaryTable(); } } else if (e.target.closest('.view-detail')) { renderTenantDetail(id); } });
+            document.getElementById('tenantDetail').addEventListener('click', (e) => { const edBtn = e.target.closest('.edit-tx-btn'), delBtn = e.target.closest('.delete-tx-btn'); if (edBtn) { const { tenantId, txId } = edBtn.dataset, t = appData.tenants.find(x => x.id === tenantId), tx = t.transactions.find(x => x.id === txId); document.getElementById('editTxTenantId').value = tenantId; document.getElementById('editTxId').value = txId; document.getElementById('editTxDate').value = tx.date; document.getElementById('editTxDesc').value = tx.description; document.getElementById('editTxAmount').value = tx.amount; openModal(modals.editTx); } else if (delBtn) { const { tenantId, txId } = delBtn.dataset; if (confirm('के तपाईं यो कारोबार मेटाउन चाहनुहुन्छ?')) { const t = appData.tenants.find(x => x.id === tenantId); t.transactions = t.transactions.filter(x => x.id !== txId); saveData(); renderTenantDetail(tenantId); } } });
+            document.getElementById('editTransactionForm').addEventListener('submit', (e) => { e.preventDefault(); const tId = document.getElementById('editTxTenantId').value, txId = document.getElementById('editTxId').value, t = appData.tenants.find(x => x.id === tId), txIdx = t.transactions.findIndex(x => x.id === txId); t.transactions[txIdx].date = document.getElementById('editTxDate').value; t.transactions[txIdx].description = document.getElementById('editTxDesc').value; t.transactions[txIdx].amount = parseFloat(document.getElementById('editTxAmount').value); saveData(); closeModal(modals.editTx); renderTenantDetail(tId); });
             document.getElementById('tenantDetail').addEventListener('input', (e) => { if (e.target.id === 'paymentDate' && /^\d{8}$/.test(e.target.value)) { e.target.value = `${e.target.value.substring(0, 4)}-${e.target.value.substring(4, 6)}-${e.target.value.substring(6, 8)}`; } });
-            document.getElementById('tenantDetail').addEventListener('submit', (e) => {
-                if (e.target.id === 'paymentForm') {
-                    e.preventDefault();
-                    const tenantId = e.target.dataset.tenantId, tenant = appData.tenants.find(t => t.id === tenantId);
-                    if (tenant) { tenant.transactions.push({ id: `TX${Date.now()}`, date: document.getElementById('paymentDate').value, type: 'payment', amount: parseFloat(document.getElementById('paymentAmount').value), description: 'नगद भुक्तानी' }); saveData(); renderTenantDetail(tenantId); }
-                }
-            });
-            document.getElementById('postRentForm').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const year = document.getElementById('rentYear').value, month = document.getElementById('rentMonth').value.padStart(2, '0'), monthName = getNepaliMonthName(parseInt(month));
-                if (!year || !month || !confirm(`${toNepaliNumber(year)} साल ${monthName} महिनाको भाडा सबैमा चढाउनुहोस्?`)) return;
-                const rentDate = `${year}-${month}-01`;
-                let rentPostedCount = 0;
-                appData.tenants.forEach(tenant => {
-                    if (!tenant.transactions.some(tx => tx.type === 'rent' && tx.date.startsWith(`${year}-${month}`))) {
-                        tenant.transactions.push({ id: `TX${Date.now()}-${tenant.id}`, date: rentDate, type: 'rent', amount: tenant.rooms * appData.settings.rentPerRoom, description: `${monthName} महिनाको भाडा` });
-                        rentPostedCount++;
-                    }
-                });
-                saveData(); closeModal(modals.postRent);
-                if (document.getElementById('summaryList').classList.contains('active')) { renderSummaryTable(); }
-                alert(`${toNepaliNumber(rentPostedCount)} जना बहालवालाको भाडा सफलतापूर्वक चढाइयो।`);
-            });
-            document.getElementById('settingsForm').addEventListener('submit', (e) => {
-                e.preventDefault();
-                appData.settings.orgName = document.getElementById('orgName').value;
-                appData.settings.orgAddress = document.getElementById('orgAddress').value;
-                appData.settings.rentPerRoom = parseFloat(document.getElementById('rentPerRoom').value);
-                saveData(); alert('सेटिङ्स सेभ भयो।'); switchPage('dashboard');
-            });
-            document.getElementById('deleteAllTxForm').addEventListener('submit', (e) => {
-                e.preventDefault();
-                if(document.getElementById('deleteConfirmInput').value === 'DELETE') {
-                    appData.tenants.forEach(tenant => tenant.transactions = []);
-                    saveData();
-                    alert('सबै कारोबार सफलतापूर्वक मेटाइयो।');
-                    closeModal(modals.deleteAllTx);
-                    document.getElementById('deleteConfirmInput').value = '';
-                } else {
-                    alert('पुष्टि गर्न "DELETE" सही तरिकाले टाइप गर्नुहोस्।');
-                }
-            });
-            document.getElementById('exportDataBtn').addEventListener('click', () => {
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(new Blob([JSON.stringify(appData, null, 2)], {type: 'application/json'}));
-                a.download = `rental-data-${new Date().toISOString().slice(0,10)}.json`; a.click(); URL.revokeObjectURL(a.href);
-            });
-            document.getElementById('importDataInput').addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (!file || !confirm('के तपाइँ डाटा इम्पोर्ट गर्न चाहनुहुन्छ? हालको सबै डाटा मेटिनेछ र फायरबेसमा सेभ हुनेछ।')) return;
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    try {
-                        const importedData = JSON.parse(event.target.result);
-                        if (importedData.settings && importedData.tenants) {
-                            appData = importedData; 
-                            saveData(); // Save imported data to Firestore
-                            alert('डाटा सफलतापूर्वक इम्पोर्ट भयो।');
-                        } else { alert('अमान्य फाइल।'); }
-                    } catch (error) { alert('फाइल पढ्न सकिएन।'); }
-                };
-                reader.readAsText(file); e.target.value = '';
-            });
+            document.getElementById('tenantDetail').addEventListener('submit', (e) => { if (e.target.id === 'paymentForm') { e.preventDefault(); const tId = e.target.dataset.tenantId, t = appData.tenants.find(x => x.id === tId); if (t) { t.transactions.push({ id: `TX${Date.now()}`, date: document.getElementById('paymentDate').value, type: 'payment', amount: parseFloat(document.getElementById('paymentAmount').value), description: 'नगद भुक्तानी' }); saveData(); renderTenantDetail(tId); } } });
+            document.getElementById('postRentForm').addEventListener('submit', (e) => { e.preventDefault(); const y = document.getElementById('rentYear').value, m = document.getElementById('rentMonth').value.padStart(2, '0'), mName = getNepaliMonthName(parseInt(m)); if (!y || !m || !confirm(`${toNepaliNumber(y)} साल ${mName} महिनाको भाडा सबैमा चढाउनुहोस्?`)) return; const rentDate = `${y}-${m}-01`; let count = 0; appData.tenants.forEach(t => { if (!t.transactions.some(tx => tx.type === 'rent' && tx.date.startsWith(`${y}-${m}`))) { t.transactions.push({ id: `TX${Date.now()}-${t.id}`, date: rentDate, type: 'rent', amount: t.rooms * appData.settings.rentPerRoom, description: `${mName} महिनाको भाडा` }); count++; } }); saveData(); closeModal(modals.postRent); if (document.getElementById('summaryList').classList.contains('active')) renderSummaryTable(); alert(`${toNepaliNumber(count)} जना बहालवालाको भाडा सफलतापूर्वक चढाइयो।`); });
+            document.getElementById('settingsForm').addEventListener('submit', (e) => { e.preventDefault(); appData.settings.orgName = document.getElementById('orgName').value; appData.settings.orgAddress = document.getElementById('orgAddress').value; appData.settings.rentPerRoom = parseFloat(document.getElementById('rentPerRoom').value); saveData(); alert('सेटिङ्स सेभ भयो।'); switchPage('dashboard'); });
+            document.getElementById('deleteAllTxForm').addEventListener('submit', (e) => { e.preventDefault(); if (document.getElementById('deleteConfirmInput').value === 'DELETE') { appData.tenants.forEach(t => t.transactions = []); saveData(); alert('सबै कारोबार सफलतापूर्वक मेटाइयो।'); closeModal(modals.deleteAllTx); document.getElementById('deleteConfirmInput').value = ''; } else { alert('पुष्टि गर्न "DELETE" सही तरिकाले टाइप गर्नुहोस्।'); } });
+            document.getElementById('exportDataBtn').addEventListener('click', () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(appData, null, 2)], { type: 'application/json' })); a.download = `rental-data-${new Date().toISOString().slice(0, 10)}.json`; a.click(); URL.revokeObjectURL(a.href); });
+            document.getElementById('importDataInput').addEventListener('change', (e) => { const file = e.target.files[0]; if (!file || !confirm('के तपाइँ डाटा इम्पोर्ट गर्न चाहनुहुन्छ? हालको सबै डाटा मेटिनेछ र फायरबेसमा सेभ हुनेछ।')) return; const reader = new FileReader(); reader.onload = (event) => { try { const data = JSON.parse(event.target.result); if (data.settings && data.tenants) { appData = data; saveData(); alert('डाटा सफलतापूर्वक इम्पोर्ट भयो।'); } else { alert('अमान्य फाइल।'); } } catch (err) { alert('फाइल पढ्न सकिएन।'); } }; reader.readAsText(file); e.target.value = ''; });
 
-            // --- एप सुरु गर्ने (Initialization) ---
+            // Auth Event Handlers
+            document.getElementById('signupForm').addEventListener('submit', (e) => { e.preventDefault(); const email = document.getElementById('signupEmail').value, password = document.getElementById('signupPassword').value; createUserWithEmailAndPassword(auth, email, password).catch(err => document.getElementById('signup-error').textContent = 'खाता बनाउन सकिएन: ' + err.message); });
+            document.getElementById('loginForm').addEventListener('submit', (e) => { e.preventDefault(); const email = document.getElementById('loginEmail').value, password = document.getElementById('loginPassword').value; signInWithEmailAndPassword(auth, email, password).catch(err => document.getElementById('login-error').textContent = 'लगइन असफल भयो: ' + err.message); });
+            document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
+
+            // Auth State Change Listener
             onAuthStateChanged(auth, user => {
                 if (user) {
-                    // User is signed in.
                     currentUserId = user.uid;
-                    
-                    // Stop any previous listener
-                    if (unsubscribeFromFirestore) {
-                        unsubscribeFromFirestore();
-                    }
-
-                    // Listen for real-time data changes from Firestore
-                    const docRef = doc(db, "rentalData", currentUserId);
-                    unsubscribeFromFirestore = onSnapshot(docRef, (docSnap) => {
+                    authSection.classList.remove('active'); appContent.classList.add('active');
+                    if (unsubscribeFromFirestore) unsubscribeFromFirestore();
+                    unsubscribeFromFirestore = onSnapshot(doc(db, "rentalData", currentUserId), (docSnap) => {
                         if (docSnap.exists()) {
-                            const dataFromDB = docSnap.data();
-                            // Basic validation
-                             if (dataFromDB.settings && dataFromDB.tenants) {
-                                appData = dataFromDB;
-                             }
-                        } else {
-                            // Document does not exist, probably a new user.
-                            // The initial appData will be used and saved on the first modification.
-                            console.log("No data found in Firestore for this user. A new record will be created on first save.");
-                        }
-                        updateUIWithData(); // Update the whole UI with new data
-                    }, (error) => {
-                        console.error("Error listening to Firestore: ", error);
-                        alert("डाटा ल्याउन समस्या भयो।");
-                    });
-
+                            const data = docSnap.data();
+                            if (data.settings && data.tenants) appData = data;
+                        } else { console.log("No data found for this user. A new record will be created on first save."); }
+                        updateUIWithData();
+                    }, err => { console.error("Firestore listener error:", err); alert("डाटा ल्याउन समस्या भयो।"); });
                 } else {
-                    // User is signed out.
-                    signInAnonymously(auth).catch(error => {
-                        console.error("Anonymous sign-in failed: ", error);
-                        alert("प्रणालीमा जडान हुन सकेन।");
-                    });
+                    currentUserId = null;
+                    appContent.classList.remove('active'); authSection.classList.add('active');
+                    if (unsubscribeFromFirestore) { unsubscribeFromFirestore(); unsubscribeFromFirestore = null; }
+                    appData = { settings: { orgName: 'मेरो घर', orgAddress: 'काठमाडौं, नेपाल', rentPerRoom: 5000 }, tenants: [] };
                 }
             });
         });
-        
-        // --- प्रिन्ट कार्यहरू (Global Print Functions) ---
-        // यिनीहरूले सिधै `appData` बाट काम गर्ने भएकोले परिवर्तन आवश्यक छैन।
-        window.printSummaryReport = () => {
-            if (!appData || !appData.tenants || appData.tenants.length === 0) { alert('प्रिन्ट गर्नको लागि कुनै डाटा छैन।'); return; }
-            const calculateBalance = (t) => t.transactions.reduce((a,x)=>x.type==='rent'?a-x.amount:a+x.amount,-t.openingBalance);
-            const toNepaliNumber = (s) => String(s ?? '').replace(/[0-9]/g,d=>'०१२३४५६७८९'[d]);
-            const formatNepaliCurrency = (n) => { const s=String(Math.abs(n)), [i] = s.split('.'), l = i.slice(-3), o = i.slice(0, -3); return toNepaliNumber((o ? o.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + ',' : '') + l);};
-            let totalRooms = 0, netBalance = 0;
-            let rows = appData.tenants.map(t => { 
-                const b = calculateBalance(t);
-                totalRooms += t.rooms;
-                netBalance += b;
-                return `<tr><td>${t.fullName}</td><td>${toNepaliNumber(t.phone)}</td><td>${toNepaliNumber(t.rooms)}</td><td>रु. ${formatNepaliCurrency(Math.abs(b))} (${b>=0?'अग्रिम':'बाँकी'})</td></tr>`;
-            }).join('');
-            const footer = `<tfoot><tr><td colspan="2"><strong>कूल जम्मा</strong></td><td><strong>${toNepaliNumber(totalRooms)}</strong></td><td><strong>रु. ${formatNepaliCurrency(Math.abs(netBalance))} (${netBalance >= 0 ? 'कूल अग्रिम' : 'कूल बाँकी'})</strong></td></tr></tfoot>`;
-            const printHTML = `<html><head><title>सारांश रिपोर्ट</title><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari&display=swap" rel="stylesheet"><style>body{font-family:'Noto Serif Devanagari',serif}table{width:100%;border-collapse:collapse}th,td{border:1px solid #666;padding:8px;text-align:left}th{background:#eee}tfoot{font-weight:700;background:#f5f5f5}</style></head><body><div style="text-align:center"><h1>${appData.settings.orgName}</h1><p>${appData.settings.orgAddress}</p></div><h2>बहालवालाहरुको सारांश सूची</h2><table><thead><tr><th>पूरा नाम</th><th>फोन</th><th>कोठा</th><th>ब्यालेन्स</th></tr></thead><tbody>${rows}</tbody>${footer}</table></body></html>`;
-            const p = window.open('','_blank'); p.document.write(printHTML); p.document.close(); p.onload=()=>{p.print(); p.close()};
-        }
-        window.printAllReports = () => {
-            if (!appData || !appData.tenants || appData.tenants.length === 0) { alert('प्रिन्ट गर्नको लागि कुनै डाटा छैन।'); return; }
-            const toNepaliNumber = (s) => String(s ?? '').replace(/[0-9]/g, d => '०१२३४५६७८९'[d]);
-            const formatNepaliCurrency = (n) => { const s=String(Math.abs(n)), [i] = s.split('.'), l = i.slice(-3), o = i.slice(0, -3); return toNepaliNumber((o ? o.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + ',' : '') + l);};
-            let allReportsHTML = '';
-            appData.tenants.forEach((tenant, index) => {
-                const balance = tenant.transactions.reduce((a,x)=>x.type==='rent'?a-x.amount:a+x.amount,-tenant.openingBalance);
-                const ledgerItems = [{id:'ob',date:'',description:'अघिल्लो महिनाको बाँकी',rent:tenant.openingBalance,p:0},...tenant.transactions.map(tx=>({...tx,rent:tx.type==='rent'?tx.amount:0,payment:tx.type==='payment'?tx.amount:0}))].sort((a,b)=>a.date.localeCompare(b.date));
-                let runningBalance = 0, transactionRows = '';
-                ledgerItems.forEach((item, idx) => {
-                    if(item.rent > 0 || item.payment > 0 || item.description === 'अघिल्लो महिनाको बाँकी') {
-                        if (idx === 0) { runningBalance = -item.rent; } else { runningBalance = runningBalance - item.rent + item.payment; }
-                        transactionRows += `<tr><td>${toNepaliNumber(item.date)}</td><td>${item.description}</td><td style="text-align:right;">${item.rent?`रु. ${formatNepaliCurrency(item.rent)}`:'-'}</td><td style="text-align:right;">${item.payment?`रु. ${formatNepaliCurrency(item.payment)}`:'-'}</td><td style="text-align:right;">रु. ${formatNepaliCurrency(Math.abs(runningBalance))} (${runningBalance>=0?'अग्रिम':'बाँकी'})</td></tr>`;
-                    }
-                });
-                allReportsHTML += `<div ${index > 0 ? 'class="page-break"' : ''}>
-                    <h2>${tenant.fullName} को विवरण</h2>
-                    <p><strong>फोन:</strong> ${toNepaliNumber(tenant.phone)} | <strong>कोठा संख्या:</strong> ${toNepaliNumber(tenant.rooms)}</p>
-                    <p><strong>हालको ब्यालेन्स:</strong> रु. ${formatNepaliCurrency(Math.abs(balance))} (${balance >= 0 ? 'अग्रिम' : 'बाँकी'})</p>
-                    <h3>कारोबारको लेजर</h3>
-                    <table class="styled-table"><thead><tr><th>मिति</th><th>विवरण</th><th style="text-align:right;">भाडा (रु)</th><th style="text-align:right;">भुक्तानी (रु)</th><th style="text-align:right;">ब्यालेन्स (रु)</th></tr></thead><tbody>${transactionRows}</tbody></table>
-                </div>`;
-            });
-            const printHTML = `<html><head><title>सबै रिपोर्ट</title><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari&display=swap" rel="stylesheet"><style>body{font-family:'Noto Serif Devanagari',serif}.styled-table{width:100%;border-collapse:collapse}.styled-table th,.styled-table td{border:1px solid #666;padding:8px;text-align:left}.styled-table thead th{background-color:#eee !important;-webkit-print-color-adjust:exact;color:#000!important}.print-header{text-align:center;border-bottom:2px solid #000;padding-bottom:10px;margin-bottom:20px}.page-break{page-break-before:always}body.print-individual-report .print-header{display:none!important}</style></head><body>${allReportsHTML}</body></html>`;
-            const p = window.open('','_blank'); p.document.write(printHTML); p.document.close(); p.onload=()=>{p.print();p.close()};
-        }
-    </script>
 
+        // Global Print Functions
+        window.printSummaryReport = () => { if (!appData || !appData.tenants || appData.tenants.length === 0) return; const toN = (s) => String(s ?? '').replace(/[0-9]/g,d=>'०१२३४५६७८९'[d]); const toC = (n) => { const s=String(Math.abs(n)),[i]=s.split('.'),l=i.slice(-3),o=i.slice(0,-3); return toN((o?o.replace(/\B(?=(\d{2})+(?!\d))/g,",")+',':'')+l);}; let totalR = 0, netB = 0; const rows = appData.tenants.map(t => { const b = t.transactions.reduce((a,x)=>x.type==='rent'?a-x.amount:a+x.amount,-t.openingBalance); totalR+=t.rooms; netB+=b; return `<tr><td>${t.fullName}</td><td>${toN(t.phone)}</td><td>${toN(t.rooms)}</td><td>रु. ${toC(b)} (${b>=0?'अग्रिम':'बाँकी'})</td></tr>`; }).join(''); const ftr = `<tfoot><tr><td colspan="2"><strong>कूल जम्मा</strong></td><td><strong>${toN(totalR)}</strong></td><td><strong>रु. ${toC(netB)} (${netB>=0?'कूल अग्रिम':'कूल बाँकी'})</strong></td></tr></tfoot>`; const pHTML = `<html><head><title>सारांश रिपोर्ट</title><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari&display=swap" rel="stylesheet"><style>body{font-family:'Noto Serif Devanagari',serif}table{width:100%;border-collapse:collapse}th,td{border:1px solid #666;padding:8px;text-align:left}th{background:#eee}tfoot{font-weight:700;background:#f5f5f5}</style></head><body><div style="text-align:center"><h1>${appData.settings.orgName}</h1><p>${appData.settings.orgAddress}</p></div><h2>बहालवालाहरुको सारांश सूची</h2><table><thead><tr><th>पूरा नाम</th><th>फोन</th><th>कोठा</th><th>ब्यालेन्स</th></tr></thead><tbody>${rows}</tbody>${ftr}</table></body></html>`; const p = window.open('','_blank'); p.document.write(pHTML); p.document.close(); p.onload=()=>{p.print(); p.close()}; }
+        window.printAllReports = () => { if (!appData || !appData.tenants || appData.tenants.length === 0) return; const toN=(s)=>String(s??'').replace(/[0-9]/g,d=>'०१२३४५६७८९'[d]); const toC=(n)=>{const s=String(Math.abs(n)),[i]=s.split('.'),l=i.slice(-3),o=i.slice(0,-3);return toN((o?o.replace(/\B(?=(\d{2})+(?!\d))/g,",")+',':'')+l);}; let allHTML=''; appData.tenants.forEach((t, i)=>{ const b=t.transactions.reduce((a,x)=>x.type==='rent'?a-x.amount:a+x.amount,-t.openingBalance); const items=[{id:'ob',date:'',description:'अघिल्लो महिनाको बाँकी',rent:t.openingBalance,p:0},...t.transactions.map(tx=>({...tx,rent:tx.type==='rent'?tx.amount:0,payment:tx.type==='payment'?tx.amount:0}))].sort((a,b)=>a.date.localeCompare(b.date)); let runB=0,txRows=''; items.forEach((item,idx)=>{if(item.rent>0||item.payment>0||item.description==='अघिल्लो महिनाको बाँकी'){if(idx===0){runB=-item.rent;}else{runB=runB-item.rent+item.payment;} txRows+=`<tr><td>${toN(item.date)}</td><td>${item.description}</td><td style="text-align:right;">${item.rent?`रु. ${toC(item.rent)}`:'-'}</td><td style="text-align:right;">${item.payment?`रु. ${toC(item.payment)}`:'-'}</td><td style="text-align:right;">रु. ${toC(runB)} (${runB>=0?'अग्रिम':'बाँकी'})</td></tr>`;}}); allHTML+=`<div ${i>0?'class="page-break"':''}><h2>${t.fullName} को विवरण</h2><p><strong>फोन:</strong> ${toN(t.phone)} | <strong>कोठा संख्या:</strong> ${toN(t.rooms)}</p><p><strong>हालको ब्यालेन्स:</strong> रु. ${toC(b)} (${b>=0?'अग्रिम':'बाँकी'})</p><h3>कारोबारको लेजर</h3><table class="styled-table"><thead><tr><th>मिति</th><th>विवरण</th><th style="text-align:right;">भाडा (रु)</th><th style="text-align:right;">भुक्तानी (रु)</th><th style="text-align:right;">ब्यालेन्स (रु)</th></tr></thead><tbody>${txRows}</tbody></table></div>`; }); const pHTML=`<html><head><title>सबै रिपोर्ट</title><link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari&display=swap" rel="stylesheet"><style>body{font-family:'Noto Serif Devanagari',serif}.styled-table{width:100%;border-collapse:collapse}.styled-table th,.styled-table td{border:1px solid #666;padding:8px;text-align:left}.styled-table thead th{background-color:#eee !important;-webkit-print-color-adjust:exact;color:#000!important}.page-break{page-break-before:always}</style></head><body>${allHTML}</body></html>`; const p = window.open('','_blank'); p.document.write(pHTML); p.document.close(); p.onload=()=>{p.print();p.close()}; }
+    </script>
 </body>
 </html>
 
