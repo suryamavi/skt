@@ -395,7 +395,7 @@
                 </div>
                 <div class="table-container">
                     <table id="all-vouchers-table">
-                         <thead><tr><th>भौचर नं.</th><th>मिति</th><th>विवरण</th><th>जम्मा रकम</th><th>कार्य</th></tr></thead>
+                         <thead><tr><th>भौचर नं.</th><th>मिति</th><th>विवरण</th><th>जम्मा रकम (रु.)</th><th>कार्य</th></tr></thead>
                          <tbody></tbody>
                     </table>
                 </div>
@@ -553,7 +553,7 @@
     <!-- Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, signInWithCredential, EmailAuthProvider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, reauthenticateWithCredential, EmailAuthProvider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, setDoc, getDocs, getDoc, writeBatch, query, where, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         // --- Configuration and Initialization ---
@@ -710,9 +710,9 @@
             const nepaliInteger = toDevanagari(formattedInteger);
             let nepaliAmount;
             if (!decimalPart || parseInt(decimalPart, 10) === 0) {
-                nepaliAmount = `रु. ${nepaliInteger}/-`;
+                nepaliAmount = `${nepaliInteger}/-`;
             } else {
-                nepaliAmount = `रु. ${nepaliInteger}/${toDevanagari(decimalPart)}`;
+                nepaliAmount = `${nepaliInteger}/${toDevanagari(decimalPart)}`;
             }
             return isNegative ? `(${nepaliAmount})` : nepaliAmount;
         };
@@ -909,7 +909,29 @@
             });
             dom.ledgerTableBody.innerHTML = tableHTML;
         };
-        const renderTrialBalance = () => { /* ... unchanged ... */};
+        const renderTrialBalance = () => {
+            dom.trialBalanceTableBody.innerHTML = '';
+            dom.trialBalanceTableFoot.innerHTML = '';
+            let totalDebit = 0, totalCredit = 0;
+            state.accounts.forEach(account => {
+                let balance = 0;
+                state.vouchers.forEach(voucher => {
+                    voucher.entries.forEach(entry => {
+                        if (entry.accountId === account.id) balance += (entry.debit || 0) - (entry.credit || 0);
+                    });
+                });
+                if (Math.abs(balance) > 0.001) {
+                    const isDebit = balance > 0;
+                    dom.trialBalanceTableBody.innerHTML += `<tr><td>${account.fullName}</td><td class="text-right">${isDebit ? formatVoucherAmount(balance) : '—'}</td><td class="text-right">${!isDebit ? formatVoucherAmount(Math.abs(balance)) : '—'}</td></tr>`;
+                    if (isDebit) totalDebit += balance;
+                    else totalCredit += Math.abs(balance);
+                }
+            });
+            dom.trialBalanceTableFoot.innerHTML = `<tr><td><b>जम्मा</b></td><td class="text-right"><b>${formatVoucherAmount(totalDebit)}</b></td><td class="text-right"><b>${formatVoucherAmount(totalCredit)}</b></td></tr>`;
+            if (Math.abs(totalDebit - totalCredit) > 0.01) {
+                dom.trialBalanceTableFoot.querySelector('tr').style.cssText = 'background-color: var(--danger-color); color: white;';
+            }
+        };
         const startEditVoucher = (voucherId) => { 
             const voucher = state.vouchers.find(v => v.id === voucherId);
             if (!voucher) return;
@@ -944,9 +966,13 @@
             try {
                 const user = auth.currentUser;
                 const credential = EmailAuthProvider.credential(user.email, password);
-                await signInWithCredential(user, credential);
+                await reauthenticateWithCredential(user, credential);
                 return true;
-            } catch (error) { showModal('पासवर्ड मिलेन।', 'error'); return false; }
+            } catch (error) {
+                console.error("Reauthentication failed:", error);
+                showModal('पासवर्ड मिलेन। कृपया पुन: प्रयास गर्नुहोस्।', 'error');
+                return false;
+            }
         }
         
         dom.createFyBtn.addEventListener('click', async () => {
@@ -1235,7 +1261,7 @@
                     <h2>गोश्वार भौचर (आ.व. ${toDevanagari(activeFy.name)})</h2>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 12pt;"><span><b>गो. भौचर नं.:</b> ${toDevanagari(voucher.voucherNo.toString())}</span><span><b>मिति:</b> ${formatNepaliDate(voucher.date)}</span></div>
-                <table border="1"><thead><tr><th style="width:5%">संकेत</th><th>विवरण</th><th style="width:20%">डेबिट</th><th style="width:20%">क्रेडिट</th></tr></thead>
+                <table border="1"><thead><tr><th style="width:5%">संकेत</th><th>विवरण</th><th style="width:20%">डेबिट (रु.)</th><th style="width:20%">क्रेडिट (रु.)</th></tr></thead>
                 <tbody>${entriesHTML}<tr style="font-style: italic;"><td colspan="4">(${voucher.narration})</td></tr></tbody>
                 <tfoot><tr><td colspan="2" class="text-right"><b>जम्मा</b></td><td class="text-right"><b>${formatVoucherAmount(total)}</b></td><td class="text-right"><b>${formatVoucherAmount(total)}</b></td></tr></tfoot></table>
                 <div style="margin-top: 60px; display: flex; justify-content: space-between; font-size: 11pt; page-break-inside: avoid;"><div style="width: 200px; text-align: center;"><p style="margin: 40px 0 5px 0; border-top: 1px solid #000; padding-top: 5px;">तयार गर्ने</p><span>दर्जा: लेखापाल</span></div><div style="width: 200px; text-align: center;"><p style="margin: 40px 0 5px 0; border-top: 1px solid #000; padding-top: 5px;">सदर गर्ने</p><span>दर्जा: प्र.अ.</span></div></div>`;
