@@ -185,12 +185,29 @@
         .card h4 { margin-top: 0; }
         .card p { font-size: 2em; font-weight: bold; margin: 0; color: var(--primary-color); }
         .report-header, .ledger-header { display: flex; justify-content: space-between; align-items: center; }
+        
         @media print {
-            body { background-color: #fff; }
-            .container, nav, header h2, .content-section:not(.active), form, .nav-btn, button, #login-container, #app-container, #logout-btn { display: none !important; }
-            #print-area { display: block !important; font-family: 'Mukta', sans-serif; }
-            #print-area table { font-size: 10pt; width: 100%; border-collapse: collapse; }
-            #print-area th, #print-area td { padding: 8px 5px; border: 1px solid #333; }
+            body {
+                display: block; /* Overrides flexbox for printing */
+                min-height: auto;
+                background-color: #fff;
+            }
+            .container, nav, header h2, .content-section:not(.active), form, .nav-btn, button, #login-container, #app-container, #logout-btn { 
+                display: none !important; 
+            }
+            #print-area { 
+                display: block !important; 
+                font-family: 'Mukta', sans-serif; 
+            }
+            #print-area table { 
+                font-size: 11pt; /* Increased font size for better readability */
+                width: 100%; 
+                border-collapse: collapse; 
+            }
+            #print-area th, #print-area td { 
+                padding: 8px 5px; 
+                border: 1px solid #333; 
+            }
             #print-area .voucher-print-table tbody tr:not(.narration-row) td {
                 border-top: none;
                 border-bottom: none;
@@ -198,15 +215,48 @@
             #print-area .voucher-print-table tbody tr:not(.narration-row):last-of-type td {
                 border-bottom: 1px solid #333;
             }
-            .print-header { text-align: center; margin-bottom: 20px; }
-            .print-header h1 { font-size: 16pt; margin: 0; color: #000; }
-            .print-header p, .print-header h2 { font-size: 11pt; margin: 2px 0; color: #000; font-weight: normal; }
-            .print-voucher-info { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 11pt; }
-            .print-footer { margin-top: 40px; display: flex; justify-content: space-between; font-size: 11pt; }
-            .footer-box { width: 200px; text-align: center; }
-            .footer-box p { margin: 40px 0 5px 0; border-top: 1px solid #000; padding-top: 5px; }
-            .narration-row td { font-style: italic; }
+            .print-header { 
+                text-align: center; 
+                margin-bottom: 20px; 
+            }
+            .print-header h1 { 
+                font-size: 18pt; /* Increased font size */
+                margin: 0; 
+                color: #000; 
+            }
+            .print-header p, .print-header h2 { 
+                font-size: 12pt; /* Increased font size */
+                margin: 2px 0; 
+                color: #000; 
+                font-weight: normal; 
+            }
+            .print-voucher-info { 
+                display: flex; 
+                justify-content: space-between; 
+                margin-bottom: 10px; 
+                font-size: 12pt; /* Increased font size */
+            }
+            .print-footer { 
+                margin-top: 40px; 
+                display: flex; 
+                justify-content: space-between; 
+                font-size: 11pt; 
+                page-break-inside: avoid;
+            }
+            .footer-box { 
+                width: 200px; 
+                text-align: center; 
+            }
+            .footer-box p { 
+                margin: 40px 0 5px 0; 
+                border-top: 1px solid #000; 
+                padding-top: 5px; 
+            }
+            .narration-row td { 
+                font-style: italic; 
+            }
         }
+
         #print-area { display: none; }
     </style>
 </head>
@@ -947,6 +997,7 @@
     </script>
 </body>
 </html>
+
 
 
 
