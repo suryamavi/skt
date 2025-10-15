@@ -739,20 +739,51 @@
             let balance = 0;
             const relevantEntries = [];
             state.vouchers.forEach(voucher => {
-                voucher.entries.forEach(entry => {
-                    if (entry.accountId === accountId) {
-                        relevantEntries.push({ ...entry, date: voucher.date, voucherNo: voucher.voucherNo, narration: voucher.narration });
-                    }
-                });
+                // Check if the current account is part of this voucher's entries
+                const isAccountInVoucher = voucher.entries.some(e => e.accountId === accountId);
+
+                if (isAccountInVoucher) {
+                    voucher.entries.forEach(entry => {
+                        if (entry.accountId === accountId) {
+                             // Find the names of all OTHER accounts in the voucher
+                            const opposingAccountNames = voucher.entries
+                                .filter(e => e.accountId !== accountId)
+                                .map(e => {
+                                    const acc = state.accounts.find(a => a.id === e.accountId);
+                                    return acc ? acc.name : null;
+                                })
+                                .filter(name => name) // Filter out nulls if an account was deleted
+                                .join(', ');
+
+                            relevantEntries.push({
+                                ...entry,
+                                date: voucher.date,
+                                voucherNo: voucher.voucherNo,
+                                description: opposingAccountNames || voucher.narration // Fallback to narration
+                            });
+                        }
+                    });
+                }
             });
+
             if (relevantEntries.length === 0) {
                 ledgerTableBody.innerHTML = '<tr><td colspan="7" class="text-center">यस खातामा कुनै कारोबार छैन।</td></tr>';
                 return;
             }
+
             relevantEntries.sort((a, b) => new Date(a.date) - new Date(b.date) || a.voucherNo - b.voucherNo);
+            
             relevantEntries.forEach(entry => {
                 balance += (entry.debit || 0) - (entry.credit || 0);
-                ledgerTableBody.innerHTML += `<tr><td>${formatNepaliDate(entry.date)}</td><td>${entry.narration}</td><td class="text-center">${toDevanagari(entry.voucherNo)}</td><td class="text-right">${formatVoucherAmount(entry.debit)}</td><td class="text-right">${formatVoucherAmount(entry.credit)}</td><td class="text-right">${formatVoucherAmount(Math.abs(balance))}</td><td class="text-center">${balance >= 0 ? 'डे.' : 'क्रे.'}</td></tr>`;
+                ledgerTableBody.innerHTML += `<tr>
+                    <td>${formatNepaliDate(entry.date)}</td>
+                    <td>${entry.description}</td>
+                    <td class="text-center">${toDevanagari(entry.voucherNo)}</td>
+                    <td class="text-right">${formatVoucherAmount(entry.debit)}</td>
+                    <td class="text-right">${formatVoucherAmount(entry.credit)}</td>
+                    <td class="text-right">${formatVoucherAmount(Math.abs(balance))}</td>
+                    <td class="text-center">${balance >= 0 ? 'डे.' : 'क्रे.'}</td>
+                </tr>`;
             });
         };
 
@@ -997,6 +1028,7 @@
     </script>
 </body>
 </html>
+
 
 
 
