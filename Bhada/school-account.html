@@ -736,34 +736,38 @@
             if (!account) return;
             ledgerAccountTitle.textContent = `${account.name} को लेजर`;
             printLedgerBtn.style.display = 'inline-block';
-            let balance = 0;
+            
             const relevantEntries = [];
             state.vouchers.forEach(voucher => {
-                // Check if the current account is part of this voucher's entries
-                const isAccountInVoucher = voucher.entries.some(e => e.accountId === accountId);
+                const mainEntry = voucher.entries.find(e => e.accountId === accountId);
 
-                if (isAccountInVoucher) {
-                    voucher.entries.forEach(entry => {
-                        if (entry.accountId === accountId) {
-                             // Find the names of all OTHER accounts in the voucher
-                            const opposingAccountNames = voucher.entries
-                                .filter(e => e.accountId !== accountId)
-                                .map(e => {
-                                    const acc = state.accounts.find(a => a.id === e.accountId);
-                                    return acc ? acc.name : null;
-                                })
-                                .filter(name => name) // Filter out nulls if an account was deleted
-                                .join(', ');
-
-                            relevantEntries.push({
-                                ...entry,
-                                date: voucher.date,
-                                voucherNo: voucher.voucherNo,
-                                description: opposingAccountNames || voucher.narration // Fallback to narration
-                            });
-                        }
-                    });
+                // If the account is not in this voucher, skip it
+                if (!mainEntry) {
+                    return;
                 }
+
+                const isDebitEntry = (mainEntry.debit || 0) > 0;
+
+                // Find all accounts on the OPPOSITE side of the transaction
+                const opposingAccountNames = voucher.entries
+                    .filter(e => {
+                        // If our main entry is a debit, we want all credit entries.
+                        // If our main entry is a credit, we want all debit entries.
+                        return isDebitEntry ? (e.credit || 0) > 0 : (e.debit || 0) > 0;
+                    })
+                    .map(e => {
+                        const acc = state.accounts.find(a => a.id === e.accountId);
+                        return acc ? acc.name : null;
+                    })
+                    .filter(name => name) // Remove nulls if an account was deleted
+                    .join(', ');
+
+                relevantEntries.push({
+                    ...mainEntry,
+                    date: voucher.date,
+                    voucherNo: voucher.voucherNo,
+                    description: opposingAccountNames || voucher.narration // Fallback to narration
+                });
             });
 
             if (relevantEntries.length === 0) {
@@ -771,11 +775,14 @@
                 return;
             }
 
+            // Sort entries by date, then by voucher number
             relevantEntries.sort((a, b) => new Date(a.date) - new Date(b.date) || a.voucherNo - b.voucherNo);
             
+            let balance = 0;
+            let tableHTML = '';
             relevantEntries.forEach(entry => {
                 balance += (entry.debit || 0) - (entry.credit || 0);
-                ledgerTableBody.innerHTML += `<tr>
+                tableHTML += `<tr>
                     <td>${formatNepaliDate(entry.date)}</td>
                     <td>${entry.description}</td>
                     <td class="text-center">${toDevanagari(entry.voucherNo)}</td>
@@ -785,6 +792,7 @@
                     <td class="text-center">${balance >= 0 ? 'डे.' : 'क्रे.'}</td>
                 </tr>`;
             });
+            ledgerTableBody.innerHTML = tableHTML;
         };
 
         const renderTrialBalance = () => {
@@ -1028,6 +1036,7 @@
     </script>
 </body>
 </html>
+
 
 
 
