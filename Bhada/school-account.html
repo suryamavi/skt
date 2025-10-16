@@ -249,6 +249,15 @@
         #income-expense-statement .sub-header { font-weight: bold; background-color: #f0f0f0; }
         .net-balance-row { font-weight: bold; font-size: 1.2em; background-color: #e0e0e0; }
 
+        /* Reconciliation */
+        #reconciliation-workspace { display: flex; gap: 20px; margin-top: 20px; }
+        #recon-ledger-side, #recon-summary-side { flex: 1; }
+        #recon-summary-table td { padding: 8px; }
+        #recon-summary-table .balance-row td { border-top: 2px solid #333; font-weight: bold;}
+        #recon-difference.matched { color: var(--success-color); }
+        #recon-difference.unmatched { color: var(--danger-color); }
+
+
         /* Settings Page */
         #settings-section .setting-box {
             background-color: var(--light-blue-bg);
@@ -366,6 +375,8 @@
             <button id="nav-ledger" class="nav-btn">लेजर</button>
             <button id="nav-trial-balance" class="nav-btn">सन्तुलन परीक्षण</button>
             <button id="nav-reports" class="nav-btn">आ.ख. रिपोर्ट</button>
+            <button id="nav-fixed-assets" class="nav-btn">स्थिर सम्पत्ति</button>
+            <button id="nav-reconciliation" class="nav-btn">बैंक मिलान</button>
             <button id="nav-settings" class="nav-btn">सेटिङ्ग</button>
         </nav>
 
@@ -503,6 +514,122 @@
                 </div>
             </section>
 
+            <section id="fixed-assets-section" class="content-section">
+                <h3>स्थिर सम्पत्ति व्यवस्थापन</h3>
+                <form id="add-asset-form">
+                    <input type="hidden" id="editing-asset-id">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="asset-name">सम्पत्तिको नाम</label>
+                            <input type="text" id="asset-name" placeholder="जस्तै: Dell Laptop" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="asset-type">सम्पत्तिको प्रकार</label>
+                            <select id="asset-type" required>
+                                <option value="">-- छान्नुहोस् --</option>
+                                <option value="भवन">भवन</option>
+                                <option value="फर्निचर">फर्निचर</option>
+                                <option value="कम्प्युटर तथा उपकरण">कम्प्युटर तथा उपकरण</option>
+                                <option value="जग्गा">जग्गा</option>
+                                <option value="अन्य">अन्य</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="asset-purchase-date">खरिद मिति (YYYYMMDD)</label>
+                            <input type="text" id="asset-purchase-date" placeholder="जस्तै: २०८००४०१" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="asset-cost">लागत (रु.)</label>
+                            <input type="number" id="asset-cost" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="asset-depreciation-rate">ह्रासकट्टी दर (%)</label>
+                            <input type="number" id="asset-depreciation-rate" step="0.01" value="0" required>
+                        </div>
+                    </div>
+                     <div class="form-buttons">
+                        <button type="submit" id="save-asset-btn" class="submit-btn">सम्पत्ति थप्नुहोस्</button>
+                        <button type="button" id="cancel-asset-edit-btn" class="cancel-btn" style="display: none;">रद्द गर्नुहोस्</button>
+                    </div>
+                </form>
+                <hr>
+                <div class="report-header">
+                    <h4>स्थिर सम्पत्ति रजिस्टर</h4>
+                    <button id="print-assets-btn" class="print-btn">प्रिन्ट गर्नुहोस्</button>
+                </div>
+                <div class="table-container">
+                    <table id="fixed-assets-table">
+                        <thead>
+                            <tr>
+                                <th>विवरण</th>
+                                <th>खरिद मिति</th>
+                                <th>लागत (रु.)</th>
+                                <th>ह्रासकट्टी दर (%)</th>
+                                <th>यस वर्षको ह्रासकट्टी (रु.)</th>
+                                <th>खुद बाँकी रकम (रु.)</th>
+                                <th>कार्य</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="reconciliation-section" class="content-section">
+                <h3>बैंक हिसाब मिलान (Bank Reconciliation)</h3>
+                <div id="reconciliation-setup">
+                    <form id="reconciliation-setup-form">
+                        <p>यो सुविधा प्रयोग गर्न, आफ्नो बैंक खाता छनोट गरी बैंक स्टेटमेन्ट अनुसारको मिति र अन्तिम मौज्दात राख्नुहोस्।</p>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="recon-bank-account-select">बैंक खाता छान्नुहोस्</label>
+                                <select id="recon-bank-account-select" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label for="recon-statement-date">स्टेटमेन्ट मिति (YYYYMMDD)</label>
+                                <input type="text" id="recon-statement-date" placeholder="जस्तै: २०८१०४३१" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="recon-statement-balance">स्टेटमेन्ट अनुसार अन्तिम मौज्दात (रु.)</label>
+                                <input type="number" id="recon-statement-balance" step="0.01" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="submit-btn">मिलान सुरु गर्नुहोस्</button>
+                    </form>
+                </div>
+                <div id="reconciliation-workspace" class="hidden">
+                    <h4 id="recon-title"></h4>
+                    <div id="reconciliation-workspace-inner" style="display: flex; gap: 20px; flex-wrap: wrap;">
+                        <div id="recon-ledger-side" style="flex: 2; min-width: 400px;">
+                            <h5>विद्यालयको खातामा देखिएका तर स्टेटमेन्टमा नदेखिएका कारोबारहरू (Un-cleared Transactions)</h5>
+                            <p><small>बैंक स्टेटमेन्टमा देखिएका कारोबारहरूलाई यहाँबाट हटाउनुहोस् (uncheck गर्नुहोस्)।</small></p>
+                            <div class="table-container" style="max-height: 400px; overflow-y: auto;">
+                                <table id="recon-ledger-entries-table">
+                                    <thead><tr><th><input type="checkbox" id="recon-check-all"></th><th>मिति</th><th>विवरण</th><th>डेबिट (रु.)</th><th>क्रेडिट (रु.)</th></tr></thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div id="recon-summary-side" style="flex: 1; min-width: 300px; background-color: var(--light-blue-bg); padding: 15px; border-radius: 8px;">
+                            <h5>हिसाब मिलान सारांश</h5>
+                            <table id="recon-summary-table" style="width: 100%;">
+                                <tbody>
+                                    <tr><td>बैंक स्टेटमेन्ट अनुसार मौज्दात:</td><td class="text-right" id="summary-statement-balance"></td></tr>
+                                    <tr><td>(+) जम्मा भएका तर नदेखिएका (Deposits in Transit):</td><td class="text-right" id="summary-deposits"></td></tr>
+                                    <tr><td>(-) भुक्तानी दिएका तर नझिकिएका (Outstanding Cheques):</td><td class="text-right" id="summary-cheques"></td></tr>
+                                    <tr class="balance-row"><td>समायोजित बैंक मौज्दात:</td><td class="text-right" id="summary-adjusted-balance"></td></tr>
+                                    <tr><td>विद्यालयको खाता अनुसार मौज्दात:</td><td class="text-right" id="summary-book-balance"></td></tr>
+                                    <tr class="balance-row"><td>फरक रकम:</td><td class="text-right" id="summary-difference"></td></tr>
+                                </tbody>
+                            </table>
+                             <button id="print-recon-btn" class="print-btn" style="width: 100%; margin-top: 20px;">रिपोर्ट प्रिन्ट गर्नुहोस्</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section id="settings-section" class="content-section">
                 <h3>प्रणाली सेटिङ्ग</h3>
                 <div class="setting-box">
@@ -555,7 +682,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, reauthenticateWithCredential, EmailAuthProvider } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, setDoc, getDocs, getDoc, writeBatch, query, where, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, setDoc, getDocs, getDoc, writeBatch, query, where, limit, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         // --- Configuration and Initialization ---
         const firebaseConfig = {
@@ -571,9 +698,11 @@
         const db = getFirestore(app);
 
         // --- Global State and DOM Elements ---
-        let state = { accounts: [], vouchers: [], fiscalYears: [], activeFyId: null };
+        let state = { accounts: [], vouchers: [], fixedAssets: [], fiscalYears: [], activeFyId: null };
         let accountsUnsubscribe = null;
         let vouchersUnsubscribe = null;
+        let fixedAssetsUnsubscribe = null;
+
         const dom = {
             appLoader: document.getElementById('app-loader'), loaderMessage: document.getElementById('loader-message'),
             loginContainer: document.getElementById('login-container'), mainContainer: document.querySelector('.container'),
@@ -608,6 +737,34 @@
             newFyNameInput: document.getElementById('new-fy-name'), createFyBtn: document.getElementById('create-fy-btn'),
             deleteVoucherForm: document.getElementById('delete-voucher-form'), voucherNoToDeleteInput: document.getElementById('voucher-no-to-delete'),
             deleteVoucherBtn: document.getElementById('delete-voucher-btn'),
+            // New Fixed Assets DOM Elements
+            addAssetForm: document.getElementById('add-asset-form'),
+            editingAssetIdInput: document.getElementById('editing-asset-id'),
+            assetNameInput: document.getElementById('asset-name'),
+            assetTypeSelect: document.getElementById('asset-type'),
+            assetPurchaseDateInput: document.getElementById('asset-purchase-date'),
+            assetCostInput: document.getElementById('asset-cost'),
+            assetDepreciationRateInput: document.getElementById('asset-depreciation-rate'),
+            saveAssetBtn: document.getElementById('save-asset-btn'),
+            cancelAssetEditBtn: document.getElementById('cancel-asset-edit-btn'),
+            fixedAssetsTableBody: document.querySelector('#fixed-assets-table tbody'),
+            printAssetsBtn: document.getElementById('print-assets-btn'),
+            // New Reconciliation DOM Elements
+            reconciliationSetupForm: document.getElementById('reconciliation-setup-form'),
+            reconBankAccountSelect: document.getElementById('recon-bank-account-select'),
+            reconStatementDateInput: document.getElementById('recon-statement-date'),
+            reconStatementBalanceInput: document.getElementById('recon-statement-balance'),
+            reconciliationWorkspace: document.getElementById('reconciliation-workspace'),
+            reconTitle: document.getElementById('recon-title'),
+            reconLedgerEntriesTableBody: document.querySelector('#recon-ledger-entries-table tbody'),
+            reconCheckAll: document.getElementById('recon-check-all'),
+            summaryStatementBalance: document.getElementById('summary-statement-balance'),
+            summaryDeposits: document.getElementById('summary-deposits'),
+            summaryCheques: document.getElementById('summary-cheques'),
+            summaryAdjustedBalance: document.getElementById('summary-adjusted-balance'),
+            summaryBookBalance: document.getElementById('summary-book-balance'),
+            summaryDifference: document.getElementById('summary-difference'),
+            printReconBtn: document.getElementById('print-recon-btn'),
         };
 
         // --- Modal and Utility Functions ---
@@ -699,7 +856,7 @@
             });
         };
         const nepaliDigits = ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'];
-        const toEnglish = (numStr) => String(numStr).split('').map(c => nepaliDigits.indexOf(c) !== -1 ? nepaliDigits.indexOf(c) : c).join('');
+        const toEnglish = (numStr) => String(numStr).split('').map(c => nepaliDigits.indexOf(c) !== -1 ? nepaliDigits.indexOf(c) : c).join('').replace(/[^0-9.-]/g, '');
         const toDevanagari = (numStr) => String(numStr).replace(/[0-9]/g, d => nepaliDigits[d]);
         const formatVoucherAmount = (num) => {
             if (num === null || num === undefined || isNaN(num)) num = 0;
@@ -719,7 +876,7 @@
             return isNegative ? `(${nepaliAmount})` : nepaliAmount;
         };
         const formatNepaliDate = (dateString) => {
-            if (!dateString) return '';
+            if (!dateString || !dateString.includes('-')) return '';
             const [year, month, day] = dateString.split('-');
             return `${toDevanagari(year)}/${toDevanagari(month)}/${toDevanagari(day)}`;
         };
@@ -751,6 +908,7 @@
                 dom.appLoader.classList.add('hidden');
                 if (accountsUnsubscribe) accountsUnsubscribe();
                 if (vouchersUnsubscribe) vouchersUnsubscribe();
+                if (fixedAssetsUnsubscribe) fixedAssetsUnsubscribe();
             }
         });
         
@@ -790,9 +948,11 @@
             dom.loaderMessage.textContent = 'डाटा लोड हुँदैछ...';
             if (accountsUnsubscribe) accountsUnsubscribe();
             if (vouchersUnsubscribe) vouchersUnsubscribe();
+            if (fixedAssetsUnsubscribe) fixedAssetsUnsubscribe();
 
             const accountsRef = collection(db, `users/${uid}/fiscalYears/${fyId}/accounts`);
             const vouchersRef = collection(db, `users/${uid}/fiscalYears/${fyId}/vouchers`);
+            const fixedAssetsRef = collection(db, `users/${uid}/fiscalYears/${fyId}/fixedAssets`);
 
             accountsUnsubscribe = onSnapshot(query(accountsRef), (snapshot) => {
                 state.accounts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -804,19 +964,27 @@
                 state.vouchers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderAll();
             });
+
+            fixedAssetsUnsubscribe = onSnapshot(query(fixedAssetsRef, orderBy("purchaseDate")), (snapshot) => {
+                state.fixedAssets = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderAll();
+            });
         }
         
         // --- Render Functions ---
         const renderAll = () => {
             if (!auth.currentUser || !state.activeFyId) return;
             const activeSection = document.querySelector('.content-section.active')?.id;
-
-            renderDashboard();
+            
+            // This function triggers renders for the active section
+            renderDashboard(); // Always render dashboard stats
             if (activeSection === 'voucher-list-section') renderVoucherList();
             if (activeSection === 'accounts-section') { renderAccounts(); populateGovExpenseTopics(); }
             if (activeSection === 'ledger-section') { renderLedgerSelect(); if(dom.ledgerAccountSelect.value) renderLedger(); }
             if (activeSection === 'trial-balance-section') renderTrialBalance();
             if (activeSection === 'reports-section') renderIncomeExpenseStatement();
+            if (activeSection === 'fixed-assets-section') renderFixedAssets();
+            if (activeSection === 'reconciliation-section') renderReconciliationSetup();
         };
 
         const renderDashboard = () => {
@@ -1207,7 +1375,10 @@
             document.getElementById(targetSectionId).classList.add('active');
             
             if (e.target.id === 'nav-voucher' && !dom.editingVoucherIdInput.value) resetVoucherForm();
-            else renderAll();
+            if (e.target.id === 'nav-fixed-assets' && !dom.editingAssetIdInput.value) resetAssetForm();
+            
+            // This is a single point to trigger renders after navigation
+            renderAll();
         };
 
         const handleSaveVoucher = async (e) => {
@@ -1263,6 +1434,179 @@
             showModal('खाता सफलतापूर्वक हटाइयो!', 'success');
         };
 
+        // --- NEW: Fixed Assets Functions ---
+        const renderFixedAssets = () => {
+            dom.fixedAssetsTableBody.innerHTML = '';
+            if (state.fixedAssets.length === 0) {
+                dom.fixedAssetsTableBody.innerHTML = '<tr><td colspan="7" class="text-center">कुनै सम्पत्ति थपिएको छैन।</td></tr>';
+                return;
+            }
+            const activeFy = state.fiscalYears.find(fy => fy.id === state.activeFyId);
+            if (!activeFy) return;
+            const fyEndDate = new Date(parseInt(activeFy.name.split('/')[0]) + 1, 3, 15); // Approx end of Chaitra
+
+            state.fixedAssets.forEach(asset => {
+                const purchaseDate = new Date(asset.purchaseDate);
+                const timeDiff = fyEndDate - purchaseDate;
+                const yearsOwned = timeDiff > 0 ? timeDiff / (1000 * 60 * 60 * 24 * 365.25) : 0;
+                
+                const annualDepreciation = asset.depreciationRate > 0 ? (asset.cost * asset.depreciationRate / 100) : 0;
+                const totalDepreciation = Math.min(asset.cost, annualDepreciation * yearsOwned);
+                const netBookValue = asset.cost - totalDepreciation;
+                
+                dom.fixedAssetsTableBody.innerHTML += `
+                    <tr>
+                        <td>${asset.name} (${asset.type})</td>
+                        <td>${formatNepaliDate(asset.purchaseDate)}</td>
+                        <td class="text-right">${formatVoucherAmount(asset.cost)}</td>
+                        <td class="text-center">${toDevanagari(asset.depreciationRate)}%</td>
+                        <td class="text-right">${formatVoucherAmount(annualDepreciation)}</td>
+                        <td class="text-right">${formatVoucherAmount(netBookValue)}</td>
+                        <td>
+                            <button class="edit-btn" data-id="${asset.id}">एडिट</button>
+                            <button class="delete-btn" data-id="${asset.id}">डिलिट</button>
+                        </td>
+                    </tr>`;
+            });
+        };
+
+        const handleSaveAsset = async (e) => {
+            e.preventDefault();
+            const editingId = dom.editingAssetIdInput.value;
+            const assetData = {
+                name: dom.assetNameInput.value.trim(),
+                type: dom.assetTypeSelect.value,
+                purchaseDate: dom.assetPurchaseDateInput.dataset.rawValue,
+                cost: parseFloat(dom.assetCostInput.value) || 0,
+                depreciationRate: parseFloat(dom.assetDepreciationRateInput.value) || 0
+            };
+            if (!assetData.name || !assetData.type || !assetData.purchaseDate || assetData.cost <= 0) {
+                showModal('कृपया सबै विवरण सहीसँग भर्नुहोस्।', 'error'); return;
+            }
+            const collectionRef = collection(db, `users/${auth.currentUser.uid}/fiscalYears/${state.activeFyId}/fixedAssets`);
+            const docRef = editingId ? doc(collectionRef, editingId) : doc(collectionRef);
+            await setDoc(docRef, assetData);
+            showModal(editingId ? 'सम्पत्ति सफलतापूर्वक अपडेट भयो!' : 'सम्पत्ति सफलतापूर्वक थपियो!', 'success');
+            resetAssetForm();
+        };
+
+        const resetAssetForm = () => {
+            dom.addAssetForm.reset();
+            dom.editingAssetIdInput.value = '';
+            dom.assetPurchaseDateInput.dataset.rawValue = '';
+            dom.saveAssetBtn.textContent = 'सम्पत्ति थप्नुहोस्';
+            dom.cancelAssetEditBtn.style.display = 'none';
+        };
+
+        const startEditAsset = (assetId) => {
+            const asset = state.fixedAssets.find(a => a.id === assetId);
+            if (!asset) return;
+            resetAssetForm();
+            dom.editingAssetIdInput.value = asset.id;
+            dom.assetNameInput.value = asset.name;
+            dom.assetTypeSelect.value = asset.type;
+            dom.assetPurchaseDateInput.value = formatNepaliDate(asset.purchaseDate).replace(/\//g, '-');
+            dom.assetPurchaseDateInput.dataset.rawValue = asset.purchaseDate;
+            dom.assetCostInput.value = asset.cost;
+            dom.assetDepreciationRateInput.value = asset.depreciationRate;
+            dom.saveAssetBtn.textContent = 'अपडेट गर्नुहोस्';
+            dom.cancelAssetEditBtn.style.display = 'inline-block';
+        };
+        
+        const handleDeleteAsset = async (assetId) => {
+             const confirmed = await showConfirmModal('के तपाईं यो सम्पत्ति स्थायी रूपमा मेटाउन चाहनुहुन्छ?');
+            if (!confirmed) return;
+            await deleteDoc(doc(db, `users/${auth.currentUser.uid}/fiscalYears/${state.activeFyId}/fixedAssets`, assetId));
+            showModal('सम्पत्ति सफलतापूर्वक हटाइयो!', 'success');
+        };
+
+        // --- NEW: Bank Reconciliation Functions ---
+        const renderReconciliationSetup = () => {
+            const bankAccounts = state.accounts.filter(acc => acc.nature === 'सम्पत्ति' && acc.fullName.includes('बैंक'));
+            if (bankAccounts.length === 0) {
+                 dom.reconBankAccountSelect.innerHTML = '<option value="">-- पहिले बैंक खाता बनाउनुहोस् --</option>';
+            } else {
+                dom.reconBankAccountSelect.innerHTML = '<option value="">-- बैंक खाता छान्नुहोस् --</option>' + bankAccounts.map(acc => `<option value="${acc.id}">${acc.fullName}</option>`).join('');
+            }
+            dom.reconciliationWorkspace.classList.add('hidden');
+        };
+
+        const startReconciliation = () => {
+            const accountId = dom.reconBankAccountSelect.value;
+            const statementDate = dom.reconStatementDateInput.dataset.rawValue;
+            if (!accountId || !statementDate) { showModal('कृपया बैंक खाता र मिति छान्नुहोस्।', 'error'); return; }
+            
+            const account = state.accounts.find(a => a.id === accountId);
+            dom.reconTitle.textContent = `${account.fullName} - ${formatNepaliDate(statementDate)} को हिसाब मिलान`;
+
+            const entries = [];
+            state.vouchers.forEach(v => {
+                if(v.date <= statementDate) {
+                    v.entries.forEach(e => {
+                        if (e.accountId === accountId) {
+                            entries.push({ date: v.date, voucherNo: v.voucherNo, narration: v.narration, debit: e.debit || 0, credit: e.credit || 0 });
+                        }
+                    });
+                }
+            });
+            entries.sort((a,b) => new Date(a.date) - new Date(b.date));
+
+            dom.reconLedgerEntriesTableBody.innerHTML = '';
+            entries.forEach(entry => {
+                dom.reconLedgerEntriesTableBody.innerHTML += `
+                <tr>
+                    <td><input type="checkbox" class="recon-entry-check" checked></td>
+                    <td>${formatNepaliDate(entry.date)}</td>
+                    <td>${entry.narration}</td>
+                    <td class="text-right">${entry.debit > 0 ? formatVoucherAmount(entry.debit) : ''}</td>
+                    <td class="text-right">${entry.credit > 0 ? formatVoucherAmount(entry.credit) : ''}</td>
+                </tr>`;
+            });
+
+            dom.reconciliationWorkspace.classList.remove('hidden');
+            updateReconciliationSummary();
+        };
+
+        const updateReconciliationSummary = () => {
+            const statementBalance = parseFloat(dom.reconStatementBalanceInput.value) || 0;
+            let depositsInTransit = 0;
+            let outstandingCheques = 0;
+            let bookBalance = 0;
+            
+            const rows = dom.reconLedgerEntriesTableBody.querySelectorAll('tr');
+            rows.forEach(row => {
+                const isCleared = row.querySelector('.recon-entry-check').checked;
+                const debitText = row.cells[3].textContent;
+                const creditText = row.cells[4].textContent;
+                const debit = debitText ? parseFloat(toEnglish(debitText)) : 0;
+                const credit = creditText ? parseFloat(toEnglish(creditText)) : 0;
+
+                bookBalance += (debit - credit);
+
+                if (!isCleared) {
+                    if (debit > 0) outstandingCheques += debit;
+                    if (credit > 0) depositsInTransit += credit;
+                }
+            });
+
+            const adjustedBalance = statementBalance + depositsInTransit - outstandingCheques;
+            const difference = adjustedBalance - bookBalance;
+
+            dom.summaryStatementBalance.textContent = formatVoucherAmount(statementBalance);
+            dom.summaryDeposits.textContent = formatVoucherAmount(depositsInTransit);
+            dom.summaryCheques.textContent = `(${formatVoucherAmount(outstandingCheques)})`;
+            dom.summaryAdjustedBalance.textContent = formatVoucherAmount(adjustedBalance);
+            dom.summaryBookBalance.textContent = formatVoucherAmount(bookBalance);
+            dom.summaryDifference.textContent = formatVoucherAmount(difference);
+            
+            if (Math.abs(difference) < 0.01) {
+                dom.summaryDifference.className = 'text-right matched';
+            } else {
+                 dom.summaryDifference.className = 'text-right unmatched';
+            }
+        };
+
+
         const printStatement = () => {
             const activeFy = state.fiscalYears.find(fy => fy.id === state.activeFyId);
             const reportTitle = `आम्दानी-खर्च विवरण (आ.व. ${toDevanagari(activeFy.name)})`;
@@ -1273,13 +1617,13 @@
             window.print();
         };
         
-        const printGenericReport = (tableId, reportTitle) => {
-            const tableContent = document.getElementById(tableId)?.outerHTML;
-            if (!tableContent) return;
+        const printGenericReport = (elementId, reportTitle) => {
+            const content = document.getElementById(elementId)?.outerHTML;
+            if (!content) return;
             const activeFy = state.fiscalYears.find(fy => fy.id === state.activeFyId);
             const fullReportTitle = `${reportTitle} (आ.व. ${toDevanagari(activeFy.name)})`;
             const headerHTML = `<div class="print-header"><h1>सूर्य ज्योति माध्यमिक विद्यालय मेहेलकुना</h1><p>गुर्भाकोट नगरपालिका-८, सुर्खेत</p><h2>${fullReportTitle}</h2></div>`;
-            dom.printArea.innerHTML = headerHTML + tableContent;
+            dom.printArea.innerHTML = headerHTML + content;
             window.print();
         };
         
@@ -1337,7 +1681,24 @@
         dom.sourceTypeSelect.addEventListener('change', handleAccountFormChange);
         dom.printStatementBtn.addEventListener('click', printStatement);
 
+        // --- NEW EVENT LISTENERS ---
+        dom.addAssetForm.addEventListener('submit', handleSaveAsset);
+        dom.assetPurchaseDateInput.addEventListener('input', formatDateInput);
+        dom.fixedAssetsTableBody.addEventListener('click', (e) => {
+            if (e.target.classList.contains('edit-btn')) startEditAsset(e.target.dataset.id);
+            if (e.target.classList.contains('delete-btn')) handleDeleteAsset(e.target.dataset.id);
+        });
+        dom.cancelAssetEditBtn.addEventListener('click', resetAssetForm);
+        dom.printAssetsBtn.addEventListener('click', () => printGenericReport('fixed-assets-table', 'स्थिर सम्पत्ति रजिस्टर'));
+
+        dom.reconciliationSetupForm.addEventListener('submit', (e) => { e.preventDefault(); startReconciliation(); });
+        dom.reconStatementDateInput.addEventListener('input', formatDateInput);
+        dom.reconLedgerEntriesTableBody.addEventListener('change', updateReconciliationSummary);
+        dom.reconCheckAll.addEventListener('change', (e) => {
+            dom.reconLedgerEntriesTableBody.querySelectorAll('.recon-entry-check').forEach(chk => chk.checked = e.target.checked);
+            updateReconciliationSummary();
+        });
+        dom.printReconBtn.addEventListener('click', () => printGenericReport('recon-summary-side', dom.reconTitle.textContent));
     </script>
 </body>
 </html>
-
