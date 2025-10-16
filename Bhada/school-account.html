@@ -380,7 +380,7 @@
                 <h4>पछिल्ला भौचरहरू</h4>
                 <div class="table-container">
                     <table id="recent-vouchers-table">
-                        <thead><tr><th>भौचर नं.</th><th>मिति</th><th>जम्मा रकम</th><th>कार्य</th></tr></thead>
+                        <thead><tr><th>भौचर नं.</th><th>मिति</th><th>जम्मा रकम (रु.)</th><th>कार्य</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
@@ -439,9 +439,10 @@
                                 <option value="खर्च">खर्च (Expense)</option>
                                 <option value="सम्पत्ति">सम्पत्ति (Asset)</option>
                                 <option value="दायित्व">दायित्व (Liability)</option>
+                                <option value="व्यक्तिगत">व्यक्तिगत (Personal)</option>
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" id="source-type-group">
                             <label for="source-type">स्रोतको प्रकार</label>
                             <select id="source-type" required>
                                 <option value="">-- छान्नुहोस् --</option>
@@ -453,7 +454,7 @@
                     </div>
                     <div class="form-group" id="standard-name-group">
                         <label for="account-name">खाताको नाम</label>
-                        <input type="text" id="account-name" placeholder="जस्तै: तलब, कुमारी बैंक" required>
+                        <input type="text" id="account-name" placeholder="जस्तै: तलब, कुमारी बैंक, सन्त बहादुर" required>
                     </div>
                      <div class="form-group hidden" id="gov-expense-group">
                         <label for="gov-expense-topic-select">खर्चको शीर्षक (सरकारी आम्दानी अनुसार)</label>
@@ -582,6 +583,7 @@
             logoutBtn: document.getElementById('logout-btn'), activeFyDisplay: document.getElementById('active-fy-display'),
             navButtons: document.querySelectorAll('.nav-btn'), contentSections: document.querySelectorAll('.content-section'),
             addAccountForm: document.getElementById('add-account-form'), accountNatureSelect: document.getElementById('account-nature'),
+            sourceTypeGroup: document.getElementById('source-type-group'),
             sourceTypeSelect: document.getElementById('source-type'), standardNameGroup: document.getElementById('standard-name-group'),
             accountNameInput: document.getElementById('account-name'), govExpenseGroup: document.getElementById('gov-expense-group'),
             govExpenseTopicSelect: document.getElementById('gov-expense-topic-select'), accountsTableBody: document.querySelector('#accounts-table tbody'),
@@ -912,21 +914,47 @@
         const renderTrialBalance = () => {
             dom.trialBalanceTableBody.innerHTML = '';
             dom.trialBalanceTableFoot.innerHTML = '';
-            let totalDebit = 0, totalCredit = 0;
+            let totalDebit = 0;
+            let totalCredit = 0;
+            const balances = {};
+
             state.accounts.forEach(account => {
-                let balance = 0;
-                state.vouchers.forEach(voucher => {
-                    voucher.entries.forEach(entry => {
-                        if (entry.accountId === account.id) balance += (entry.debit || 0) - (entry.credit || 0);
-                    });
-                });
-                if (Math.abs(balance) > 0.001) {
-                    const isDebit = balance > 0;
-                    dom.trialBalanceTableBody.innerHTML += `<tr><td>${account.fullName}</td><td class="text-right">${isDebit ? formatVoucherAmount(balance) : '—'}</td><td class="text-right">${!isDebit ? formatVoucherAmount(Math.abs(balance)) : '—'}</td></tr>`;
-                    if (isDebit) totalDebit += balance;
-                    else totalCredit += Math.abs(balance);
-                }
+                balances[account.id] = { balance: 0, account };
             });
+
+            state.vouchers.forEach(voucher => {
+                voucher.entries.forEach(entry => {
+                    if (balances[entry.accountId]) {
+                        balances[entry.accountId].balance += (entry.debit || 0) - (entry.credit || 0);
+                    }
+                });
+            });
+            
+            Object.values(balances).forEach(({ balance, account }) => {
+                if (Math.abs(balance) < 0.001) return;
+
+                let isDebit = balance > 0;
+                let isCredit = balance < 0;
+
+                if (account.nature === 'व्यक्तिगत') {
+                    // Handled above by balance sign
+                } else if (['आम्दानी', 'दायित्व'].includes(account.nature)) {
+                    // Normal balance is credit. If balance is negative, it becomes debit.
+                    isCredit = balance < 0;
+                    isDebit = balance > 0;
+                    balance = -balance; // Invert for display
+                }
+
+                dom.trialBalanceTableBody.innerHTML += `<tr>
+                    <td>${account.fullName}</td>
+                    <td class="text-right">${isDebit ? formatVoucherAmount(balance) : '—'}</td>
+                    <td class="text-right">${isCredit ? formatVoucherAmount(Math.abs(balance)) : '—'}</td>
+                </tr>`;
+
+                if (isDebit) totalDebit += balance;
+                if (isCredit) totalCredit += Math.abs(balance);
+            });
+
             dom.trialBalanceTableFoot.innerHTML = `<tr><td><b>जम्मा</b></td><td class="text-right"><b>${formatVoucherAmount(totalDebit)}</b></td><td class="text-right"><b>${formatVoucherAmount(totalCredit)}</b></td></tr>`;
             if (Math.abs(totalDebit - totalCredit) > 0.01) {
                 dom.trialBalanceTableFoot.querySelector('tr').style.cssText = 'background-color: var(--danger-color); color: white;';
@@ -1145,6 +1173,15 @@
         const handleAccountFormChange = () => {
             const nature = dom.accountNatureSelect.value;
             const source = dom.sourceTypeSelect.value;
+            
+            if (nature === 'व्यक्तिगत') {
+                dom.sourceTypeGroup.classList.add('hidden');
+                dom.sourceTypeSelect.required = false;
+            } else {
+                dom.sourceTypeGroup.classList.remove('hidden');
+                dom.sourceTypeSelect.required = true;
+            }
+
             if (nature === 'खर्च' && source === 'सरकारी') {
                 dom.standardNameGroup.classList.add('hidden'); dom.accountNameInput.required = false;
                 dom.govExpenseGroup.classList.remove('hidden'); dom.govExpenseTopicSelect.required = true;
@@ -1199,10 +1236,14 @@
 
         const handleAddAccount = async (e) => {
             e.preventDefault();
-            const nature = dom.accountNatureSelect.value; const sourceType = dom.sourceTypeSelect.value;
+            const nature = dom.accountNatureSelect.value; 
+            let sourceType = dom.sourceTypeSelect.value;
+            if (nature === 'व्यक्तिगत') sourceType = 'लागू नहुने';
+
             let name = (nature === 'खर्च' && sourceType === 'सरकारी') ? dom.govExpenseTopicSelect.value : dom.accountNameInput.value.trim();
+            
             if (!nature || !sourceType || !name) { showModal('कृपया सबै विवरणहरू भर्नुहोस्।', 'error'); return; }
-            const fullName = (sourceType === 'लागू नहुने') ? `${nature} - ${name}` : `${nature} (${sourceType}) - ${name}`;
+            const fullName = (nature === 'व्यक्तिगत' || sourceType === 'लागू नहुने') ? `${nature} - ${name}` : `${nature} (${sourceType}) - ${name}`;
             if (state.accounts.some(acc => acc.fullName.toLowerCase() === fullName.toLowerCase())) { showModal('यो खाता पहिले नै अवस्थित छ।', 'error'); return; }
             const newAccount = { nature, sourceType, name, fullName };
             await addDoc(collection(db, `users/${auth.currentUser.uid}/fiscalYears/${state.activeFyId}/accounts`), newAccount);
