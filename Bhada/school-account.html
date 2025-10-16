@@ -305,14 +305,18 @@
                 font-size: 10pt; 
                 width: 100%; 
                 border-collapse: collapse; 
-                page-break-inside: auto;
+                page-break-inside: auto; /* Allow table to break if needed */
             }
             #print-area tr {
-                page-break-inside: avoid;
+                page-break-inside: avoid; /* Try to keep rows from breaking */
                 page-break-after: auto;
             }
             #print-area thead { display: table-header-group; }
-            #print-area tfoot { display: table-footer-group; }
+            #print-area tfoot { 
+                display: table-footer-group; 
+                page-break-before: auto;
+                page-break-inside: avoid !important; /* Strongly prevent breaking inside the footer */
+            }
             #print-area th, #print-area td { padding: 6px 4px; border: 1px solid #333; }
             .print-header { text-align: center; margin-bottom: 20px; page-break-after: avoid; }
             .print-header h1 { font-size: 18pt; margin: 0; color: #000; }
@@ -1842,5 +1846,6 @@
     </script>
 </body>
 </html>
+
 
 
