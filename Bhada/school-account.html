@@ -291,9 +291,16 @@
         /* Print Styles */
         @media print {
             @page { size: A4; margin: 0.75in; }
+             @page landscape {
+                size: A4 landscape;
+                margin: 0.5in;
+            }
             body { background-color: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .container, nav, .header-right, .header-left, header h2, .content-section:not(.active), form, .nav-btn, button, .form-buttons { display: none !important; }
             #print-area { display: block !important; font-family: 'Mukta', sans-serif; }
+            #print-area.landscape-print {
+                page: landscape;
+            }
             #print-area table { font-size: 10pt; width: 100%; border-collapse: collapse; }
             #print-area th, #print-area td { padding: 6px 4px; border: 1px solid #333; }
             .print-header { text-align: center; margin-bottom: 20px; page-break-after: avoid; }
@@ -722,7 +729,7 @@
         const db = getFirestore(app);
 
         // --- Global State and DOM Elements ---
-        let state = { accounts: [], vouchers: [], assets: [], fiscalYears: [], activeFyId: null };
+        let state = { accounts: [], vouchers: [], assets: [], fiscalYears: [], activeFyId: null, statementEntries: [] };
         let accountsUnsubscribe = null;
         let vouchersUnsubscribe = null;
         let assetsUnsubscribe = null;
@@ -774,6 +781,7 @@
             reconLedgerTableBody: document.querySelector('#recon-ledger-table tbody'),
             reconStatementTableBody: document.querySelector('#recon-statement-table tbody'),
             addStatementEntryForm: document.getElementById('add-statement-entry-form'),
+            printReconBtn: document.getElementById('print-recon-btn'),
         };
 
         // --- Modal and Utility Functions ---
@@ -1551,12 +1559,13 @@
             dom.addAccountForm.reset(); handleAccountFormChange();
         };
 
-        const handleDeleteAccount = async (e) => {
-            if (!e.target.classList.contains('delete-btn')) return;
-            const accountId = e.target.dataset.id;
+        const handleDeleteAccount = async (accountId) => {
             if (!accountId) return;
             const isUsed = state.vouchers.some(v => v.entries.some(en => en.accountId === accountId));
-            if (isUsed) { showModal('यो खाता भौचरमा प्रयोग भइसकेकोले हटाउन मिल्दैन।', 'error'); return; }
+            if (isUsed) {
+                showModal('यो खाता भौचरमा प्रयोग भइसकेकोले हटाउन मिल्दैन।', 'error');
+                return;
+            }
             const confirmed = await showConfirmModal('के तपाईं यो खाता साँच्चै हटाउन चाहनुहुन्छ?');
             if (!confirmed) return;
             await deleteDoc(doc(db, `users/${auth.currentUser.uid}/fiscalYears/${state.activeFyId}/accounts`, accountId));
@@ -1676,9 +1685,58 @@
             const fullReportTitle = `${reportTitle} (आ.व. ${toDevanagari(activeFy.name)})`;
             const headerHTML = `<div class="print-header"><h1>सूर्य ज्योति माध्यमिक विद्यालय मेहेलकुना</h1><p>गुर्भाकोट नगरपालिका-८, सुर्खेत</p><h2>${fullReportTitle}</h2></div>`;
             dom.printArea.innerHTML = headerHTML + tableContent;
+
+            if (tableId === 'assets-table') {
+                dom.printArea.classList.add('landscape-print');
+            } else {
+                dom.printArea.classList.remove('landscape-print');
+            }
+
             window.print();
+            dom.printArea.classList.remove('landscape-print');
         };
         
+        const printReconciliation = () => {
+            const bankAccount = dom.reconBankSelect.options[dom.reconBankSelect.selectedIndex].text;
+            const reconDate = dom.reconDateInput.value;
+            if (dom.reconBankSelect.value === "" || !reconDate) {
+                showModal('कृपया बैंक खाता र मिति छान्नुहोस्।', 'error');
+                return;
+            }
+
+            const ledgerContent = document.getElementById('recon-ledger-table').parentElement.innerHTML;
+            const statementContent = document.getElementById('recon-statement-table').parentElement.innerHTML;
+
+            const activeFy = state.fiscalYears.find(fy => fy.id === state.activeFyId);
+            const reportTitle = `बैंक हिसाब मिलान विवरण (आ.व. ${toDevanagari(activeFy.name)})`;
+            
+            const reconHTML = `
+                <div class="print-header">
+                    <h1>सूर्य ज्योति माध्यमिक विद्यालय मेहेलकुना</h1>
+                    <p>गुर्भाकोट नगरपालिका-८, सुर्खेत</p>
+                    <h2>${reportTitle}</h2>
+                    <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 12pt; padding: 0 20px;">
+                        <span><b>बैंक खाता:</b> ${bankAccount}</span>
+                        <span><b>मिति:</b> ${reconDate} सम्म</span>
+                    </div>
+                </div>
+                <div class="recon-container" style="display: flex; gap: 20px; align-items: flex-start;">
+                    <div style="flex: 1;">
+                        <h4>लेजर अनुसारको कारोबार</h4>
+                        ${ledgerContent}
+                    </div>
+                    <div style="flex: 1;">
+                        <h4>बैंक स्टेटमेन्ट अनुसारको कारोबार</h4>
+                        ${statementContent}
+                    </div>
+                </div>
+            `;
+
+            dom.printArea.innerHTML = reconHTML;
+            dom.printArea.classList.remove('landscape-print'); // Ensure portrait mode
+            window.print();
+        };
+
         const printVoucher = (voucherId) => {
             const voucher = state.vouchers.find(v => v.id === voucherId);
             if (!voucher) return;
@@ -1707,7 +1765,7 @@
         };
 
         // EVENT LISTENERS
-        dom.signupForm.addEventListener('submit', (e) => { e.preventDefault(); const email = dom.signupForm['signup-email'].value; const password = dom.signupForm['signup-password'].value; createUserWithEmailAndPassword(auth, email, password).then(() => showModal('खाता सफलतापूर्वक सिर्जना भयो!', 'success')).catch((err) => showModal(err.message, 'error')); });
+        dom.signupForm.addEventListener('submit', (e) => { e.preventDefault(); const email = dom.signupForm['signup-email'].value; const password = dom.signupForm['signup-password'].value; createUserWithEmailAndPassword(auth, email, password).then(() => showModal('खाता सफलतापूर्वक सिर्जना भयो!', 'success')).catch((err) => showModal(err.message, 'error'));});
         dom.loginForm.addEventListener('submit', (e) => { e.preventDefault(); const email = dom.loginForm['login-email'].value; const password = dom.loginForm['login-password'].value; signInWithEmailAndPassword(auth, email, password).catch(() => showModal('इमेल वा पासवर्ड मिलेन।', 'error')); });
         dom.logoutBtn.addEventListener('click', () => signOut(auth));
         dom.showSignup.addEventListener('click', () => { dom.loginView.classList.add('hidden'); dom.signupView.classList.remove('hidden'); });
@@ -1715,7 +1773,12 @@
         dom.navButtons.forEach(btn => btn.addEventListener('click', handleNavClick));
         dom.voucherForm.addEventListener('submit', handleSaveVoucher);
         dom.addAccountForm.addEventListener('submit', handleAddAccount);
-        dom.accountsTableBody.addEventListener('click', handleDeleteAccount);
+        dom.accountsTableBody.addEventListener('click', (e) => {
+            if (e.target.classList.contains('delete-btn')) {
+                const accountId = e.target.dataset.id;
+                handleDeleteAccount(accountId);
+            }
+        });
         dom.cancelEditBtn.addEventListener('click', resetVoucherForm);
         dom.voucherNoInput.addEventListener('input', handleVoucherNoInput);
         dom.voucherDateInput.addEventListener('input', formatDateInput);
@@ -1762,6 +1825,7 @@
         dom.addStatementEntryForm.addEventListener('submit', handleAddStatementEntry);
         document.getElementById('statement-date').addEventListener('input', formatDateInput);
         dom.reconStatementTableBody.addEventListener('click', handleDeleteStatementEntry);
+        dom.printReconBtn.addEventListener('click', printReconciliation);
 
 
     </script>
