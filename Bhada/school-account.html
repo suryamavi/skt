@@ -531,7 +531,7 @@
                          <div class="form-row">
                              <div class="form-group">
                                  <label for="asset-purchase-date">खरिद/स्थापना मिति</label>
-                                 <input type="date" id="asset-purchase-date" required>
+                                 <input type="text" id="asset-purchase-date" placeholder="जस्तै: २०८१०४०१" required>
                              </div>
                              <div class="form-group">
                                  <label for="asset-depreciation-rate">ह्रासकट्टी दर (%)</label>
@@ -859,12 +859,9 @@
             return isNegative ? `(${nepaliAmount})` : nepaliAmount;
         };
         const formatNepaliDate = (dateString) => {
-            if (!dateString) return '';
-            const date = new Date(dateString);
-            const year = toDevanagari(date.getFullYear());
-            const month = toDevanagari(String(date.getMonth() + 1).padStart(2, '0'));
-            const day = toDevanagari(String(date.getDate()).padStart(2, '0'));
-            return `${year}/${month}/${day}`;
+            if (!dateString || !dateString.includes('-')) return '';
+            const [year, month, day] = dateString.split('-');
+            return `${toDevanagari(year)}/${toDevanagari(month)}/${toDevanagari(day)}`;
         };
         const formatDateInput = (e) => {
             let value = e.target.value.replace(/[^\d०१२३४५६७८९]/g, '');
@@ -1491,7 +1488,7 @@
             const assetData = {
                 name: document.getElementById('asset-name').value,
                 type: document.getElementById('asset-type').value,
-                purchaseDate: document.getElementById('asset-purchase-date').value,
+                purchaseDate: document.getElementById('asset-purchase-date').dataset.rawValue,
                 openingCost: parseFloat(document.getElementById('asset-opening-cost').value) || 0,
                 addedCost: parseFloat(document.getElementById('asset-added-cost').value) || 0,
                 depreciationRate: parseFloat(document.getElementById('asset-depreciation-rate').value) || 0,
@@ -1534,7 +1531,12 @@
             dom.editingAssetIdInput.value = asset.id;
             document.getElementById('asset-name').value = asset.name;
             document.getElementById('asset-type').value = asset.type;
-            document.getElementById('asset-purchase-date').value = asset.purchaseDate;
+            
+            const dateInput = document.getElementById('asset-purchase-date');
+            dateInput.dataset.rawValue = asset.purchaseDate;
+            const [year, month, day] = asset.purchaseDate.split('-');
+            dateInput.value = `${toDevanagari(year)}-${toDevanagari(month)}-${toDevanagari(day)}`;
+            
             document.getElementById('asset-opening-cost').value = asset.openingCost;
             document.getElementById('asset-added-cost').value = asset.addedCost;
             document.getElementById('asset-depreciation-rate').value = asset.depreciationRate;
@@ -1625,6 +1627,7 @@
 
         // New Asset Event Listeners
         dom.addAssetForm.addEventListener('submit', handleSaveAsset);
+        document.getElementById('asset-purchase-date').addEventListener('input', formatDateInput);
         dom.addNewAssetBtn.addEventListener('click', () => {
              resetAssetForm();
              dom.assetView.classList.add('hidden');
