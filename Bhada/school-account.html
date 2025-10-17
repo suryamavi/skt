@@ -1756,13 +1756,15 @@
             let lessStatementHTML = '';
             
             // Items not in Ledger (from unticked statement items)
+            // These are items the bank knows about, but we haven't recorded.
+            // So, we adjust OUR ledger balance to reflect them.
             dom.reconStatementTableBody.querySelectorAll('tr').forEach(row => {
                 if (!row.querySelector('.recon-statement-check').checked) {
                     const entry = state.statementEntries[parseInt(row.dataset.index)];
-                    if (entry.type === 'credit') { // Add to ledger balance
+                    if (entry.type === 'credit') { // e.g., Interest income: Add to ledger balance
                         addLedgerHTML += `<tr><td>${entry.description}</td><td class="text-right">${formatVoucherAmount(entry.amount)}</td></tr>`;
                         adjustedLedgerBalance += entry.amount;
-                    } else { // Less from ledger balance
+                    } else { // e.g., Bank charges: Less from ledger balance
                         lessLedgerHTML += `<tr><td>${entry.description}</td><td class="text-right">${formatVoucherAmount(entry.amount)}</td></tr>`;
                         adjustedLedgerBalance -= entry.amount;
                     }
@@ -1770,6 +1772,8 @@
             });
 
             // Items not in Statement (from unticked ledger items)
+            // These are items we have recorded, but haven't cleared the bank yet.
+            // So, we adjust the BANK's statement balance to reflect them.
             dom.reconLedgerTableBody.querySelectorAll('tr').forEach(row => {
                 if (!row.querySelector('.recon-ledger-check').checked) {
                     const cells = row.querySelectorAll('td');
@@ -1777,12 +1781,12 @@
                     const debit = parseFloat(toEnglish(cells[3].textContent.replace(/[^०-९.]/g, ''))) || 0;
                     const credit = parseFloat(toEnglish(cells[4].textContent.replace(/[^०-९.]/g, ''))) || 0;
 
-                    if (credit > 0) { // Deposit in transit: Add to statement balance
-                         addStatementHTML += `<tr><td>${description}</td><td class="text-right">${formatVoucherAmount(credit)}</td></tr>`;
-                         adjustedStatementBalance += credit;
-                    } else { // Unpresented Cheque: Less from statement balance
-                        lessStatementHTML += `<tr><td>${description}</td><td class="text-right">${formatVoucherAmount(debit)}</td></tr>`;
-                        adjustedStatementBalance -= debit;
+                    if (debit > 0) { // Deposit in transit (not yet credited by bank): Add to statement balance
+                         addStatementHTML += `<tr><td>${description}</td><td class="text-right">${formatVoucherAmount(debit)}</td></tr>`;
+                         adjustedStatementBalance += debit;
+                    } else if (credit > 0) { // Unpresented Cheque (not yet debited by bank): Less from statement balance
+                        lessStatementHTML += `<tr><td>${description}</td><td class="text-right">${formatVoucherAmount(credit)}</td></tr>`;
+                        adjustedStatementBalance -= credit;
                     }
                 }
             });
@@ -1963,4 +1967,6 @@
     </script>
 </body>
 </html>
+
+
 
