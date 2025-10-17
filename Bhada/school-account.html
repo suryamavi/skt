@@ -487,20 +487,35 @@
                                 <option value="लागू नहुने">लागू नहुने (N/A)</option>
                             </select>
                         </div>
+                         <div class="form-group hidden" id="grant-type-group">
+                            <label for="grant-type">अनुदानको किसिम</label>
+                            <select id="grant-type">
+                                <option value="शशर्त">शशर्त (Conditional)</option>
+                                <option value="निशर्त">निशर्त (Unconditional)</option>
+                            </select>
+                        </div>
+                        <div class="form-group hidden" id="gov-expense-category-group">
+                            <label for="gov-expense-category">खर्चको श्रेणी</label>
+                            <select id="gov-expense-category">
+                                <option value="">-- छान्नुहोस् --</option>
+                                <option value="शशर्त">शशर्त (Conditional)</option>
+                                <option value="निशर्त">निशर्त (Unconditional)</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="form-group" id="standard-name-group">
+                     <div class="form-group" id="standard-name-group">
                         <label for="account-name">खाताको नाम</label>
                         <input type="text" id="account-name" placeholder="जस्तै: तलब, कुमारी बैंक, सन्त बहादुर" required>
                     </div>
-                     <div class="form-group hidden" id="gov-expense-group">
-                        <label for="gov-expense-topic-select">खर्चको शीर्षक (सरकारी आम्दानी अनुसार)</label>
-                        <select id="gov-expense-topic-select" required></select>
+                     <div class="form-group hidden" id="gov-conditional-expense-group">
+                        <label for="gov-expense-topic-select">खर्चको शीर्षक (शशर्त आम्दानी अनुसार)</label>
+                        <select id="gov-expense-topic-select"></select>
                     </div>
                     <button type="submit" class="submit-btn">खाता थप्नुहोस्</button>
                 </form>
                 <hr>
                 <h4>विद्यमान खाताहरू</h4>
-                <div class="table-container"><table id="accounts-table"><thead><tr><th>पूर्ण नाम</th><th>प्रकृति</th><th>स्रोत</th><th>कार्य</th></tr></thead><tbody></tbody></table></div>
+                <div class="table-container"><table id="accounts-table"><thead><tr><th>पूर्ण नाम</th><th>प्रकृति</th><th>स्रोत</th><th>किसिम</th><th>कार्य</th></tr></thead><tbody></tbody></table></div>
             </section>
 
             <section id="ledger-section" class="content-section">
@@ -717,9 +732,17 @@
             navButtons: document.querySelectorAll('.nav-btn'), contentSections: document.querySelectorAll('.content-section'),
             addAccountForm: document.getElementById('add-account-form'), accountNatureSelect: document.getElementById('account-nature'),
             sourceTypeGroup: document.getElementById('source-type-group'),
-            sourceTypeSelect: document.getElementById('source-type'), standardNameGroup: document.getElementById('standard-name-group'),
-            accountNameInput: document.getElementById('account-name'), govExpenseGroup: document.getElementById('gov-expense-group'),
-            govExpenseTopicSelect: document.getElementById('gov-expense-topic-select'), accountsTableBody: document.querySelector('#accounts-table tbody'),
+            sourceTypeSelect: document.getElementById('source-type'), 
+            standardNameGroup: document.getElementById('standard-name-group'),
+            accountNameInput: document.getElementById('account-name'), 
+            govConditionalExpenseGroup: document.getElementById('gov-conditional-expense-group'),
+            govExpenseTopicSelect: document.getElementById('gov-expense-topic-select'), 
+            accountsTableBody: document.querySelector('#accounts-table tbody'),
+            grantTypeGroup: document.getElementById('grant-type-group'),
+            grantTypeSelect: document.getElementById('grant-type'),
+            govExpenseCategoryGroup: document.getElementById('gov-expense-category-group'),
+            govExpenseCategorySelect: document.getElementById('gov-expense-category'),
+            // Voucher Elements
             voucherForm: document.getElementById('voucher-form'), voucherFormTitle: document.getElementById('voucher-form-title'),
             voucherNoInput: document.getElementById('voucher-no'), voucherDateInput: document.getElementById('voucher-date'),
             voucherNarrationInput: document.getElementById('voucher-narration'), voucherEntryBody: document.getElementById('voucher-entry-body'),
@@ -1041,7 +1064,8 @@
             }
             const sortedAccounts = [...state.accounts].sort((a, b) => a.fullName.localeCompare(b.fullName, 'ne'));
             sortedAccounts.forEach(account => {
-                dom.accountsTableBody.innerHTML += `<tr><td>${account.fullName}</td><td>${account.nature}</td><td>${account.sourceType}</td><td><button class="delete-btn" data-id="${account.id}">हटाउनुहोस्</button></td></tr>`;
+                const type = account.grantType || account.expenseCategory || '—';
+                dom.accountsTableBody.innerHTML += `<tr><td>${account.fullName}</td><td>${account.nature}</td><td>${account.sourceType}</td><td>${type}</td><td><button class="delete-btn" data-id="${account.id}">हटाउनुहोस्</button></td></tr>`;
             });
         };
         const getAccountOptions = (selectedId = null) => {
@@ -1426,30 +1450,45 @@
         const handleAccountFormChange = () => {
             const nature = dom.accountNatureSelect.value;
             const source = dom.sourceTypeSelect.value;
-            
+            const expenseCategory = dom.govExpenseCategorySelect.value;
+
+            // Hide all optional fields first
+            dom.sourceTypeGroup.classList.remove('hidden');
+            dom.sourceTypeSelect.required = true;
+            dom.grantTypeGroup.classList.add('hidden');
+            dom.govExpenseCategoryGroup.classList.add('hidden');
+            dom.govConditionalExpenseGroup.classList.add('hidden');
+            dom.govExpenseTopicSelect.required = false;
+            dom.standardNameGroup.classList.remove('hidden');
+            dom.accountNameInput.required = true;
+
             if (nature === 'व्यक्तिगत') {
                 dom.sourceTypeGroup.classList.add('hidden');
                 dom.sourceTypeSelect.required = false;
-            } else {
-                dom.sourceTypeGroup.classList.remove('hidden');
-                dom.sourceTypeSelect.required = true;
-            }
-
-            if (nature === 'खर्च' && source === 'सरकारी') {
-                dom.standardNameGroup.classList.add('hidden'); dom.accountNameInput.required = false;
-                dom.govExpenseGroup.classList.remove('hidden'); dom.govExpenseTopicSelect.required = true;
-            } else {
-                dom.standardNameGroup.classList.remove('hidden'); dom.accountNameInput.required = true;
-                dom.govExpenseGroup.classList.add('hidden'); dom.govExpenseTopicSelect.required = false;
+            } else if (nature === 'आम्दानी' && source === 'सरकारी') {
+                dom.grantTypeGroup.classList.remove('hidden');
+            } else if (nature === 'खर्च' && source === 'सरकारी') {
+                dom.govExpenseCategoryGroup.classList.remove('hidden');
+                if (expenseCategory === 'शशर्त') {
+                    dom.standardNameGroup.classList.add('hidden');
+                    dom.accountNameInput.required = false;
+                    dom.govConditionalExpenseGroup.classList.remove('hidden');
+                    dom.govExpenseTopicSelect.required = true;
+                } else if (expenseCategory === 'निशर्त') {
+                    // Standard name group is already visible, which is correct
+                } else { // Category not selected yet
+                    dom.standardNameGroup.classList.add('hidden');
+                    dom.accountNameInput.required = false;
+                }
             }
         };
 
         const populateGovExpenseTopics = () => {
-            const govIncomeAccounts = state.accounts.filter(a => a.nature === 'आम्दानी' && a.sourceType === 'सरकारी');
+            const govIncomeAccounts = state.accounts.filter(a => a.nature === 'आम्दानी' && a.sourceType === 'सरकारी' && a.grantType === 'शशर्त');
             const uniqueNames = [...new Set(govIncomeAccounts.map(a => a.name))];
             if (uniqueNames.length > 0) {
                 dom.govExpenseTopicSelect.innerHTML = '<option value="">-- शीर्षक छान्नुहोस् --</option>' + uniqueNames.map(name => `<option value="${name}">${name}</option>`).join('');
-            } else { dom.govExpenseTopicSelect.innerHTML = '<option value="">-- पहिले सरकारी आम्दानी खाता बनाउनुहोस् --</option>'; }
+            } else { dom.govExpenseTopicSelect.innerHTML = '<option value="">-- पहिले शशर्त सरकारी आम्दानी खाता बनाउनुहोस् --</option>'; }
         };
 
         const handleNavClick = (e) => {
@@ -1489,19 +1528,50 @@
 
         const handleAddAccount = async (e) => {
             e.preventDefault();
-            const nature = dom.accountNatureSelect.value; 
+            const nature = dom.accountNatureSelect.value;
             let sourceType = dom.sourceTypeSelect.value;
-            if (nature === 'व्यक्तिगत') sourceType = 'लागू नहुने';
+            let grantType = dom.grantTypeSelect.value;
+            let expenseCategory = dom.govExpenseCategorySelect.value;
+            let name;
+            let newAccount = {};
 
-            let name = (nature === 'खर्च' && sourceType === 'सरकारी') ? dom.govExpenseTopicSelect.value : dom.accountNameInput.value.trim();
+            if (nature === 'व्यक्तिगत') {
+                sourceType = 'लागू नहुने';
+                name = dom.accountNameInput.value.trim();
+                newAccount = { nature, sourceType, name, fullName: `${nature} - ${name}` };
+            } else if (sourceType === 'सरकारी') {
+                if (nature === 'आम्दानी') {
+                    name = dom.accountNameInput.value.trim();
+                    newAccount = { nature, sourceType, name, grantType, fullName: `${nature} (${sourceType} - ${grantType}) - ${name}` };
+                } else if (nature === 'खर्च') {
+                    if (expenseCategory === 'शशर्त') {
+                        name = dom.govExpenseTopicSelect.value;
+                    } else if (expenseCategory === 'निशर्त') {
+                        name = dom.accountNameInput.value.trim();
+                    }
+                    if (name) {
+                       newAccount = { nature, sourceType, name, expenseCategory, fullName: `${nature} (${sourceType} - ${expenseCategory}) - ${name}` };
+                    }
+                }
+            } else { // Internal or N/A
+                name = dom.accountNameInput.value.trim();
+                newAccount = { nature, sourceType, name, fullName: sourceType === 'लागू नहुने' ? `${nature} - ${name}` : `${nature} (${sourceType}) - ${name}` };
+            }
+
+            if (!newAccount.name || !newAccount.nature || !newAccount.sourceType) {
+                showModal('कृपया सबै आवश्यक विवरणहरू भर्नुहोस्।', 'error');
+                return;
+            }
+
+            if (state.accounts.some(acc => acc.fullName.toLowerCase() === newAccount.fullName.toLowerCase())) {
+                showModal('यो खाता पहिले नै अवस्थित छ।', 'error');
+                return;
+            }
             
-            if (!nature || !sourceType || !name) { showModal('कृपया सबै विवरणहरू भर्नुहोस्।', 'error'); return; }
-            const fullName = (nature === 'व्यक्तिगत' || sourceType === 'लागू नहुने') ? `${nature} - ${name}` : `${nature} (${sourceType}) - ${name}`;
-            if (state.accounts.some(acc => acc.fullName.toLowerCase() === fullName.toLowerCase())) { showModal('यो खाता पहिले नै अवस्थित छ।', 'error'); return; }
-            const newAccount = { nature, sourceType, name, fullName };
             await addDoc(collection(db, `users/${auth.currentUser.uid}/fiscalYears/${state.activeFyId}/accounts`), newAccount);
             showModal('खाता सफलतापूर्वक थपियो!', 'success');
-            dom.addAccountForm.reset(); handleAccountFormChange();
+            dom.addAccountForm.reset(); 
+            handleAccountFormChange();
         };
 
         const handleDeleteAccount = async (e) => {
@@ -1735,6 +1805,7 @@
         dom.voucherSearchInput.addEventListener('input', renderVoucherList);
         dom.accountNatureSelect.addEventListener('change', handleAccountFormChange);
         dom.sourceTypeSelect.addEventListener('change', handleAccountFormChange);
+        dom.govExpenseCategorySelect.addEventListener('change', handleAccountFormChange);
         dom.printStatementBtn.addEventListener('click', printStatement);
 
         // Asset Event Listeners
@@ -1782,5 +1853,6 @@
     </script>
 </body>
 </html>
+
 
 
