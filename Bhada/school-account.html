@@ -1046,7 +1046,10 @@
             if (activeSectionId === 'assets-section') renderAssets();
             if (activeSectionId === 'ledger-section') { renderLedgerSelect(); if(dom.ledgerAccountSelect.value) renderLedger(); }
             if (activeSectionId === 'trial-balance-section') renderTrialBalance();
-            if (activeSectionId === 'reconciliation-section') { renderReconciliationSelect(); }
+            if (activeSectionId === 'reconciliation-section') { 
+                renderReconciliationSelect();
+                initializeAndRenderReconciliation();
+            }
             if (activeSectionId === 'reports-section') renderIncomeExpenseStatement();
         };
 
@@ -1616,6 +1619,37 @@
             showModal('खाता सफलतापूर्वक हटाइयो!', 'success');
         };
 
+        const initializeAndRenderReconciliation = () => {
+            if (reconStateUnsubscribe) reconStateUnsubscribe();
+            if (statementEntriesUnsubscribe) statementEntriesUnsubscribe();
+            
+            const bankAccountId = dom.reconBankSelect.value;
+            const reconDate = dom.reconDateInput.dataset.rawValue;
+
+            if (!bankAccountId || !reconDate) {
+                state.reconciliationState = { tickedLedgerIndices: [], tickedStatementIds: [] };
+                state.statementEntries = [];
+                renderReconciliation(); // Clears view
+                return;
+            }
+
+            // Listener for Tick State
+            const docId = `${bankAccountId}_${reconDate.replace(/-/g, '')}`;
+            const docRef = doc(db, `users/${auth.currentUser.uid}/fiscalYears/${state.activeFyId}/reconciliationStates`, docId);
+            reconStateUnsubscribe = onSnapshot(docRef, (docSnap) => {
+                state.reconciliationState = docSnap.exists() ? docSnap.data() : { tickedLedgerIndices: [], tickedStatementIds: [] };
+                renderReconciliation();
+            });
+
+            // Listener for Statement Entries
+            const collectionRef = collection(db, `users/${auth.currentUser.uid}/fiscalYears/${state.activeFyId}/statementEntries`);
+            const q = query(collectionRef, where("bankAccountId", "==", bankAccountId));
+            statementEntriesUnsubscribe = onSnapshot(q, (snapshot) => {
+                state.statementEntries = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data()}));
+                renderReconciliation();
+            });
+        };
+
         const saveReconciliationState = async () => {
             const bankAccountId = dom.reconBankSelect.value;
             const reconDate = dom.reconDateInput.dataset.rawValue;
@@ -1963,50 +1997,9 @@
         dom.printAssetRegisterBtn.addEventListener('click', () => printGenericReport('assets-table', 'स्थिर सम्पत्ति रजिस्टर', true));
 
         // Reconciliation Event Listeners
-        const setupReconStateListener = () => {
-            if (reconStateUnsubscribe) reconStateUnsubscribe();
-            
-            const bankAccountId = dom.reconBankSelect.value;
-            const reconDate = dom.reconDateInput.dataset.rawValue;
-
-            if (!bankAccountId || !reconDate) {
-                state.reconciliationState = { tickedLedgerIndices: [], tickedStatementIds: [] };
-                renderReconciliation();
-                return;
-            }
-
-            const docId = `${bankAccountId}_${reconDate.replace(/-/g, '')}`;
-            const docRef = doc(db, `users/${auth.currentUser.uid}/fiscalYears/${state.activeFyId}/reconciliationStates`, docId);
-            
-            reconStateUnsubscribe = onSnapshot(docRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    state.reconciliationState = docSnap.data();
-                } else {
-                    state.reconciliationState = { tickedLedgerIndices: [], tickedStatementIds: [] };
-                }
-                renderReconciliation(); // Re-render with the loaded check states
-            });
-        };
-
-        dom.reconBankSelect.addEventListener('change', () => {
-             if (statementEntriesUnsubscribe) statementEntriesUnsubscribe();
-             const bankAccountId = dom.reconBankSelect.value;
-             dom.reconStatementTableBody.innerHTML = '';
-             state.statementEntries = [];
-             if(bankAccountId) {
-                setupReconStateListener(); // Setup listener for check states
-                const collectionRef = collection(db, `users/${auth.currentUser.uid}/fiscalYears/${state.activeFyId}/statementEntries`);
-                const q = query(collectionRef, where("bankAccountId", "==", bankAccountId));
-                statementEntriesUnsubscribe = onSnapshot(q, (snapshot) => {
-                    state.statementEntries = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data()}));
-                    renderReconciliation();
-                });
-             } else {
-                 renderReconciliation();
-             }
-        });
+        dom.reconBankSelect.addEventListener('change', initializeAndRenderReconciliation);
         dom.reconDateInput.addEventListener('input', formatDateInput);
-        dom.reconDateInput.addEventListener('change', setupReconStateListener);
+        dom.reconDateInput.addEventListener('change', initializeAndRenderReconciliation);
         dom.addStatementEntryForm.addEventListener('submit', handleAddStatementEntry);
         document.getElementById('statement-date').addEventListener('input', formatDateInput);
         dom.reconStatementTableBody.addEventListener('click', handleDeleteStatementEntry);
@@ -2029,4 +2022,5 @@
     </script>
 </body>
 </html>
+
 
