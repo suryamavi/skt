@@ -1224,6 +1224,7 @@
                             description: v.narration,
                             debit: e.debit || 0,
                             credit: e.credit || 0,
+                            voucherNo: v.voucherNo, // Sorting को लागि भौचर नं. थपिएको
                         };
                         ledgerEntries.push(entryData);
                         ledgerBalance += (entryData.debit) - (entryData.credit);
@@ -1231,7 +1232,7 @@
                 });
             });
             
-            ledgerEntries.sort((a,b) => new Date(a.date) - new Date(b.date)).forEach((entry, index) => {
+            ledgerEntries.sort((a,b) => new Date(a.date) - new Date(b.date) || a.voucherNo - b.voucherNo).forEach((entry, index) => {
                 const isChecked = state.reconciliationState.tickedLedgerIndices.includes(index.toString());
                 dom.reconLedgerTableBody.innerHTML += `
                     <tr data-index="${index}">
@@ -1251,7 +1252,7 @@
         const renderStatementEntries = () => {
             dom.reconStatementTableBody.innerHTML = '';
             let statementBalance = 0;
-            state.statementEntries.sort((a,b) => new Date(a.date) - new Date(b.date)).forEach((entry, index) => {
+            state.statementEntries.sort((a,b) => new Date(a.date) - new Date(b.date) || a.id - b.id).forEach((entry, index) => {
                 const isChecked = state.reconciliationState.tickedStatementIds.includes(entry.id);
                 const isDebit = entry.type === 'debit';
                 statementBalance += isDebit ? -entry.amount : entry.amount;
@@ -2022,5 +2023,6 @@
     </script>
 </body>
 </html>
+
 
 
