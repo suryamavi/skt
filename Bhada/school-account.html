@@ -733,6 +733,7 @@
         const auth = getAuth();
         const db = getFirestore(app);
 
+        // --- Global State and DOM Elements ---
         let state = { accounts: [], vouchers: [], fiscalYears: [], activeFyId: null, assets: [], statementEntries: [], reconciliationState: { tickedLedgerIndices: [], tickedStatementIds: [] } };
         let accountsUnsubscribe = null;
         let vouchersUnsubscribe = null;
@@ -1165,74 +1166,7 @@
                 });
             });
             
-            Object.values(balances).forEach(({ balance, account }) => {
-                if (Math.abs(balance) < 0.001) return;
-
-                let isDebit = balance > 0;
-                let isCredit = balance < 0;
-
-                if (account.nature === 'व्यक्तिगत') {
-                    // Handled above by balance sign
-                } else if (['आम्दानी', 'दायित्व'].includes(account.nature)) {
-                    isCredit = balance < 0;
-                    isDebit = balance > 0;
-                    balance = -balance; 
-                }
-
-                dom.trialBalanceTableBody.innerHTML += `<tr>
-                    <td>${account.fullName}</td>
-                    <td class="text-right">${isDebit ? formatVoucherAmount(balance) : '—'}</td>
-                    <td class="text-right">${isCredit ? formatVoucherAmount(Math.abs(balance)) : '—'}</td>
-                </tr>`;
-
-                if (isDebit) totalDebit += balance;
-                if (isCredit) totalCredit += Math.abs(balance);
-            });
-
-            dom.trialBalanceTableFoot.innerHTML = `<tr><td><b>जम्मा</b></td><td class="text-right"><b>${formatVoucherAmount(totalDebit)}</b></td><td class="text-right"><b>${formatVoucherAmount(totalCredit)}</b></td></tr>`;
-            if (Math.abs(totalDebit - totalCredit) > 0.01) {
-                dom.trialBalanceTableFoot.querySelector('tr').style.cssText = 'background-color: var(--danger-color); color: white;';
-            }
-        };
-
-        const renderReconciliationSelect = () => {
-            const bankAccounts = state.accounts.filter(acc => acc.nature === 'सम्पत्ति' && (acc.fullName.toLowerCase().includes('bank') || acc.fullName.includes('बैंक')));
-            const currentSelection = dom.reconBankSelect.value;
-            dom.reconBankSelect.innerHTML = '<option value="">-- बैंक खाता छान्नुहोस् --</option>' + 
-                bankAccounts.map(acc => `<option value="${acc.id}">${acc.fullName}</option>`).join('');
-            dom.reconBankSelect.value = currentSelection;
-            dom.reconStatementContainer.classList.add('hidden');
-        };
-
-        const renderReconciliation = () => {
-            const bankAccountId = dom.reconBankSelect.value;
-            const reconDate = dom.reconDateInput.dataset.rawValue;
-            
-            dom.reconLedgerTableBody.innerHTML = '';
-            dom.reconStatementContainer.classList.add('hidden');
-            
-            if(!bankAccountId) return;
-            
-            let ledgerBalance = 0;
-            const ledgerEntries = [];
-            state.vouchers.forEach(v => {
-                if (reconDate && v.date > reconDate) return;
-                v.entries.forEach(e => {
-                    if (e.accountId === bankAccountId) {
-                        const entryData = {
-                            date: v.date,
-                            description: v.narration,
-                            debit: e.debit || 0,
-                            credit: e.credit || 0,
-                            voucherNo: v.voucherNo, // Sorting को लागि भौचर नं. थपिएको
-                        };
-                        ledgerEntries.push(entryData);
-                        ledgerBalance += (entryData.debit) - (entryData.credit);
-                    }
-                });
-            });
-            
-            ledgerEntries.sort((a,b) => new Date(a.date) - new Date(b.date) || a.voucherNo - b.voucherNo).forEach((entry, index) => {
+            ledgerEntries.sort((a,b) => (a.date.replace(/-/g, '') - b.date.replace(/-/g, '')) || a.voucherNo - b.voucherNo).forEach((entry, index) => {
                 const isChecked = state.reconciliationState.tickedLedgerIndices.includes(index.toString());
                 dom.reconLedgerTableBody.innerHTML += `
                     <tr data-index="${index}">
@@ -1252,7 +1186,7 @@
         const renderStatementEntries = () => {
             dom.reconStatementTableBody.innerHTML = '';
             let statementBalance = 0;
-            state.statementEntries.sort((a,b) => new Date(a.date) - new Date(b.date) || a.id - b.id).forEach((entry, index) => {
+            state.statementEntries.sort((a,b) => (a.date.replace(/-/g, '') - b.date.replace(/-/g, '')) || a.id - b.id).forEach((entry, index) => {
                 const isChecked = state.reconciliationState.tickedStatementIds.includes(entry.id);
                 const isDebit = entry.type === 'debit';
                 statementBalance += isDebit ? -entry.amount : entry.amount;
@@ -2023,6 +1957,5 @@
     </script>
 </body>
 </html>
-
 
 
