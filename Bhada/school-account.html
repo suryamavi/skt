@@ -114,7 +114,7 @@
         
         .header-left, .header-right {
             flex-shrink: 0;
-            width: 200px; /* Adjust as needed */
+            width: 200px;
         }
         .header-left { text-align: left; }
         .header-right { text-align: right; }
@@ -207,7 +207,7 @@
         .form-row { display: flex; gap: 20px; flex-wrap: wrap; }
         .form-group { flex: 1; display: flex; flex-direction: column; min-width: 200px; }
         label { margin-bottom: 5px; font-weight: bold; }
-        input[type="text"], input[type="number"], input[type="password"], input[type="email"], select, input[type="date"] {
+        input[type="text"], input[type="number"], input[type="password"], input[type="email"], select {
             padding: 10px; border: 1px solid var(--border-color); border-radius: 4px;
             font-family: 'Mukta', sans-serif; font-size: 1em; width: 100%; box-sizing: border-box;
         }
@@ -224,8 +224,8 @@
 
         /* Tables */
         .table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 0.9em; }
-        th, td { border: 1px solid var(--border-color); padding: 8px; text-align: left; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid var(--border-color); padding: 10px; text-align: left; }
         th { background-color: #f2f2f2; font-weight: bold; }
         #accounts-table th, #ledger-table th, #trial-balance-table th, #voucher-entry-table th, #assets-table th { background-color: var(--light-blue-bg); }
         #trial-balance-table tfoot td, .report-table tfoot td, #assets-table tfoot td { font-weight: bold; background-color: var(--light-blue-bg); }
@@ -241,7 +241,7 @@
         .card p { font-size: 2em; font-weight: bold; margin: 0; color: var(--primary-color); }
         
         /* Reports */
-        .report-header, .ledger-header { display: flex; justify-content: space-between; align-items: center; }
+        .report-header { display: flex; justify-content: space-between; align-items: center; }
         #income-expense-statement { display: flex; gap: 20px; }
         #income-expense-statement > div { flex: 1; }
         #income-expense-statement table { margin-top: 5px; }
@@ -250,7 +250,7 @@
         .net-balance-row { font-weight: bold; font-size: 1.2em; background-color: #e0e0e0; }
 
         /* Settings Page */
-        .setting-box {
+        #settings-section .setting-box {
             background-color: var(--light-blue-bg);
             padding: 20px;
             border-radius: 8px;
@@ -259,13 +259,18 @@
         }
         #fy-management-table td, #fy-management-table th { vertical-align: middle; }
 
-        /* Reconciliation */
-        .recon-container { display: flex; gap: 20px; }
-        .recon-container > div { flex: 1; }
-        .recon-table th { font-size: 0.9em; padding: 6px; }
-        .recon-table td { font-size: 0.85em; padding: 5px; }
-        .recon-table input[type="checkbox"] { margin-right: 5px; }
-        .recon-totals { font-weight: bold; margin-top: 10px; }
+        /* Asset Management */
+        #add-new-asset-btn { margin-bottom: 15px; }
+        #asset-form-container {
+            background-color: var(--light-blue-bg);
+            padding: 20px; border-radius: 8px; margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Bank Reconciliation */
+        .recon-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .recon-table th, .recon-table td { font-size: 0.9em; padding: 8px; }
+        .recon-totals { font-weight: bold; margin-top: 10px; padding: 8px; background-color: #f2f2f2; text-align: right; }
 
         /* Modals */
         .modal-overlay {
@@ -278,7 +283,7 @@
         .modal-box {
             background: white; padding: 20px 30px; border-radius: 8px;
             transform: scale(0.9); transition: transform 0.3s ease;
-            max-width: 90%; width: 500px;
+            max-width: 90%; width: 400px;
         }
         .modal-overlay.visible .modal-box { transform: scale(1); }
         .modal-box.success { border-top: 5px solid var(--success-color); text-align: center; }
@@ -322,10 +327,9 @@
             .print-header h1 { font-size: 18pt; margin: 0; color: #000; }
             .print-header p { font-size: 12pt; margin: 2px 0; color: #000; }
             .print-header h2 { font-size: 14pt; margin: 5px 0; color: #000; font-weight: bold; }
-            #print-area h1, #print-area h2, #print-area h3, #print-area h4 { color: #000; }
             /* T-Format print */
-            #print-area #income-expense-statement { display: flex; gap: 20px; }
-            #print-area #income-expense-statement > div { flex: 1; }
+            #print-area #income-expense-statement, #print-area .recon-container { display: flex; gap: 20px; }
+            #print-area #income-expense-statement > div, #print-area .recon-container > div { flex: 1; }
         }
 
         #print-area { display: none; }
@@ -393,9 +397,9 @@
             <button id="nav-voucher-list" class="nav-btn">भौचर सूची</button>
             <button id="nav-voucher" class="nav-btn">गोश्वार भौचर</button>
             <button id="nav-accounts" class="nav-btn">खाता व्यवस्थापन</button>
-            <button id="nav-assets" class="nav-btn">स्थिर सम्पत्ति</button>
             <button id="nav-ledger" class="nav-btn">लेजर</button>
             <button id="nav-trial-balance" class="nav-btn">सन्तुलन परीक्षण</button>
+            <button id="nav-assets" class="nav-btn">स्थिर सम्पत्ति</button>
             <button id="nav-reconciliation" class="nav-btn">बैंक मिलान</button>
             <button id="nav-reports" class="nav-btn">आ.ख. रिपोर्ट</button>
             <button id="nav-settings" class="nav-btn">सेटिङ्ग</button>
@@ -498,85 +502,6 @@
                 <h4>विद्यमान खाताहरू</h4>
                 <div class="table-container"><table id="accounts-table"><thead><tr><th>पूर्ण नाम</th><th>प्रकृति</th><th>स्रोत</th><th>कार्य</th></tr></thead><tbody></tbody></table></div>
             </section>
-            
-            <section id="assets-section" class="content-section">
-                <div id="asset-view">
-                    <div class="report-header">
-                        <h3>स्थिर सम्पत्ति रजिस्टर</h3>
-                        <div>
-                             <button id="add-new-asset-btn" class="submit-btn">नयाँ सम्पत्ति थप्नुहोस्</button>
-                             <button id="print-asset-register-btn" class="print-btn">प्रिन्ट गर्नुहोस्</button>
-                        </div>
-                    </div>
-                    <div class="table-container">
-                        <table id="assets-table">
-                            <thead>
-                                <tr>
-                                    <th>नाम</th>
-                                    <th>प्रकार</th>
-                                    <th>खरिद मिति</th>
-                                    <th class="text-right">सुरुवाती लागत (रु.)</th>
-                                    <th class="text-right">थप लागत (रु.)</th>
-                                    <th class="text-right">जम्मा लागत (रु.)</th>
-                                    <th class="text-center">ह्रा. दर</th>
-                                    <th class="text-right">वार्षिक ह्रासकट्टी (रु.)</th>
-                                    <th class="text-right">खुद बाँकी रकम (रु.)</th>
-                                    <th>कार्य</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                            <tfoot></tfoot>
-                        </table>
-                    </div>
-                </div>
-                <div id="asset-form-view" class="hidden">
-                     <h3 id="asset-form-title">नयाँ सम्पत्ति</h3>
-                     <form id="add-asset-form">
-                         <input type="hidden" id="editing-asset-id">
-                         <div class="form-row">
-                             <div class="form-group">
-                                 <label for="asset-name">सम्पत्तिको नाम</label>
-                                 <input type="text" id="asset-name" required>
-                             </div>
-                             <div class="form-group">
-                                <label for="asset-type">सम्पत्तिको प्रकार</label>
-                                <select id="asset-type" required>
-                                    <option value="">-- छान्नुहोस् --</option>
-                                    <option value="जग्गा">जग्गा</option>
-                                    <option value="भवन">भवन</option>
-                                    <option value="फर्निचर">फर्निचर</option>
-                                    <option value="अफिस सामग्री">अफिस सामग्री</option>
-                                    <option value="मेसिनरी तथा अन्य">मेसिनरी तथा अन्य</option>
-                                </select>
-                            </div>
-                         </div>
-                         <div class="form-row">
-                             <div class="form-group">
-                                 <label for="asset-purchase-date">खरिद/स्थापना मिति</label>
-                                 <input type="text" id="asset-purchase-date" placeholder="जस्तै: २०८१०४०१" required>
-                             </div>
-                             <div class="form-group">
-                                 <label for="asset-depreciation-rate">ह्रासकट्टी दर (%)</label>
-                                 <input type="number" id="asset-depreciation-rate" value="0" step="0.01" required>
-                             </div>
-                         </div>
-                         <div class="form-row">
-                              <div class="form-group">
-                                 <label for="asset-opening-cost">सुरुवाती लागत (रु.)</label>
-                                 <input type="number" id="asset-opening-cost" value="0" step="0.01" required>
-                             </div>
-                             <div class="form-group">
-                                 <label for="asset-added-cost">यस वर्ष थपिएको लागत (रु.)</label>
-                                 <input type="number" id="asset-added-cost" value="0" step="0.01" required>
-                             </div>
-                         </div>
-                         <div class="form-buttons">
-                            <button type="submit" class="submit-btn">सुरक्षित गर्नुहोस्</button>
-                            <button type="button" id="cancel-asset-edit-btn" class="cancel-btn">रद्द गर्नुहोस्</button>
-                         </div>
-                     </form>
-                </div>
-            </section>
 
             <section id="ledger-section" class="content-section">
                 <h3>खाताको लेजर हेर्नुहोस्</h3>
@@ -592,6 +517,38 @@
                 <div class="table-container"><table id="trial-balance-table"><thead><tr><th>खाताको नाम</th><th>डेबिट (रु.)</th><th>क्रेडिट (रु.)</th></tr></thead><tbody></tbody><tfoot></tfoot></table></div>
             </section>
 
+            <section id="assets-section" class="content-section">
+                <div class="report-header"><h3>स्थिर सम्पत्ति रजिस्टर</h3><button id="print-asset-register-btn" class="print-btn">प्रिन्ट गर्नुहोस्</button></div>
+                <button id="add-new-asset-btn" class="submit-btn" style="width: auto; padding: 10px 15px;">+ नयाँ सम्पत्ति थप्नुहोस्</button>
+                <div id="asset-form-container" class="hidden">
+                     <h4 id="asset-form-title">नयाँ सम्पत्ति</h4>
+                    <form id="add-asset-form">
+                        <input type="hidden" id="editing-asset-id">
+                        <div class="form-row">
+                            <div class="form-group"><label for="asset-name">सम्पत्तिको विवरण</label><input type="text" id="asset-name" required></div>
+                            <div class="form-group"><label for="asset-type">प्रकार</label><input type="text" id="asset-type" placeholder="जस्तै: भवन, फर्निचर" required></div>
+                            <div class="form-group"><label for="asset-purchase-date">खरिद/प्राप्ति मिति</label><input type="text" id="asset-purchase-date" placeholder="जस्तै: २०८१०४०१" required></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group"><label for="asset-opening-cost">सुरुवाती लागत (रु.)</label><input type="number" step="0.01" id="asset-opening-cost" value="0" required></div>
+                            <div class="form-group"><label for="asset-added-cost">यस वर्ष थपिएको लागत (रु.)</label><input type="number" step="0.01" id="asset-added-cost" value="0" required></div>
+                            <div class="form-group"><label for="asset-dep-rate">ह्रासकट्टी दर (%)</label><input type="number" step="0.01" id="asset-dep-rate" value="0" required></div>
+                        </div>
+                        <div class="form-buttons">
+                            <button type="submit" class="submit-btn">सुरक्षित गर्नुहोस्</button>
+                            <button type="button" id="cancel-asset-edit-btn" class="cancel-btn">रद्द गर्नुहोस्</button>
+                        </div>
+                    </form>
+                </div>
+                 <div class="table-container">
+                    <table id="assets-table">
+                        <thead><tr><th>विवरण</th><th>प्रकार</th><th>प्राप्ति मिति</th><th>सुरुवाती लागत</th><th>थप लागत</th><th>जम्मा लागत</th><th>ह्रासकट्टी दर(%)</th><th>वार्षिक ह्रासकट्टी</th><th>खुद बाँकी रकम</th><th>कार्य</th></tr></thead>
+                        <tbody></tbody>
+                        <tfoot></tfoot>
+                    </table>
+                </div>
+            </section>
+            
             <section id="reconciliation-section" class="content-section">
                  <div class="report-header">
                      <h3>बैंक हिसाब मिलान विवरण</h3>
@@ -744,10 +701,12 @@
         const db = getFirestore(app);
 
         // --- Global State and DOM Elements ---
-        let state = { accounts: [], vouchers: [], assets: [], fiscalYears: [], activeFyId: null, statementEntries: [] };
+        let state = { accounts: [], vouchers: [], fiscalYears: [], activeFyId: null, assets: [], statementEntries: [] };
         let accountsUnsubscribe = null;
         let vouchersUnsubscribe = null;
         let assetsUnsubscribe = null;
+        let statementEntriesUnsubscribe = null;
+
         const dom = {
             appLoader: document.getElementById('app-loader'), loaderMessage: document.getElementById('loader-message'),
             loginContainer: document.getElementById('login-container'), mainContainer: document.querySelector('.container'),
@@ -782,21 +741,22 @@
             newFyNameInput: document.getElementById('new-fy-name'), createFyBtn: document.getElementById('create-fy-btn'),
             deleteVoucherForm: document.getElementById('delete-voucher-form'), voucherNoToDeleteInput: document.getElementById('voucher-no-to-delete'),
             deleteVoucherBtn: document.getElementById('delete-voucher-btn'),
-            // New Asset Elements
-            assetView: document.getElementById('asset-view'), assetFormView: document.getElementById('asset-form-view'),
-            addNewAssetBtn: document.getElementById('add-new-asset-btn'),
+            // Asset Elements
+            addNewAssetBtn: document.getElementById('add-new-asset-btn'), assetFormContainer: document.getElementById('asset-form-container'),
             addAssetForm: document.getElementById('add-asset-form'), assetFormTitle: document.getElementById('asset-form-title'),
-            editingAssetIdInput: document.getElementById('editing-asset-id'), assetsTableBody: document.querySelector('#assets-table tbody'),
-            assetsTableFoot: document.querySelector('#assets-table tfoot'),
+            editingAssetIdInput: document.getElementById('editing-asset-id'),
             cancelAssetEditBtn: document.getElementById('cancel-asset-edit-btn'),
+            assetsTableBody: document.querySelector('#assets-table tbody'), assetsTableFoot: document.querySelector('#assets-table tfoot'),
             printAssetRegisterBtn: document.getElementById('print-asset-register-btn'),
-            // New Reconciliation Elements
+            // Reconciliation Elements
             reconBankSelect: document.getElementById('recon-bank-select'),
             reconDateInput: document.getElementById('recon-date'),
             reconLedgerTableBody: document.querySelector('#recon-ledger-table tbody'),
             reconStatementTableBody: document.querySelector('#recon-statement-table tbody'),
             addStatementEntryForm: document.getElementById('add-statement-entry-form'),
             printReconBtn: document.getElementById('print-recon-btn'),
+            ledgerBalanceSpan: document.getElementById('ledger-balance'),
+            statementBalanceSpan: document.getElementById('statement-balance'),
         };
 
         // --- Modal and Utility Functions ---
@@ -891,13 +851,17 @@
         const toEnglish = (numStr) => String(numStr).split('').map(c => nepaliDigits.indexOf(c) !== -1 ? nepaliDigits.indexOf(c) : c).join('');
         const toDevanagari = (numStr) => String(numStr).replace(/[0-9]/g, d => nepaliDigits[d]);
         const formatVoucherAmount = (num) => {
-            if (num === null || num === undefined || isNaN(num)) num = 0;
+            if (num === null || num === undefined || isNaN(num)) {
+                num = 0;
+            }
             const isNegative = num < 0;
             const fixedNum = Math.abs(num).toFixed(2);
             const [integerPart, decimalPart] = fixedNum.split('.');
             let formattedInteger = integerPart.slice(-3);
             const otherNumbers = integerPart.slice(0, -3);
-            if(otherNumbers) formattedInteger = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + ',' + formattedInteger;
+            if(otherNumbers) {
+                formattedInteger = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + ',' + formattedInteger;
+            }
             const nepaliInteger = toDevanagari(formattedInteger);
             let nepaliAmount;
             if (!decimalPart || parseInt(decimalPart, 10) === 0) {
@@ -908,8 +872,11 @@
             return isNegative ? `(${nepaliAmount})` : nepaliAmount;
         };
         const formatNepaliDate = (dateString) => {
-            if (!dateString || !dateString.includes('-')) return '';
-            const [year, month, day] = dateString.split('-');
+            if (!dateString || dateString.length < 8) return '';
+            const engDate = dateString.replace(/-/g, '');
+            const year = engDate.substring(0, 4);
+            const month = engDate.substring(4, 6);
+            const day = engDate.substring(6, 8);
             return `${toDevanagari(year)}/${toDevanagari(month)}/${toDevanagari(day)}`;
         };
         const formatDateInput = (e) => {
@@ -917,9 +884,14 @@
             let engValue = toEnglish(value);
             if (engValue.length >= 8) {
                 engValue = engValue.slice(0, 8);
-                e.target.dataset.rawValue = `${engValue.substring(0, 4)}-${engValue.substring(4, 6)}-${engValue.substring(6, 8)}`;
-                e.target.value = `${toDevanagari(engValue.substring(0, 4))}-${toDevanagari(engValue.substring(4, 6))}-${toDevanagari(engValue.substring(6, 8))}`;
-            } else { e.target.dataset.rawValue = ''; }
+                const year = engValue.substring(0, 4);
+                const month = engValue.substring(4, 6);
+                const day = engValue.substring(6, 8);
+                e.target.dataset.rawValue = `${year}-${month}-${day}`;
+                e.target.value = `${toDevanagari(year)}-${toDevanagari(month)}-${toDevanagari(day)}`;
+            } else { 
+                e.target.dataset.rawValue = ''; 
+            }
         };
         const handleVoucherNoInput = (e) => {
             const devanagariValue = e.target.value.replace(/[^\d०१२३४५६७८९]/g, '');
@@ -941,6 +913,7 @@
                 if (accountsUnsubscribe) accountsUnsubscribe();
                 if (vouchersUnsubscribe) vouchersUnsubscribe();
                 if (assetsUnsubscribe) assetsUnsubscribe();
+                if (statementEntriesUnsubscribe) statementEntriesUnsubscribe();
             }
         });
         
@@ -952,7 +925,9 @@
                     const settings = settingsSnap.data();
                     state.fiscalYears = settings.years || [];
                     state.activeFyId = settings.activeId || null;
-                } else { state.fiscalYears = []; state.activeFyId = null; }
+                } else { 
+                    state.fiscalYears = []; state.activeFyId = null; 
+                }
 
                 if (state.fiscalYears.length === 0) {
                     dom.loaderMessage.textContent = 'कुनै आर्थिक वर्ष भेटिएन। कृपया एउटा सिर्जना गर्नुहोस्।';
@@ -965,7 +940,9 @@
                     await setupFirestoreListeners(uid, state.activeFyId);
                 }
                 updateFyUi();
-            } catch(e) { console.error(e); dom.loaderMessage.textContent = 'आ.व. लोड गर्न असफल भयो।'; }
+            } catch(e) { 
+                console.error(e); dom.loaderMessage.textContent = 'आ.व. लोड गर्न असफल भयो।'; 
+            }
         }
 
         function updateFyUi() {
@@ -981,48 +958,49 @@
             if (accountsUnsubscribe) accountsUnsubscribe();
             if (vouchersUnsubscribe) vouchersUnsubscribe();
             if (assetsUnsubscribe) assetsUnsubscribe();
-            
+            if (statementEntriesUnsubscribe) statementEntriesUnsubscribe();
+
             const accountsRef = collection(db, `users/${uid}/fiscalYears/${fyId}/accounts`);
             const vouchersRef = collection(db, `users/${uid}/fiscalYears/${fyId}/vouchers`);
             const assetsRef = collection(db, `users/${uid}/fiscalYears/${fyId}/assets`);
-
+            
             let loadingCounter = 3;
-            const onDataLoaded = () => {
+            const doneLoading = () => {
                 loadingCounter--;
-                if (loadingCounter === 0) {
-                    renderAll();
-                    dom.appLoader.classList.add('hidden');
-                }
+                if(loadingCounter === 0) dom.appLoader.classList.add('hidden');
             };
 
             accountsUnsubscribe = onSnapshot(query(accountsRef), (snapshot) => {
                 state.accounts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                onDataLoaded();
-            }, (err) => { console.error(err); onDataLoaded(); });
+                renderAll();
+                doneLoading();
+            }, (error) => { console.error(error); doneLoading(); });
 
             vouchersUnsubscribe = onSnapshot(query(vouchersRef), (snapshot) => {
                 state.vouchers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                onDataLoaded();
-            }, (err) => { console.error(err); onDataLoaded(); });
+                renderAll();
+                doneLoading();
+            }, (error) => { console.error(error); doneLoading(); });
             
             assetsUnsubscribe = onSnapshot(query(assetsRef), (snapshot) => {
                 state.assets = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                onDataLoaded();
-            }, (err) => { console.error(err); onDataLoaded(); });
+                renderAll();
+                doneLoading();
+            }, (error) => { console.error(error); doneLoading(); });
         }
         
         // --- Render Functions ---
         const renderAll = () => {
             if (!auth.currentUser || !state.activeFyId) return;
             const activeSectionId = document.querySelector('.content-section.active')?.id;
-
+            
             renderDashboard();
             if (activeSectionId === 'voucher-list-section') renderVoucherList();
             if (activeSectionId === 'accounts-section') { renderAccounts(); populateGovExpenseTopics(); }
             if (activeSectionId === 'assets-section') renderAssets();
             if (activeSectionId === 'ledger-section') { renderLedgerSelect(); if(dom.ledgerAccountSelect.value) renderLedger(); }
             if (activeSectionId === 'trial-balance-section') renderTrialBalance();
-            if (activeSectionId === 'reconciliation-section') { renderReconciliationSelect(); renderReconciliation(); }
+            if (activeSectionId === 'reconciliation-section') { renderReconciliationSelect(); }
             if (activeSectionId === 'reports-section') renderIncomeExpenseStatement();
         };
 
@@ -1066,60 +1044,6 @@
                 dom.accountsTableBody.innerHTML += `<tr><td>${account.fullName}</td><td>${account.nature}</td><td>${account.sourceType}</td><td><button class="delete-btn" data-id="${account.id}">हटाउनुहोस्</button></td></tr>`;
             });
         };
-
-        const renderAssets = () => {
-            dom.assetsTableBody.innerHTML = '';
-            dom.assetsTableFoot.innerHTML = '';
-            let totalOpening = 0, totalAdded = 0, totalCost = 0, totalDepreciation = 0, totalNet = 0;
-
-            const sortedAssets = [...state.assets].sort((a, b) => a.name.localeCompare(b.name, 'ne'));
-
-            sortedAssets.forEach(asset => {
-                const openingCost = parseFloat(asset.openingCost) || 0;
-                const addedCost = parseFloat(asset.addedCost) || 0;
-                const depreciationRate = parseFloat(asset.depreciationRate) || 0;
-
-                const currentTotalCost = openingCost + addedCost;
-                const annualDepreciation = currentTotalCost * (depreciationRate / 100);
-                const netValue = currentTotalCost - annualDepreciation;
-                
-                totalOpening += openingCost;
-                totalAdded += addedCost;
-                totalCost += currentTotalCost;
-                totalDepreciation += annualDepreciation;
-                totalNet += netValue;
-
-                dom.assetsTableBody.innerHTML += `
-                    <tr>
-                        <td>${asset.name}</td>
-                        <td>${asset.type}</td>
-                        <td>${formatNepaliDate(asset.purchaseDate)}</td>
-                        <td class="text-right">${formatVoucherAmount(openingCost)}</td>
-                        <td class="text-right">${formatVoucherAmount(addedCost)}</td>
-                        <td class="text-right">${formatVoucherAmount(currentTotalCost)}</td>
-                        <td class="text-center">${toDevanagari(depreciationRate)}%</td>
-                        <td class="text-right">${formatVoucherAmount(annualDepreciation)}</td>
-                        <td class="text-right">${formatVoucherAmount(netValue)}</td>
-                        <td>
-                            <button class="edit-btn" data-id="${asset.id}">एडिट</button>
-                            <button class="delete-btn" data-id="${asset.id}">डिलिट</button>
-                        </td>
-                    </tr>`;
-            });
-
-            dom.assetsTableFoot.innerHTML = `
-                <tr>
-                    <td colspan="3"><b>जम्मा</b></td>
-                    <td class="text-right"><b>${formatVoucherAmount(totalOpening)}</b></td>
-                    <td class="text-right"><b>${formatVoucherAmount(totalAdded)}</b></td>
-                    <td class="text-right"><b>${formatVoucherAmount(totalCost)}</b></td>
-                    <td colspan="1"></td>
-                    <td class="text-right"><b>${formatVoucherAmount(totalDepreciation)}</b></td>
-                    <td class="text-right"><b>${formatVoucherAmount(totalNet)}</b></td>
-                    <td></td>
-                </tr>`;
-        };
-        
         const getAccountOptions = (selectedId = null) => {
             const sortedAccounts = [...state.accounts].sort((a, b) => a.fullName.localeCompare(b.fullName, 'ne'));
             return sortedAccounts.map(acc => `<option value="${acc.id}" ${selectedId === acc.id ? 'selected' : ''}>${acc.fullName}</option>`).join('');
@@ -1200,10 +1124,9 @@
                 if (account.nature === 'व्यक्तिगत') {
                     // Handled above by balance sign
                 } else if (['आम्दानी', 'दायित्व'].includes(account.nature)) {
-                    // Normal balance is credit. If balance is negative, it becomes debit.
                     isCredit = balance < 0;
                     isDebit = balance > 0;
-                    balance = -balance; // Invert for display
+                    balance = -balance; 
                 }
 
                 dom.trialBalanceTableBody.innerHTML += `<tr>
@@ -1223,7 +1146,7 @@
         };
 
         const renderReconciliationSelect = () => {
-            const bankAccounts = state.accounts.filter(acc => acc.nature === 'सम्पत्ति' && acc.fullName.toLowerCase().includes('bank') || acc.fullName.includes('बैंक'));
+            const bankAccounts = state.accounts.filter(acc => acc.nature === 'सम्पत्ति' && (acc.fullName.toLowerCase().includes('bank') || acc.fullName.includes('बैंक')));
             const currentSelection = dom.reconBankSelect.value;
             dom.reconBankSelect.innerHTML = '<option value="">-- बैंक खाता छान्नुहोस् --</option>' + 
                 bankAccounts.map(acc => `<option value="${acc.id}">${acc.fullName}</option>`).join('');
@@ -1235,14 +1158,13 @@
             const reconDate = dom.reconDateInput.dataset.rawValue;
             
             dom.reconLedgerTableBody.innerHTML = '';
-            dom.reconStatementTableBody.innerHTML = '';
-
-            if(!bankAccountId || !reconDate) return;
-
-            // Render Ledger Transactions
+            
+            if(!bankAccountId) return;
+            
+            let ledgerBalance = 0;
             const ledgerEntries = [];
             state.vouchers.forEach(v => {
-                if (v.date > reconDate) return;
+                if (reconDate && v.date > reconDate) return;
                 v.entries.forEach(e => {
                     if (e.accountId === bankAccountId) {
                         ledgerEntries.push({
@@ -1251,6 +1173,7 @@
                             debit: e.debit || 0,
                             credit: e.credit || 0,
                         });
+                        ledgerBalance += (e.debit || 0) - (e.credit || 0);
                     }
                 });
             });
@@ -1258,7 +1181,7 @@
             ledgerEntries.sort((a,b) => new Date(a.date) - new Date(b.date)).forEach(entry => {
                 dom.reconLedgerTableBody.innerHTML += `
                     <tr>
-                        <td><input type="checkbox"></td>
+                        <td><input type="checkbox" class="recon-ledger-check"></td>
                         <td>${formatNepaliDate(entry.date)}</td>
                         <td>${entry.description}</td>
                         <td class="text-right">${entry.debit > 0 ? formatVoucherAmount(entry.debit) : '-'}</td>
@@ -1266,21 +1189,28 @@
                     </tr>
                 `;
             });
-
-            // Render Statement Transactions
-            if (!state.statementEntries) state.statementEntries = [];
-            state.statementEntries.forEach(entry => {
+            dom.ledgerBalanceSpan.textContent = formatVoucherAmount(ledgerBalance);
+            renderStatementEntries();
+        };
+        
+        const renderStatementEntries = () => {
+            dom.reconStatementTableBody.innerHTML = '';
+            let statementBalance = 0;
+            state.statementEntries.sort((a,b) => new Date(a.date) - new Date(b.date)).forEach(entry => {
+                const isDebit = entry.type === 'debit';
+                statementBalance += isDebit ? -entry.amount : entry.amount;
                  dom.reconStatementTableBody.innerHTML += `
-                    <tr>
-                        <td><input type="checkbox"></td>
+                    <tr data-id="${entry.id}">
+                        <td><input type="checkbox" class="recon-statement-check"></td>
                         <td>${formatNepaliDate(entry.date)}</td>
                         <td>${entry.description}</td>
-                        <td class="text-right">${entry.type === 'debit' ? formatVoucherAmount(entry.amount) : '-'}</td>
-                        <td class="text-right">${entry.type === 'credit' ? formatVoucherAmount(entry.amount) : '-'}</td>
+                        <td class="text-right">${isDebit ? formatVoucherAmount(entry.amount) : '-'}</td>
+                        <td class="text-right">${!isDebit ? formatVoucherAmount(entry.amount) : '-'}</td>
                         <td><button class="delete-btn statement-delete-btn" data-id="${entry.id}" style="padding: 2px 5px; font-size: 0.8em;">X</button></td>
                     </tr>
                 `;
             });
+            dom.statementBalanceSpan.textContent = formatVoucherAmount(statementBalance);
         };
         
         const startEditVoucher = (voucherId) => { 
@@ -1302,7 +1232,7 @@
             document.getElementById('nav-voucher').click();
         };
         const resetVoucherForm = () => { 
-             dom.voucherForm.reset();
+            dom.voucherForm.reset();
             dom.editingVoucherIdInput.value = '';
             dom.voucherNoInput.dataset.rawValue = '';
             dom.voucherDateInput.dataset.rawValue = '';
@@ -1310,7 +1240,7 @@
             dom.saveVoucherBtn.textContent = 'भौचर सुरक्षित गर्नुहोस्';
             dom.cancelEditBtn.style.display = 'none';
             renderVoucherRows(2);
-         };
+        };
          
         // --- Core Logic (Events, Firebase interactions) ---
         async function reauthenticate(password) {
@@ -1328,7 +1258,7 @@
         
         dom.createFyBtn.addEventListener('click', async () => {
             let fyName = dom.newFyNameInput.value.trim();
-            fyName = toEnglish(fyName).replace(/[^0-9/]/g, ''); // Sanitize and convert
+            fyName = toEnglish(fyName).replace(/[^0-9/]/g, ''); 
             if(!fyName.match(/^\d{4}\/\d{2}$/)) { showModal('कृपया "२०८१/८२" जस्तो सही ढाँचामा आ.व. लेख्नुहोस्।', 'error'); return; }
             if(state.fiscalYears.some(fy => fy.name === fyName)) { showModal('यो आर्थिक वर्ष पहिले नै सिर्जना भइसकेको छ।', 'error'); return; }
             const confirmed = await showConfirmModal(`के तपाईं नयाँ आर्थिक वर्ष "${toDevanagari(fyName)}" सिर्जना गर्न चाहनुहुन्छ?`);
@@ -1406,7 +1336,7 @@
                 if (await reauthenticate(password)) {
                     const updatedFyList = state.fiscalYears.filter(fy => fy.id !== id);
                     let newActiveId = state.activeFyId;
-                    if (state.activeFyId === id) { // If deleting the active one
+                    if (state.activeFyId === id) { 
                         newActiveId = updatedFyList.length > 0 ? updatedFyList[0].id : null;
                     }
                     const settingsRef = doc(db, `users/${auth.currentUser.uid}/settings`, 'fiscalYears');
@@ -1574,23 +1504,27 @@
             dom.addAccountForm.reset(); handleAccountFormChange();
         };
 
-        const handleDeleteAccount = async (accountId) => {
+        const handleDeleteAccount = async (e) => {
+            if (!e.target.classList.contains('delete-btn')) return;
+            const accountId = e.target.dataset.id;
             if (!accountId) return;
             const isUsed = state.vouchers.some(v => v.entries.some(en => en.accountId === accountId));
-            if (isUsed) {
-                showModal('यो खाता भौचरमा प्रयोग भइसकेकोले हटाउन मिल्दैन।', 'error');
-                return;
-            }
+            if (isUsed) { showModal('यो खाता भौचरमा प्रयोग भइसकेकोले हटाउन मिल्दैन।', 'error'); return; }
             const confirmed = await showConfirmModal('के तपाईं यो खाता साँच्चै हटाउन चाहनुहुन्छ?');
             if (!confirmed) return;
             await deleteDoc(doc(db, `users/${auth.currentUser.uid}/fiscalYears/${state.activeFyId}/accounts`, accountId));
             showModal('खाता सफलतापूर्वक हटाइयो!', 'success');
         };
 
-        const handleAddStatementEntry = (e) => {
+        const handleAddStatementEntry = async (e) => {
             e.preventDefault();
+            const bankAccountId = dom.reconBankSelect.value;
+            if(!bankAccountId) {
+                showModal('कृपया पहिले बैंक खाता छान्नुहोस्।', 'error');
+                return;
+            }
             const date = document.getElementById('statement-date').dataset.rawValue;
-            const description = document.getElementById('statement-description').value;
+            const description = document.getElementById('statement-description').value.trim();
             const amount = parseFloat(document.getElementById('statement-amount').value);
             const type = document.getElementById('statement-type').value;
 
@@ -1598,160 +1532,156 @@
                 showModal('कृपया मिति, विवरण र सही रकम भर्नुहोस्।', 'error');
                 return;
             }
-
-            if (!state.statementEntries) state.statementEntries = [];
-            state.statementEntries.push({ id: Date.now(), date, description, amount, type });
             
-            renderReconciliation();
+            const newEntry = { bankAccountId, date, description, amount, type };
+            await addDoc(collection(db, `users/${auth.currentUser.uid}/fiscalYears/${state.activeFyId}/statementEntries`), newEntry);
+
             dom.addStatementEntryForm.reset();
             document.getElementById('statement-date').dataset.rawValue = '';
+            document.getElementById('statement-date').value = '';
         };
 
-        const handleDeleteStatementEntry = (e) => {
+        const handleDeleteStatementEntry = async (e) => {
             if (!e.target.classList.contains('statement-delete-btn')) return;
-            const entryId = parseInt(e.target.dataset.id);
-            state.statementEntries = state.statementEntries.filter(entry => entry.id !== entryId);
-            renderReconciliation();
+            const entryId = e.target.dataset.id;
+            const confirmed = await showConfirmModal('के तपाईं यो कारोबार हटाउन चाहनुहुन्छ?');
+            if(!confirmed) return;
+            await deleteDoc(doc(db, `users/${auth.currentUser.uid}/fiscalYears/${state.activeFyId}/statementEntries`, entryId));
         };
 
         const handleSaveAsset = async (e) => {
             e.preventDefault();
             const editingId = dom.editingAssetIdInput.value;
             const assetData = {
-                name: document.getElementById('asset-name').value,
-                type: document.getElementById('asset-type').value,
+                name: document.getElementById('asset-name').value.trim(),
+                type: document.getElementById('asset-type').value.trim(),
                 purchaseDate: document.getElementById('asset-purchase-date').dataset.rawValue,
                 openingCost: parseFloat(document.getElementById('asset-opening-cost').value) || 0,
                 addedCost: parseFloat(document.getElementById('asset-added-cost').value) || 0,
-                depreciationRate: parseFloat(document.getElementById('asset-depreciation-rate').value) || 0,
+                depRate: parseFloat(document.getElementById('asset-dep-rate').value) || 0,
             };
 
             if (!assetData.name || !assetData.type || !assetData.purchaseDate) {
-                showModal('कृपया सबै विवरणहरू भर्नुहोस्।', 'error');
-                return;
+                showModal('कृपया सम्पत्तिको विवरण, प्रकार र मिति भर्नुहोस्।', 'error'); return;
             }
-            
+
             const collectionRef = collection(db, `users/${auth.currentUser.uid}/fiscalYears/${state.activeFyId}/assets`);
-            if (editingId) {
-                await setDoc(doc(collectionRef, editingId), assetData);
-                showModal('सम्पत्ति सफलतापूर्वक अपडेट भयो!', 'success');
-            } else {
-                await addDoc(collectionRef, assetData);
-                showModal('सम्पत्ति सफलतापूर्वक थपियो!', 'success');
-            }
-            
+            const docRef = editingId ? doc(collectionRef, editingId) : doc(collectionRef);
+            await setDoc(docRef, assetData);
+            showModal(editingId ? 'सम्पत्ति सफलतापूर्वक अपडेट भयो!' : 'सम्पत्ति सफलतापूर्वक सुरक्षित भयो!', 'success');
             resetAssetForm();
         };
-
         const resetAssetForm = () => {
             dom.addAssetForm.reset();
             dom.editingAssetIdInput.value = '';
+            document.getElementById('asset-purchase-date').dataset.rawValue = '';
             dom.assetFormTitle.textContent = 'नयाँ सम्पत्ति';
-            dom.assetView.classList.remove('hidden');
-            dom.assetFormView.classList.add('hidden');
+            dom.assetFormContainer.classList.add('hidden');
         };
-
         const startEditAsset = (assetId) => {
             const asset = state.assets.find(a => a.id === assetId);
             if (!asset) return;
-
             resetAssetForm();
-            dom.assetView.classList.add('hidden');
-            dom.assetFormView.classList.remove('hidden');
-
-            dom.assetFormTitle.textContent = `सम्पत्ति "${asset.name}" सम्पादन गर्दै`;
+            dom.assetFormContainer.classList.remove('hidden');
+            dom.assetFormTitle.textContent = 'सम्पत्ति सम्पादन गर्नुहोस्';
             dom.editingAssetIdInput.value = asset.id;
             document.getElementById('asset-name').value = asset.name;
             document.getElementById('asset-type').value = asset.type;
-            
             const dateInput = document.getElementById('asset-purchase-date');
+            dateInput.value = formatNepaliDate(asset.purchaseDate).replace(/\//g, '-');
             dateInput.dataset.rawValue = asset.purchaseDate;
-            const [year, month, day] = asset.purchaseDate.split('-');
-            dateInput.value = `${toDevanagari(year)}-${toDevanagari(month)}-${toDevanagari(day)}`;
-            
             document.getElementById('asset-opening-cost').value = asset.openingCost;
             document.getElementById('asset-added-cost').value = asset.addedCost;
-            document.getElementById('asset-depreciation-rate').value = asset.depreciationRate;
+            document.getElementById('asset-dep-rate').value = asset.depRate;
         };
-
         const handleDeleteAsset = async (assetId) => {
-            if (!assetId) return;
-            const confirmed = await showConfirmModal('के तपाईं यो सम्पत्ति साँच्चै हटाउन चाहनुहुन्छ?');
-            if (!confirmed) return;
+            const confirmed = await showConfirmModal('के तपाईं यो सम्पत्ति स्थायी रूपमा मेटाउन चाहनुहुन्छ?');
+            if(!confirmed) return;
             await deleteDoc(doc(db, `users/${auth.currentUser.uid}/fiscalYears/${state.activeFyId}/assets`, assetId));
-            showModal('सम्पत्ति सफलतापूर्वक हटाइयो!', 'success');
+            showModal('सम्पत्ति सफलतापूर्वक मेटाइयो!', 'success');
+        };
+        const renderAssets = () => {
+            dom.assetsTableBody.innerHTML = '';
+            dom.assetsTableFoot.innerHTML = '';
+            if (!state.assets || state.assets.length === 0) {
+                dom.assetsTableBody.innerHTML = `<tr><td colspan="10" class="text-center">कुनै सम्पत्ति थपिएको छैन।</td></tr>`;
+                return;
+            }
+            let totalOpening = 0, totalAdded = 0, totalCost = 0, totalDep = 0, totalNet = 0;
+            const sortedAssets = [...state.assets].sort((a,b) => a.name.localeCompare(b.name, 'ne'));
+            sortedAssets.forEach(asset => {
+                const totalAssetCost = asset.openingCost + asset.addedCost;
+                const yearlyDep = totalAssetCost * (asset.depRate / 100);
+                const netValue = totalAssetCost - yearlyDep;
+                totalOpening += asset.openingCost;
+                totalAdded += asset.addedCost;
+                totalCost += totalAssetCost;
+                totalDep += yearlyDep;
+                totalNet += netValue;
+                dom.assetsTableBody.innerHTML += `
+                    <tr>
+                        <td>${asset.name}</td>
+                        <td>${asset.type}</td>
+                        <td class="text-center">${formatNepaliDate(asset.purchaseDate)}</td>
+                        <td class="text-right">${formatVoucherAmount(asset.openingCost)}</td>
+                        <td class="text-right">${formatVoucherAmount(asset.addedCost)}</td>
+                        <td class="text-right">${formatVoucherAmount(totalAssetCost)}</td>
+                        <td class="text-right">${toDevanagari(asset.depRate)}%</td>
+                        <td class="text-right">${formatVoucherAmount(yearlyDep)}</td>
+                        <td class="text-right">${formatVoucherAmount(netValue)}</td>
+                        <td class="text-center"><button class="edit-btn" data-id="${asset.id}">एडिट</button><button class="delete-btn" data-id="${asset.id}">डिलिट</button></td>
+                    </tr>
+                `;
+            });
+            dom.assetsTableFoot.innerHTML = `
+                <tr>
+                    <td colspan="3"><b>जम्मा</b></td>
+                    <td class="text-right"><b>${formatVoucherAmount(totalOpening)}</b></td>
+                    <td class="text-right"><b>${formatVoucherAmount(totalAdded)}</b></td>
+                    <td class="text-right"><b>${formatVoucherAmount(totalCost)}</b></td>
+                    <td colspan="1"></td>
+                    <td class="text-right"><b>${formatVoucherAmount(totalDep)}</b></td>
+                    <td class="text-right"><b>${formatVoucherAmount(totalNet)}</b></td>
+                    <td></td>
+                </tr>
+            `;
         };
         
-
         const printStatement = () => {
             const activeFy = state.fiscalYears.find(fy => fy.id === state.activeFyId);
             const reportTitle = `आम्दानी-खर्च विवरण (आ.व. ${toDevanagari(activeFy.name)})`;
             const statementContent = document.getElementById('income-expense-statement').innerHTML;
             const netBalanceContent = document.querySelector('.net-balance-row').parentElement.parentElement.outerHTML;
             const headerHTML = `<div class="print-header"><h1>सूर्य ज्योति माध्यमिक विद्यालय मेहेलकुना</h1><p>गुर्भाकोट नगरपालिका-८, सुर्खेत</p><h2>${reportTitle}</h2></div>`;
+            dom.printArea.className = '';
             dom.printArea.innerHTML = headerHTML + '<div id="income-expense-statement">' + statementContent + '</div>' + netBalanceContent;
             window.print();
         };
         
-        const printGenericReport = (tableId, reportTitle) => {
-            const tableContent = document.getElementById(tableId)?.outerHTML;
-            if (!tableContent) return;
+        const printGenericReport = (elementId, reportTitle, isLandscape = false) => {
+            const reportContent = document.getElementById(elementId)?.outerHTML;
+            if (!reportContent) return;
             const activeFy = state.fiscalYears.find(fy => fy.id === state.activeFyId);
             const fullReportTitle = `${reportTitle} (आ.व. ${toDevanagari(activeFy.name)})`;
             const headerHTML = `<div class="print-header"><h1>सूर्य ज्योति माध्यमिक विद्यालय मेहेलकुना</h1><p>गुर्भाकोट नगरपालिका-८, सुर्खेत</p><h2>${fullReportTitle}</h2></div>`;
-            dom.printArea.innerHTML = headerHTML + tableContent;
-
-            if (tableId === 'assets-table') {
-                dom.printArea.classList.add('landscape-print');
-            } else {
-                dom.printArea.classList.remove('landscape-print');
-            }
-
+            dom.printArea.className = isLandscape ? 'landscape-print' : '';
+            dom.printArea.innerHTML = headerHTML + reportContent;
             window.print();
-            dom.printArea.classList.remove('landscape-print');
+        };
+
+        const printReconciliationReport = () => {
+            const bankAccount = state.accounts.find(a => a.id === dom.reconBankSelect.value);
+            if(!bankAccount) { showModal('कृपया पहिले बैंक खाता छान्नुहोस्।', 'error'); return; }
+            const reconDate = dom.reconDateInput.value;
+            const reportTitle = `बैंक हिसाब मिलान विवरण - ${bankAccount.name}`;
+            const fullReportTitle = `${reportTitle} (${reconDate} सम्म)`;
+            const reconContent = document.querySelector('.recon-container').outerHTML;
+            const headerHTML = `<div class="print-header"><h1>सूर्य ज्योति माध्यमिक विद्यालय मेहेलकुना</h1><p>गुर्भाकोट नगरपालिका-८, सुर्खेत</p><h2>${fullReportTitle}</h2></div>`;
+            dom.printArea.className = 'landscape-print';
+            dom.printArea.innerHTML = headerHTML + '<div class="recon-container">' + reconContent + '</div>';
+            window.print();
         };
         
-        const printReconciliation = () => {
-            const bankAccount = dom.reconBankSelect.options[dom.reconBankSelect.selectedIndex].text;
-            const reconDate = dom.reconDateInput.value;
-            if (dom.reconBankSelect.value === "" || !reconDate) {
-                showModal('कृपया बैंक खाता र मिति छान्नुहोस्।', 'error');
-                return;
-            }
-
-            const ledgerContent = document.getElementById('recon-ledger-table').parentElement.innerHTML;
-            const statementContent = document.getElementById('recon-statement-table').parentElement.innerHTML;
-
-            const activeFy = state.fiscalYears.find(fy => fy.id === state.activeFyId);
-            const reportTitle = `बैंक हिसाब मिलान विवरण (आ.व. ${toDevanagari(activeFy.name)})`;
-            
-            const reconHTML = `
-                <div class="print-header">
-                    <h1>सूर्य ज्योति माध्यमिक विद्यालय मेहेलकुना</h1>
-                    <p>गुर्भाकोट नगरपालिका-८, सुर्खेत</p>
-                    <h2>${reportTitle}</h2>
-                    <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 12pt; padding: 0 20px;">
-                        <span><b>बैंक खाता:</b> ${bankAccount}</span>
-                        <span><b>मिति:</b> ${reconDate} सम्म</span>
-                    </div>
-                </div>
-                <div class="recon-container" style="display: flex; gap: 20px; align-items: flex-start;">
-                    <div style="flex: 1;">
-                        <h4>लेजर अनुसारको कारोबार</h4>
-                        ${ledgerContent}
-                    </div>
-                    <div style="flex: 1;">
-                        <h4>बैंक स्टेटमेन्ट अनुसारको कारोबार</h4>
-                        ${statementContent}
-                    </div>
-                </div>
-            `;
-
-            dom.printArea.innerHTML = reconHTML;
-            dom.printArea.classList.remove('landscape-print'); // Ensure portrait mode
-            window.print();
-        };
-
         const printVoucher = (voucherId) => {
             const voucher = state.vouchers.find(v => v.id === voucherId);
             if (!voucher) return;
@@ -1775,6 +1705,7 @@
                 <tbody>${entriesHTML}<tr style="font-style: italic;"><td colspan="4">(${voucher.narration})</td></tr></tbody>
                 <tfoot><tr><td colspan="2" class="text-right"><b>जम्मा</b></td><td class="text-right"><b>${formatVoucherAmount(total)}</b></td><td class="text-right"><b>${formatVoucherAmount(total)}</b></td></tr></tfoot></table>
                 <div style="margin-top: 60px; display: flex; justify-content: space-between; font-size: 11pt; page-break-inside: avoid;"><div style="width: 200px; text-align: center;"><p style="margin: 40px 0 5px 0; border-top: 1px solid #000; padding-top: 5px;">तयार गर्ने</p><span>दर्जा: लेखापाल</span></div><div style="width: 200px; text-align: center;"><p style="margin: 40px 0 5px 0; border-top: 1px solid #000; padding-top: 5px;">सदर गर्ने</p><span>दर्जा: प्र.अ.</span></div></div>`;
+            dom.printArea.className = '';
             dom.printArea.innerHTML = voucherHTML;
             window.print();
         };
@@ -1788,12 +1719,7 @@
         dom.navButtons.forEach(btn => btn.addEventListener('click', handleNavClick));
         dom.voucherForm.addEventListener('submit', handleSaveVoucher);
         dom.addAccountForm.addEventListener('submit', handleAddAccount);
-        dom.accountsTableBody.addEventListener('click', (e) => {
-            if (e.target.classList.contains('delete-btn')) {
-                const accountId = e.target.dataset.id;
-                handleDeleteAccount(accountId);
-            }
-        });
+        dom.accountsTableBody.addEventListener('click', handleDeleteAccount);
         dom.cancelEditBtn.addEventListener('click', resetVoucherForm);
         dom.voucherNoInput.addEventListener('input', handleVoucherNoInput);
         dom.voucherDateInput.addEventListener('input', formatDateInput);
@@ -1811,41 +1737,49 @@
         dom.sourceTypeSelect.addEventListener('change', handleAccountFormChange);
         dom.printStatementBtn.addEventListener('click', printStatement);
 
-        // New Asset Event Listeners
+        // Asset Event Listeners
         dom.addAssetForm.addEventListener('submit', handleSaveAsset);
         document.getElementById('asset-purchase-date').addEventListener('input', formatDateInput);
         dom.addNewAssetBtn.addEventListener('click', () => {
              resetAssetForm();
-             dom.assetView.classList.add('hidden');
-             dom.assetFormView.classList.remove('hidden');
+             dom.assetFormContainer.classList.remove('hidden');
         });
         dom.cancelAssetEditBtn.addEventListener('click', resetAssetForm);
         dom.assetsTableBody.addEventListener('click', (e) => {
-            const assetId = e.target.dataset.id;
-            if (e.target.classList.contains('edit-btn')) {
-                startEditAsset(assetId);
-            } else if (e.target.classList.contains('delete-btn')) {
-                handleDeleteAsset(assetId);
+            const target = e.target;
+            if(target.classList.contains('edit-btn')) {
+                startEditAsset(target.dataset.id);
+            } else if (target.classList.contains('delete-btn')) {
+                handleDeleteAsset(target.dataset.id);
             }
         });
-        dom.printAssetRegisterBtn.addEventListener('click', () => printGenericReport('assets-table', 'स्थिर सम्पत्ति रजिस्टर'));
+        dom.printAssetRegisterBtn.addEventListener('click', () => printGenericReport('assets-table', 'स्थिर सम्पत्ति रजिस्टर', true));
 
-        // New Reconciliation Event Listeners
+        // Reconciliation Event Listeners
         dom.reconBankSelect.addEventListener('change', () => {
-            state.statementEntries = []; // Clear previous entries when bank changes
-            renderReconciliation();
+             if (statementEntriesUnsubscribe) statementEntriesUnsubscribe();
+             const bankAccountId = dom.reconBankSelect.value;
+             dom.reconStatementTableBody.innerHTML = '';
+             state.statementEntries = [];
+             if(bankAccountId) {
+                const collectionRef = collection(db, `users/${auth.currentUser.uid}/fiscalYears/${state.activeFyId}/statementEntries`);
+                const q = query(collectionRef, where("bankAccountId", "==", bankAccountId));
+                statementEntriesUnsubscribe = onSnapshot(q, (snapshot) => {
+                    state.statementEntries = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data()}));
+                    renderReconciliation();
+                });
+             } else {
+                 renderReconciliation();
+             }
         });
         dom.reconDateInput.addEventListener('input', formatDateInput);
         dom.reconDateInput.addEventListener('change', renderReconciliation);
         dom.addStatementEntryForm.addEventListener('submit', handleAddStatementEntry);
         document.getElementById('statement-date').addEventListener('input', formatDateInput);
         dom.reconStatementTableBody.addEventListener('click', handleDeleteStatementEntry);
-        dom.printReconBtn.addEventListener('click', printReconciliation);
-
+        dom.printReconBtn.addEventListener('click', printReconciliationReport);
 
     </script>
 </body>
 </html>
-
-
 
