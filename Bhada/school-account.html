@@ -1611,7 +1611,7 @@
             const sortedAssets = [...state.assets].sort((a,b) => a.name.localeCompare(b.name, 'ne'));
             sortedAssets.forEach(asset => {
                 const totalAssetCost = asset.openingCost + asset.addedCost;
-                const yearlyDep = totalAssetCost * (asset.depRate / 100);
+                const yearlyDep = totalAssetCost * ((asset.depRate || 0) / 100);
                 const netValue = totalAssetCost - yearlyDep;
                 totalOpening += asset.openingCost;
                 totalAdded += asset.addedCost;
@@ -1626,7 +1626,7 @@
                         <td class="text-right">${formatVoucherAmount(asset.openingCost)}</td>
                         <td class="text-right">${formatVoucherAmount(asset.addedCost)}</td>
                         <td class="text-right">${formatVoucherAmount(totalAssetCost)}</td>
-                        <td class="text-right">${toDevanagari(asset.depRate)}%</td>
+                        <td class="text-right">${toDevanagari(asset.depRate || 0)}%</td>
                         <td class="text-right">${formatVoucherAmount(yearlyDep)}</td>
                         <td class="text-right">${formatVoucherAmount(netValue)}</td>
                         <td class="text-center"><button class="edit-btn" data-id="${asset.id}">एडिट</button><button class="delete-btn" data-id="${asset.id}">डिलिट</button></td>
@@ -1782,4 +1782,5 @@
     </script>
 </body>
 </html>
+
 
