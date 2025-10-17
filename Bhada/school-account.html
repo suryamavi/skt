@@ -733,12 +733,12 @@
         const auth = getAuth();
         const db = getFirestore(app);
 
-        // --- Global State and DOM Elements ---
-        let state = { accounts: [], vouchers: [], fiscalYears: [], activeFyId: null, assets: [], statementEntries: [] };
+        let state = { accounts: [], vouchers: [], fiscalYears: [], activeFyId: null, assets: [], statementEntries: [], reconciliationState: { tickedLedgerIndices: [], tickedStatementIds: [] } };
         let accountsUnsubscribe = null;
         let vouchersUnsubscribe = null;
         let assetsUnsubscribe = null;
         let statementEntriesUnsubscribe = null;
+        let reconStateUnsubscribe = null;
 
         const dom = {
             appLoader: document.getElementById('app-loader'), loaderMessage: document.getElementById('loader-message'),
@@ -958,6 +958,7 @@
                 if (vouchersUnsubscribe) vouchersUnsubscribe();
                 if (assetsUnsubscribe) assetsUnsubscribe();
                 if (statementEntriesUnsubscribe) statementEntriesUnsubscribe();
+                if (reconStateUnsubscribe) reconStateUnsubscribe();
             }
         });
         
@@ -1003,6 +1004,7 @@
             if (vouchersUnsubscribe) vouchersUnsubscribe();
             if (assetsUnsubscribe) assetsUnsubscribe();
             if (statementEntriesUnsubscribe) statementEntriesUnsubscribe();
+            if (reconStateUnsubscribe) reconStateUnsubscribe();
 
             const accountsRef = collection(db, `users/${uid}/fiscalYears/${fyId}/accounts`);
             const vouchersRef = collection(db, `users/${uid}/fiscalYears/${fyId}/vouchers`);
@@ -1227,9 +1229,10 @@
             });
             
             ledgerEntries.sort((a,b) => new Date(a.date) - new Date(b.date)).forEach((entry, index) => {
+                const isChecked = state.reconciliationState.tickedLedgerIndices.includes(index.toString());
                 dom.reconLedgerTableBody.innerHTML += `
                     <tr data-index="${index}">
-                        <td><input type="checkbox" class="recon-ledger-check"></td>
+                        <td><input type="checkbox" class="recon-ledger-check" ${isChecked ? 'checked' : ''}></td>
                         <td>${formatNepaliDate(entry.date)}</td>
                         <td>${entry.description}</td>
                         <td class="text-right">${entry.debit > 0 ? formatVoucherAmount(entry.debit) : '-'}</td>
@@ -1246,11 +1249,12 @@
             dom.reconStatementTableBody.innerHTML = '';
             let statementBalance = 0;
             state.statementEntries.sort((a,b) => new Date(a.date) - new Date(b.date)).forEach((entry, index) => {
+                const isChecked = state.reconciliationState.tickedStatementIds.includes(entry.id);
                 const isDebit = entry.type === 'debit';
                 statementBalance += isDebit ? -entry.amount : entry.amount;
                  dom.reconStatementTableBody.innerHTML += `
                     <tr data-id="${entry.id}" data-index="${index}">
-                        <td><input type="checkbox" class="recon-statement-check"></td>
+                        <td><input type="checkbox" class="recon-statement-check" ${isChecked ? 'checked' : ''}></td>
                         <td>${formatNepaliDate(entry.date)}</td>
                         <td>${entry.description}</td>
                         <td class="text-right">${isDebit ? formatVoucherAmount(entry.amount) : '-'}</td>
@@ -1612,6 +1616,25 @@
             showModal('खाता सफलतापूर्वक हटाइयो!', 'success');
         };
 
+        const saveReconciliationState = async () => {
+            const bankAccountId = dom.reconBankSelect.value;
+            const reconDate = dom.reconDateInput.dataset.rawValue;
+            if (!bankAccountId || !reconDate) return;
+
+            const docId = `${bankAccountId}_${reconDate.replace(/-/g, '')}`;
+            const tickedLedgerIndices = [];
+            dom.reconLedgerTableBody.querySelectorAll('.recon-ledger-check:checked').forEach(chk => {
+                tickedLedgerIndices.push(chk.closest('tr').dataset.index);
+            });
+            const tickedStatementIds = [];
+            dom.reconStatementTableBody.querySelectorAll('.recon-statement-check:checked').forEach(chk => {
+                tickedStatementIds.push(chk.closest('tr').dataset.id);
+            });
+
+            const docRef = doc(db, `users/${auth.currentUser.uid}/fiscalYears/${state.activeFyId}/reconciliationStates`, docId);
+            await setDoc(docRef, { tickedLedgerIndices, tickedStatementIds });
+        };
+
         const handleAddStatementEntry = async (e) => {
             e.preventDefault();
             const bankAccountId = dom.reconBankSelect.value;
@@ -1940,12 +1963,38 @@
         dom.printAssetRegisterBtn.addEventListener('click', () => printGenericReport('assets-table', 'स्थिर सम्पत्ति रजिस्टर', true));
 
         // Reconciliation Event Listeners
+        const setupReconStateListener = () => {
+            if (reconStateUnsubscribe) reconStateUnsubscribe();
+            
+            const bankAccountId = dom.reconBankSelect.value;
+            const reconDate = dom.reconDateInput.dataset.rawValue;
+
+            if (!bankAccountId || !reconDate) {
+                state.reconciliationState = { tickedLedgerIndices: [], tickedStatementIds: [] };
+                renderReconciliation();
+                return;
+            }
+
+            const docId = `${bankAccountId}_${reconDate.replace(/-/g, '')}`;
+            const docRef = doc(db, `users/${auth.currentUser.uid}/fiscalYears/${state.activeFyId}/reconciliationStates`, docId);
+            
+            reconStateUnsubscribe = onSnapshot(docRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    state.reconciliationState = docSnap.data();
+                } else {
+                    state.reconciliationState = { tickedLedgerIndices: [], tickedStatementIds: [] };
+                }
+                renderReconciliation(); // Re-render with the loaded check states
+            });
+        };
+
         dom.reconBankSelect.addEventListener('change', () => {
              if (statementEntriesUnsubscribe) statementEntriesUnsubscribe();
              const bankAccountId = dom.reconBankSelect.value;
              dom.reconStatementTableBody.innerHTML = '';
              state.statementEntries = [];
              if(bankAccountId) {
+                setupReconStateListener(); // Setup listener for check states
                 const collectionRef = collection(db, `users/${auth.currentUser.uid}/fiscalYears/${state.activeFyId}/statementEntries`);
                 const q = query(collectionRef, where("bankAccountId", "==", bankAccountId));
                 statementEntriesUnsubscribe = onSnapshot(q, (snapshot) => {
@@ -1957,16 +2006,27 @@
              }
         });
         dom.reconDateInput.addEventListener('input', formatDateInput);
-        dom.reconDateInput.addEventListener('change', renderReconciliation);
+        dom.reconDateInput.addEventListener('change', setupReconStateListener);
         dom.addStatementEntryForm.addEventListener('submit', handleAddStatementEntry);
         document.getElementById('statement-date').addEventListener('input', formatDateInput);
         dom.reconStatementTableBody.addEventListener('click', handleDeleteStatementEntry);
         dom.generateReconStatementBtn.addEventListener('click', generateReconciliationStatement);
         dom.printReconBtn.addEventListener('click', printReconciliationReport);
 
+        // Add a single listener to the section for checkbox changes
+        document.getElementById('reconciliation-section').addEventListener('change', (e) => {
+            if (e.target.matches('.recon-ledger-check') || e.target.matches('.recon-statement-check') || e.target.matches('#check-all-ledger') || e.target.matches('#check-all-statement')) {
+                if(e.target.id === 'check-all-ledger'){
+                    dom.reconLedgerTableBody.querySelectorAll('.recon-ledger-check').forEach(chk => chk.checked = e.target.checked);
+                }
+                if(e.target.id === 'check-all-statement'){
+                     dom.reconStatementTableBody.querySelectorAll('.recon-statement-check').forEach(chk => chk.checked = e.target.checked);
+                }
+                saveReconciliationState();
+            }
+        });
+
     </script>
 </body>
 </html>
-
-
 
